@@ -31,6 +31,8 @@ public class Users {
 
     private boolean isActive = true;
 
+    private String profileImage;
+
     @Builder
     public Users(String email, String pwd, String name, String nickname, UserType userType, String birth) {
         this.email = email;
