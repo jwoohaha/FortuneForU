@@ -11,11 +11,11 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Applications {
+public class CounselorForm {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private int applicationNo;
+    private Long applicationNo;
 
     private int userNo;
 
