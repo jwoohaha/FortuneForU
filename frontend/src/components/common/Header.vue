@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Logo from './Logo.vue';
+import Logo from '../common/Logo.vue';
 
   export default {
   components: {
@@ -30,14 +30,17 @@ import Logo from './Logo.vue';
 
 <style lang="scss" scoped>
 header {
-  position: absolute;
   width: 100%;
   height: 90px;
   display: flex;
-  position: absolute;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   padding: 0 14%;
   //justify-content: center;
   background: rgba(247, 247, 247, 0.70);
+  z-index: 1;
 }
 .nav-contents{
   position: relative;
@@ -51,7 +54,6 @@ nav{
   align-items: flex-start;
   gap: 63px;
   color: var(--title-text, #333);
-  /* title */
   font-family: Noto Sans KR;
   font-size: 20px;
   font-style: normal;
@@ -72,9 +74,6 @@ button{
   background: var(--title-text, #333);
   color: #FFF;
   text-align: center;
-
-  /* title */
-  font-family: Noto Sans KR;
   font-size: 1em;
   font-style: normal;
   font-weight: 700;
