@@ -2,16 +2,20 @@ package com.ssafy.a403.rabbitmq;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Service;
 
-@SpringBootApplication
+@Service
+@Slf4j
 public class SttProducer {
 
-    private static final String QUEUE_NAME = "stt_queue";
+    private static final String STT_TASK_QUEUE = "stt_queue";
+    private static final String GPT_TASK_QUEUE = "gpt_queue";
+    private static final String RESULT_QUEUE = "result_queue";
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
@@ -20,19 +24,25 @@ public class SttProducer {
     private ObjectMapper objectMapper;
 
     @Bean
-    public Queue createQueue() {
-        return new Queue(QUEUE_NAME);
+    public Queue createSttQueue() {
+        return new Queue(STT_TASK_QUEUE);
     }
 
-    public void produceSttTask(String reservationId, String audioPath) throws JsonProcessingException {
+    @Bean
+    public Queue createGptQueue() { return new Queue(GPT_TASK_QUEUE); }
+
+    @Bean
+    public Queue createResultQueue() { return new Queue(RESULT_QUEUE); }
+
+    public void produceSttTask(String reservationId, String audioFilePath) throws JsonProcessingException {
 
         final SttRequest sttRequest = SttRequest.builder()
                 .reservationId(reservationId)
-                .audioPath(audioPath)
+                .audioFilePath(audioFilePath)
                 .build();
 
         String jsonSttRequest = objectMapper.writeValueAsString(sttRequest);
-        rabbitTemplate.convertAndSend(QUEUE_NAME, jsonSttRequest);
-        System.out.println("메시지를 보냈습니다: " + jsonSttRequest);
+        rabbitTemplate.convertAndSend(STT_TASK_QUEUE, jsonSttRequest);
+        log.info("Produce task message to stt_queue");
     }
 }

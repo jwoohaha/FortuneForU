@@ -10,8 +10,10 @@ spring:
     port: 5672
     username: guest
     password: guest
-queue:
-  name: stt_queue
+  template:
+    exchange:
+      name: externalApiExchange
+      type: direct
 management:
   endpoints:
     web:

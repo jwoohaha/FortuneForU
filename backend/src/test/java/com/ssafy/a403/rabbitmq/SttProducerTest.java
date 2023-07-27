@@ -19,14 +19,13 @@ public class SttProducerTest {
     public void produceSttTaskTest() throws Exception {
         //given
         String testId = "testId";
-        String testPath = "testPath";
+        String testPath = "src/main/resources/static/saju1.mp3";
 
         //when
         sttProducer.produceSttTask(testId, testPath);
 
         //then
         //수신은 수신서버 측에서 확인
-//        Object testTask = rabbitTemplate.receiveAndConvert("stt_queue");
 
     }
 }
