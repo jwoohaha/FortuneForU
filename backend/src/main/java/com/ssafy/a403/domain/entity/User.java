@@ -10,7 +10,7 @@ import javax.persistence.*;
 @Entity
 @Getter
 @NoArgsConstructor
-public class Users {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,8 +33,12 @@ public class Users {
 
     private String profileImage;
 
+    @OneToOne
+    @JoinColumn(name = "counselorNo")
+    private Counselor counselorInfo;
+
     @Builder
-    public Users(String email, String pwd, String name, String nickname, UserType userType, String birth) {
+    public User(String email, String pwd, String name, String nickname, UserType userType, String birth) {
         this.email = email;
         this.pwd = pwd;
         this.name = name;
