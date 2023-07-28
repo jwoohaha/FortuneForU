@@ -27,7 +27,7 @@ public class SecurityConfig {
 
     private final AuthenticationSuccessHandler successHandler;
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
-    //private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
     @Value("${client.url}")
     private String clientUrl;
@@ -40,14 +40,21 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         requests ->
-                                requests.antMatchers("/api/permit-all").permitAll()
-                                        .antMatchers("/api/for-user").hasRole("USER")
-                                        .antMatchers("/api/for-counselor").hasRole("COUNSELOR")
-                                        .antMatchers("/api/for-admin").hasRole("ADMIN")
+                                // swagger 사용을 위한 url -> permitAll()로 지정
+                                requests.antMatchers(
+                                                "/v2/api-docs",
+                                                "/swagger-resources",
+                                                "/swagger-resources/**",
+                                                "/configuration/ui",
+                                                "/configuration/security",
+                                                "/swagger-ui.html",
+                                                "/webjars/**",
+                                                "/v3/api-docs/**",
+                                                "/swagger-ui/**").permitAll()
                                         .anyRequest().authenticated())
                 .oauth2Login(setOAuth2Config())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                //.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable()
                 .cors()
                 .configurationSource(corsConfigurationSource())
