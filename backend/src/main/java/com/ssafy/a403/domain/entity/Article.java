@@ -1,5 +1,6 @@
 package com.ssafy.a403.domain.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -30,5 +31,14 @@ public class Article {
 
     @Column(name="article_date")
     private LocalDateTime articleDate;
+
+    @Builder
+    public Article(User user, String category, String articleTitle, String articleContent, LocalDateTime articleDate){
+        this.user = user;
+        this.category = category;
+        this.articleTitle = articleTitle;
+        this.articleContent = articleContent;
+        this.articleDate = articleDate;
+    }
 
 }

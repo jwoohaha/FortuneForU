@@ -1,5 +1,6 @@
 package com.ssafy.a403.domain.entity;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -44,5 +45,20 @@ public class CounselingReservation {
 
     @Column(name="rez_recorded")
     private String reservationRecorded;
+
+
+    @Builder
+    public CounselingReservation(User user, User counselor, LocalDateTime reservationDateTime, String reservationStatus,
+                                 String reservationURL, Boolean reservationReviewStatus, String reservationReview, String reservationReport, String reservationRecorded) {
+        this.user = user;
+        this.counselor = counselor;
+        this.reservationDateTime = reservationDateTime;
+        this.reservationStatus = reservationStatus;
+        this.reservationURL = reservationURL;
+        this.reservationReviewStatus = reservationReviewStatus;
+        this.reservationReview = reservationReview;
+        this.reservationReport = reservationReport;
+        this.reservationRecorded = reservationRecorded;
+    }
 
 }

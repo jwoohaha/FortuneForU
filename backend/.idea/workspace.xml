@@ -5,11 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2cc5140e-3ce6-4115-80b4-a0bda7ae9f37" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/Article.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/ArticleComment.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/LikeArticle.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/LikeComment.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/repository/LikeArticleRepository.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/Article.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/Article.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/CounselingReservation.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/ssafy/a403/domain/entity/CounselingReservation.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -25,8 +23,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Interface" />
         <option value="Class" />
+        <option value="Interface" />
       </list>
     </option>
   </component>
@@ -77,7 +75,7 @@
       <workItem from="1690447339768" duration="637000" />
       <workItem from="1690503062106" duration="790000" />
       <workItem from="1690503875036" duration="4641000" />
-      <workItem from="1690515236228" duration="5764000" />
+      <workItem from="1690515236228" duration="7551000" />
     </task>
     <servers />
   </component>
