@@ -1,0 +1,21 @@
+server:
+  port: 8080
+spring:
+  main:
+    banner-mode: off
+  zipkin:
+    enabled: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  template:
+    exchange:
+      name: externalApiExchange
+      type: direct
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
