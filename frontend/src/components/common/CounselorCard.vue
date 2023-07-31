@@ -33,7 +33,7 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .counselor-card {
     width: 375px;
     height: 428px;
@@ -42,7 +42,7 @@ export default {
     background: #FFF;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
     //margin: 39px 36px 39px 37px;
-    //margin-top: 304px;
+    margin-bottom: 20px;
     justify-content: space-between;
     padding: 39px 37px;
     box-sizing: border-box;
@@ -54,7 +54,7 @@ export default {
     width: 70px;
     height: 70px;
     border-radius: 70px;
-    border: 1px solid var(--bg-gray, #F7F7F7);
+    border: 1px solid #F7F7F7;
     background: lightgray 50% / cover no-repeat;
     margin-right: 21px;
 }
@@ -70,7 +70,7 @@ hr {
     width: 302px;
     height: 138px;
     overflow: hidden;
-    color: var(--title-text);
+    color: #333;
     text-overflow: ellipsis;
     font-size: 16px;
     font-style: normal;
@@ -79,7 +79,7 @@ hr {
     text-align: start;
 }
 #card-name { 
-    color: var(--title-text);
+    color: #333;
     text-align: center;
     font-size: 20px;
     font-style: normal;
@@ -89,7 +89,7 @@ hr {
     margin-bottom: 7px;
 }
 #card-score {
-    color: var(--title-text);
+    color: #333;
     text-align: center;
     font-size: 12px;
     font-style: normal;
@@ -98,7 +98,7 @@ hr {
     text-align: center;
 }
 #review-cnt{
-    color: var(--title-text);
+    color: #333;
     text-align: center;
     font-size: 12px;
     font-style: normal;
@@ -109,11 +109,11 @@ hr {
     margin-bottom: 9px;
 }
 #review-cnt span{
-    color: var(--color-saju);
+    color: #9C7AE7;
     text-decoration: underline;
 }
 #possible-time {
-    color: var(--body-text, #666);
+    color:  #666;
     font-size: 12px;
     font-style: normal;
     font-weight: 400;

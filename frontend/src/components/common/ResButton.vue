@@ -8,7 +8,7 @@
 
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 .res-btn {
     display: flex;
     height: 40px;
@@ -18,7 +18,7 @@
     align-items: center;
     gap: 10px;
     border-radius: 100px;
-    background: var(--color-saju);
+    background: #9C7AE7;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
     font-size: 16px;
     font-style: normal;
