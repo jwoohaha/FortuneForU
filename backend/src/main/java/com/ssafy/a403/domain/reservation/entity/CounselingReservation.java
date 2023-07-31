@@ -1,6 +1,7 @@
 package com.ssafy.a403.domain.reservation.entity;
 
 import com.ssafy.a403.domain.member.entity.Member;
+import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -30,7 +31,7 @@ public class CounselingReservation {
     private LocalDateTime reservationDateTime;
 
     @Column(name="rez_status")
-    private String reservationStatus;
+    private ReservationStatus reservationStatus;
 
     @Column(name="rez_url")
     private String reservationURL;
@@ -49,7 +50,7 @@ public class CounselingReservation {
 
 
     @Builder
-    public CounselingReservation(Member member, Member counselor, LocalDateTime reservationDateTime, String reservationStatus,
+    public CounselingReservation(Member member, Member counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
                                  String reservationURL, Boolean reservationReviewStatus, String reservationReview, String reservationReport, String reservationRecorded) {
         this.member = member;
         this.counselor = counselor;
@@ -61,5 +62,15 @@ public class CounselingReservation {
         this.reservationReport = reservationReport;
         this.reservationRecorded = reservationRecorded;
     }
+
+    //    주문 취소
+    public void cancel() {
+        if (reservationDateTime.isAfter(LocalDateTime.now())) {
+            this.reservationStatus = ReservationStatus.Cancel;
+        } else {
+            throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
+        }
+    }
+
 
 }
