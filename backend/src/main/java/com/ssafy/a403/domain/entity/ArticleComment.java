@@ -1,6 +1,7 @@
 package com.ssafy.a403.domain.entity;
 
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -31,4 +32,6 @@ public class ArticleComment {
 
     @Column(name="comment_date")
     private LocalDateTime commentDate;
+
+
 }

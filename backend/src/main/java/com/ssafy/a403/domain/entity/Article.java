@@ -21,6 +21,7 @@ public class Article {
     @JoinColumn(name = "user_no")
     private User user;
 
+//    @Enumerated(EnumType.STRING)
     private String category;
 
     @Column(name="article_title")

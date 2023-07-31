@@ -2,6 +2,7 @@ package com.ssafy.a403.domain.entity;
 
 import com.ssafy.a403.domain.enums.CounselorType;
 import com.ssafy.a403.domain.enums.PassState;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -37,4 +38,16 @@ public class CounselorForm {
 
     private String reason;
 
+    @Builder
+    public CounselorForm(int userNo, CounselorType counselorType, String major, String intro, String address, String phone, PassState passState, LocalDateTime submitTime, String reason) {
+        this.userNo = userNo;
+        this.counselorType = counselorType;
+        this.major = major;
+        this.intro = intro;
+        this.address = address;
+        this.phone = phone;
+        this.passState = passState;
+        this.submitTime = submitTime;
+        this.reason = reason;
+    }
 }
