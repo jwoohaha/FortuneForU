@@ -1,6 +1,6 @@
 package com.ssafy.a403.domain.reservation.entity;
 
-import com.ssafy.a403.domain.User.entity.User;
+import com.ssafy.a403.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

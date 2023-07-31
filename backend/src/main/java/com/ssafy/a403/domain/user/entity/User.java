@@ -1,4 +1,4 @@
-package com.ssafy.a403.domain.User.entity;
+package com.ssafy.a403.domain.user.entity;
 
 import com.ssafy.a403.domain.model.UserType;
 import lombok.Builder;

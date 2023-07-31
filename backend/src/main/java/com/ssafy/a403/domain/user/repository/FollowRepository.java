@@ -1,7 +1,7 @@
-package com.ssafy.a403.domain.User.repository;
+package com.ssafy.a403.domain.user.repository;
 
-import com.ssafy.a403.domain.User.entity.Follow;
-import com.ssafy.a403.domain.User.entity.User;
+import com.ssafy.a403.domain.user.entity.Follow;
+import com.ssafy.a403.domain.user.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

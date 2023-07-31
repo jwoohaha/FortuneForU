@@ -1,8 +1,8 @@
 package com.ssafy.a403.domain.admin.service;
 
-import com.ssafy.a403.domain.User.dto.FormResponse;
-import com.ssafy.a403.domain.User.entity.CounselorForm;
-import com.ssafy.a403.domain.User.repository.CounselorFormRepository;
+import com.ssafy.a403.domain.user.dto.FormResponse;
+import com.ssafy.a403.domain.user.entity.CounselorForm;
+import com.ssafy.a403.domain.user.repository.CounselorFormRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

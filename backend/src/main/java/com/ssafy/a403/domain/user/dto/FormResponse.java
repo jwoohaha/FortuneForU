@@ -1,6 +1,6 @@
-package com.ssafy.a403.domain.User.dto;
+package com.ssafy.a403.domain.user.dto;
 
-import com.ssafy.a403.domain.User.entity.User;
+import com.ssafy.a403.domain.user.entity.User;
 import com.ssafy.a403.domain.model.CounselorType;
 import lombok.*;
 
