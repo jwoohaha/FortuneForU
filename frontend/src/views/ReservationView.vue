@@ -47,7 +47,27 @@
             </div>
 
             <div class="calendar-section">
-                <div class="res-calendar"></div>
+                <div class="res-calendar">
+                    <div class="calendar-txt">예약일</div>
+                    <div class="calendar-poster">
+                        <!-- <VCalendar /> -->
+                        <VDatePicker v-model="date" transparent borderless/>
+                    </div>
+                    <div class="calendar-hr"></div>
+                    <div class="calendar-txt">예약 가능 시간</div>
+                    <div class="time-section">
+                        <div class="res-btn">12:00</div>
+                        <div class="res-btn">12:00</div>
+                        <div class="res-btn">12:00</div>
+                        <div class="res-btn">12:00</div>
+                    </div>
+                    <div class="time-section">
+                        <div class="res-btn">12:00</div>
+                        <div class="res-btn">12:00</div>
+                        <div class="res-btn">12:00</div>
+                        <div class="res-btn">12:00</div>
+                    </div>
+                </div>
                 <div class="res-btn">예약하기</div>
             </div>
            </div>
@@ -55,6 +75,7 @@
         </div>
         
     </div>
+    
   </template>
 
 <script>
@@ -75,7 +96,6 @@ export default {
   },
  };
 </script>
-
 <style lang="scss" scoped>
 .reservation-view {
     padding-left: 15%;
@@ -201,14 +221,50 @@ img {
     justify-content: center;
     align-items: center;
 }
+// .calendar-poster {
+//     // height: 293px;
+//     // width: 319px;
+//     // display: inline;
+//     // align-content: center;
+    
+// }
 .res-calendar {
     width: 407px;
     height: 553px;
-    flex-shrink: 0;
     border-radius: 20px;
     border: 2px solid #D7D7D7;
     background: #FFF;
     margin-bottom: 45px;
+    padding-top: 10px;
+    padding-bottom: 22px;
+    box-sizing: border-box;
+}
+.calendar-hr {
+    height: 2px;
+    width: 100%;
+    padding: 0;
+    margin-top: 30px;
+    background-color: #D7D7D7;
+}
+.calendar-txt{
+    color:  #333;
+    font-size: 16px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 12px 0px 10px 55px;
+    text-align: left;
+}
+.time-section{
+    margin: 20px 33px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap : wrap;
+}
+.time-section .res-btn {
+    width: 80px;
+    height: 40px;
+    box-sizing: border-box;
 }
 .res-btn {
     display: flex;
