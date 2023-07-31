@@ -1,6 +1,6 @@
-package com.ssafy.a403.domain.user.dto;
+package com.ssafy.a403.domain.member.dto;
 
-import com.ssafy.a403.domain.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.CounselorType;
 import lombok.*;
 
@@ -14,14 +14,14 @@ public class FormResponse {
 
     Long applicationNo;
 
-    User user;
+    Member user;
 
     LocalDateTime submitTime;
 
     CounselorType counselorType;
 
     @Builder
-    public FormResponse(Long applicationNo, User user, LocalDateTime submitTime, CounselorType counselorType) {
+    public FormResponse(Long applicationNo, Member user, LocalDateTime submitTime, CounselorType counselorType) {
         this.applicationNo = applicationNo;
         this.user = user;
         this.submitTime = submitTime;

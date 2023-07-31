@@ -1,7 +1,7 @@
-package com.ssafy.a403.domain.user.repository;
+package com.ssafy.a403.domain.member.repository;
 
-import com.ssafy.a403.domain.user.entity.Follow;
-import com.ssafy.a403.domain.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Follow;
+import com.ssafy.a403.domain.member.entity.Member;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -13,8 +13,8 @@ public interface FollowRepository extends JpaRepository<Follow, Follow.PK> {
     Optional<Follow> findByToUserAndFromUser(Long toUserId, Long fromUserId);
     List<Follow> findAll();
 
-    @Query(value = "select u from Follow f INNER JOIN User u ON f.fromUser = u.userNo where f.toUser = :userId")
-    List<User> findAllByToUser(@Param("userId") Long userId);
+    @Query(value = "select u from Follow f INNER JOIN Member u ON f.fromUser = u.no where f.toUser = :userId")
+    List<Member> findAllByToUser(@Param("userId") Long userId);
 
     void deleteAllByFromUser(Long userId);
     void deleteAllByToUser(Long userId);

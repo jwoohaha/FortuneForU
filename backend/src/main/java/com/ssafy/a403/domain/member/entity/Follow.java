@@ -1,4 +1,4 @@
-package com.ssafy.a403.domain.user.entity;
+package com.ssafy.a403.domain.member.entity;
 
 import lombok.NoArgsConstructor;
 
@@ -14,11 +14,11 @@ import java.io.Serializable;
 public class Follow {
 
     @Id
-    @Column(name = "touser")
+    @Column(name = "to_user")
     private Long toUser;
 
     @Id
-    @Column(name="fromuser")
+    @Column(name="from_user")
     private Long fromUser;
 
     public static class PK implements Serializable {

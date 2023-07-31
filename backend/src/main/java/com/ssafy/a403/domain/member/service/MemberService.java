@@ -1,7 +1,7 @@
-package com.ssafy.a403.global.config.security.user.service;
+package com.ssafy.a403.domain.member.service;
 
-import com.ssafy.a403.global.config.security.user.dao.UserRepository;
-import com.ssafy.a403.global.config.security.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Member;
+import com.ssafy.a403.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -14,10 +14,10 @@ import java.util.Optional;
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
-public class UserService {
-    private final UserRepository userRepository;
+public class MemberService {
+    private final MemberRepository userRepository;
 
-    public User findById(Long id) {
+    public Member findById(Long id) {
         return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
@@ -28,14 +28,14 @@ public class UserService {
 
     @Transactional
     public void deleteById(Long id) {
-        Optional<User> member = userRepository.findById(id);
+        Optional<Member> member = userRepository.findById(id);
         if (member.isEmpty()) {
             return;
         }
         userRepository.delete(member.get());
     }
 
-    public Page<User> findPaging(Pageable pageable) {
+    public Page<Member> findPaging(Pageable pageable) {
         return userRepository.findPaging(pageable);
     }
 }

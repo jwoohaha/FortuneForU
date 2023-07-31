@@ -1,4 +1,4 @@
-package com.ssafy.a403.global.config.security.user.entity;
+package com.ssafy.a403.domain.model;
 
 import com.ssafy.a403.global.config.security.oauth.mapper.AuthProvider;
 import lombok.AccessLevel;

@@ -1,4 +1,4 @@
-package com.ssafy.a403.domain.user.entity;
+package com.ssafy.a403.domain.member.entity;
 
 import com.ssafy.a403.domain.model.CounselorType;
 import lombok.Builder;
@@ -13,7 +13,8 @@ import javax.persistence.*;
 public class Counselor {
 
     @Id
-    private Long counselorNo;
+    @Column(name = "counselor_no")
+    private Long no;
 
     @Enumerated(EnumType.STRING)
     private CounselorType counselorType;
@@ -27,8 +28,9 @@ public class Counselor {
     private String phone;
 
     @Builder
-    public Counselor(CounselorType counselorType, String major, String intro,
+    public Counselor(Long no, CounselorType counselorType, String major, String intro,
                      String address, String phone) {
+        this.no = no;
         this.counselorType = counselorType;
         this.major = major;
         this.intro = intro;

@@ -1,4 +1,4 @@
-package com.ssafy.a403.domain.user.entity;
+package com.ssafy.a403.domain.member.entity;
 
 import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.PassState;
