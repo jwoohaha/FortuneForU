@@ -1,7 +1,7 @@
 package com.ssafy.a403.domain.article.entity;
 
 
-import com.ssafy.a403.domain.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Member;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -23,8 +23,8 @@ public class ArticleComment {
     private Article article;
 
     @ManyToOne
-    @JoinColumn(name = "user_no")
-    private User user;
+    @JoinColumn(name = "member_no")
+    private Member member;
 
     //댓글 내용
     @Column(name="comment_content")

@@ -14,8 +14,8 @@ import javax.persistence.JoinColumn;
 public class CounselingSchedule {
 
     @Id
-    @JoinColumn(name="userNo")
-    private int userNo;
+    @JoinColumn(name="member_no")
+    private int memberNo;
 
     private String mon;
 

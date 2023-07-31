@@ -1,6 +1,6 @@
 package com.ssafy.a403.domain.reservation.entity;
 
-import com.ssafy.a403.domain.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,12 +19,12 @@ public class CounselingReservation {
     private Long reservationNo;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User user;
+    @JoinColumn(name = "member_no")
+    private Member member;
 
     @ManyToOne
-    @JoinColumn(name = "counselor_id")
-    private User counselor;
+    @JoinColumn(name = "counselor_no")
+    private Member counselor;
 
     @Column(name="rez_time")
     private LocalDateTime reservationDateTime;
@@ -49,9 +49,9 @@ public class CounselingReservation {
 
 
     @Builder
-    public CounselingReservation(User user, User counselor, LocalDateTime reservationDateTime, String reservationStatus,
+    public CounselingReservation(Member member, Member counselor, LocalDateTime reservationDateTime, String reservationStatus,
                                  String reservationURL, Boolean reservationReviewStatus, String reservationReview, String reservationReport, String reservationRecorded) {
-        this.user = user;
+        this.member = member;
         this.counselor = counselor;
         this.reservationDateTime = reservationDateTime;
         this.reservationStatus = reservationStatus;
