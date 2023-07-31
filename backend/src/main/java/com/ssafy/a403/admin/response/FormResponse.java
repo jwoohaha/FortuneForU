@@ -1,6 +1,6 @@
 package com.ssafy.a403.admin.response;
 
-import com.ssafy.a403.domain.entity.Users;
+import com.ssafy.a403.domain.entity.User;
 import com.ssafy.a403.domain.enums.CounselorType;
 import lombok.*;
 
@@ -14,16 +14,16 @@ public class FormResponse {
 
     Long applicationNo;
 
-    Users users;
+    User user;
 
     LocalDateTime submitTime;
 
     CounselorType counselorType;
 
     @Builder
-    public FormResponse(Long applicationNo, Users users, LocalDateTime submitTime, CounselorType counselorType) {
+    public FormResponse(Long applicationNo, User user, LocalDateTime submitTime, CounselorType counselorType) {
         this.applicationNo = applicationNo;
-        this.users = users;
+        this.user = user;
         this.submitTime = submitTime;
         this.counselorType = counselorType;
     }
