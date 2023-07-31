@@ -14,4 +14,5 @@ export const ModalContent = styled("div", modalProps)`
   margin: auto;
   margin-top: 150px;
   background-color: rgba(255, 255, 255, 0);
+  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
 `;
