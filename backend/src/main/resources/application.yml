@@ -58,6 +58,10 @@ management:
       exposure:
         include: health, prometheus
 
+# Openvidu Alias
+OPENVIDU_URL: http://localhost:4443/
+OPENVIDU_SECRET: MY_SECRET
+
 # JWT Alias
 jwt:
   access-header: Authorization
