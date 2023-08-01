@@ -1,5 +1,5 @@
 <template>
-  <div class="sns-login-button" :style="{background: platform.color}" v-on:click="click()">
+  <div class="sns-login-button" :style="{background: platform.color}" @click="socialLogin()">
     <img class="sns-login-logo" :src='require(`@/assets/login/${platform.icon}`)' />
     <div class="sns-login-button-text" :style="{color: platform.textColor}">{{ platform.title }}</div>
   </div>
@@ -11,8 +11,15 @@ export default {
     platform: Object
   },
   methods: {
-    click() {
-      alert("클릭함~~");
+    socialLogin() {
+      const url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' +
+      process.env.VUE_APP_GOOGLE_CLIENT_ID +
+      '&redirect_uri=' +
+      process.env.VUE_APP_GOOGLE_REDIRECT_URL +
+      '&response_type=code' +
+      '&scope=email profile';
+
+      location.href = url;
     }
   }
 };

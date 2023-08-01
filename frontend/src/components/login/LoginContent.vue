@@ -66,7 +66,7 @@ export default {
   display: flex;
   height: 70px;
   padding: 10px 40px;
-  background-color: var(--color-tarot);
+  background-color: #BFAEE5;
   border-radius: 10px 10px 0px 0px;
   align-items: center;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
@@ -104,7 +104,7 @@ export default {
 }
 
 .logo-typo2 {
-  color: var(--color-tarot);
+  color: #BFAEE5;
   font-family: Noto Sans KR;
   font-size: 24px;
   font-style: normal;
