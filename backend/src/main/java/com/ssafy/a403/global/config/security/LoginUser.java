@@ -3,7 +3,7 @@ package com.ssafy.a403.global.config.security;
 import java.util.Collection;
 import java.util.Map;
 
-import com.ssafy.a403.global.config.security.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Member;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -13,19 +13,19 @@ import lombok.Getter;
 @Getter
 public class LoginUser implements UserDetails, OAuth2User {
 
-	private final User user;
+	private final Member member;
     private final Map<String, Object> attribute;
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public LoginUser(User user, Map<String, Object> attribute, Collection<? extends GrantedAuthority> authorities) {
-        this.user = user;
+    public LoginUser(Member member, Map<String, Object> attribute, Collection<? extends GrantedAuthority> authorities) {
+        this.member = member;
         this.attribute = attribute;
         this.authorities = authorities;
     }
 
     @Override
     public String getName() {
-        return user.getId().toString();
+        return member.getName();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LoginUser implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return user.getId().toString();
+        return Long.toString(member.getNo());
     }
 
     @Override
@@ -65,7 +65,7 @@ public class LoginUser implements UserDetails, OAuth2User {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return member.getIsActive();
     }
 
 }

@@ -1,6 +1,6 @@
 package com.ssafy.a403.domain.article.entity;
 
-import com.ssafy.a403.domain.user.entity.User;
+import com.ssafy.a403.domain.member.entity.Member;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -19,8 +19,8 @@ public class Article {
     private int articleNo;
 
     @ManyToOne
-    @JoinColumn(name = "user_no")
-    private User user;
+    @JoinColumn(name = "member_no")
+    private Member member;
 
 //    @Enumerated(EnumType.STRING)
     private String category;
@@ -35,8 +35,8 @@ public class Article {
     private LocalDateTime articleDate;
 
     @Builder
-    public Article(User user, String category, String articleTitle, String articleContent, LocalDateTime articleDate){
-        this.user = user;
+    public Article(Member member, String category, String articleTitle, String articleContent, LocalDateTime articleDate){
+        this.member = member;
         this.category = category;
         this.articleTitle = articleTitle;
         this.articleContent = articleContent;

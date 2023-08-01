@@ -1,6 +1,6 @@
 package com.ssafy.a403.domain.admin.service;
 
-import com.ssafy.a403.domain.user.dto.FormResponse;
+import com.ssafy.a403.domain.member.dto.FormResponse;
 
 import java.util.List;
 
