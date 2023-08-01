@@ -1,6 +1,7 @@
 package com.ssafy.a403.domain.reservation.entity;
 
 import com.ssafy.a403.domain.member.entity.Member;
+import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
 import lombok.Getter;
@@ -31,13 +32,11 @@ public class CounselingReservation {
     private LocalDateTime reservationDateTime;
 
     @Column(name="rez_status")
+    @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
     @Column(name="rez_url")
-    private String reservationURL;
-
-    @Column(name="rez_review_status")
-    private Boolean reservationReviewStatus;
+    private String sessionId;
 
     @Column(name="rez_review")
     private String reservationReview;
@@ -45,21 +44,26 @@ public class CounselingReservation {
     @Column(name="rez_report")
     private String reservationReport;
 
+    @Column(name="rez_report_status")
+    @Enumerated(EnumType.STRING)
+    private ReportStatus reportStatus;
+
     @Column(name="rez_recorded")
     private String reservationRecorded;
 
 
     @Builder
-    public CounselingReservation(Member member, Member counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String reservationURL, Boolean reservationReviewStatus, String reservationReview, String reservationReport, String reservationRecorded) {
+    public CounselingReservation(Long reservationNo, Member member, Member counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
+                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded) {
+        this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
         this.reservationDateTime = reservationDateTime;
         this.reservationStatus = reservationStatus;
-        this.reservationURL = reservationURL;
-        this.reservationReviewStatus = reservationReviewStatus;
+        this.sessionId = sessionId;
         this.reservationReview = reservationReview;
         this.reservationReport = reservationReport;
+        this.reportStatus = reportStatus;
         this.reservationRecorded = reservationRecorded;
     }
 
