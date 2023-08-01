@@ -57,8 +57,7 @@ export default {
 
 <style lang="scss">
 .modal-container {
-  width: 500px;
-  height: 550px;
+  min-height: 500px;
   background-color: white;
   border-radius: 10px;
 }
@@ -89,7 +88,7 @@ export default {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 30px 50px;
+  margin: 10px 50px;
   gap: 30px;
 }
 
