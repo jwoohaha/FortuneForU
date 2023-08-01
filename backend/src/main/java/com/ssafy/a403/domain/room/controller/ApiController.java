@@ -1,18 +1,19 @@
 package com.ssafy.a403.domain.room.controller;
 
+import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
+import com.ssafy.a403.domain.room.dto.RoomRequest;
 import com.ssafy.a403.domain.room.dto.RoomResponse;
+import com.ssafy.a403.domain.room.service.RoomService;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.PostConstruct;
+import javax.servlet.http.HttpServletRequest;
 import java.util.UUID;
 
 @CrossOrigin(origins = "*")
@@ -29,11 +30,14 @@ public class ApiController {
 
     private OpenVidu openVidu;
 
+    private final RoomService roomService;
+
     @PostConstruct
     public void init(){ this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET); }
 
+    //방 생성
     @PostMapping("/api/roomsession")
-    public ResponseEntity<?> makeRoomSession()
+    public ResponseEntity<?> makeRoomSession(@RequestBody RoomRequest roomRequest, HttpServletRequest request)
             throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 만들기 시작----------------------");
@@ -49,14 +53,21 @@ public class ApiController {
 
         Session session = openVidu.createSession(properties);
 
+        CounselingReservation counselingReservation = roomService.saveRoom(roomRequest, sessionId);
+
+        if (session == null || counselingReservation.getSessionId() == null) {
+            log.info("방 생성 실패");
+        }
+
         //방생성 예약DB에 저장 후 반환
         RoomResponse roomResponse = RoomResponse.builder()
-                        .roomId(sessionId)
+                        .sessionId(sessionId)
                         .build();
 
         return new ResponseEntity<>(roomResponse, HttpStatus.OK);
     }
 
+    //방 입장하기
     @PostMapping("/api/sessions/{sessionId}/connections")
     public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException{
@@ -81,6 +92,9 @@ public class ApiController {
     }
 
 
+    //방 삭제하기
+
+    //영상 저장하기
 
 
 
