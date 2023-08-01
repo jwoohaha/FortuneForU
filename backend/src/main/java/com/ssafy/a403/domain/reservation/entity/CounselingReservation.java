@@ -32,6 +32,7 @@ public class CounselingReservation {
     private LocalDateTime reservationDateTime;
 
     @Column(name="rez_status")
+    @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
 
     @Column(name="rez_url")
@@ -44,6 +45,7 @@ public class CounselingReservation {
     private String reservationReport;
 
     @Column(name="rez_report_status")
+    @Enumerated(EnumType.STRING)
     private ReportStatus reportStatus;
 
     @Column(name="rez_recorded")
