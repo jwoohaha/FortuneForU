@@ -1,0 +1,75 @@
+# Server Setting
+server:
+  port: 5000
+  ssl:
+    enabled: false
+
+spring:
+  # RabbitMQ
+  main:
+    banner-mode: off
+  zipkin:
+    enabled: false
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
+  template:
+    exchange:
+      name: externalApiExchange
+      type: direct
+
+  # Swagger
+  mvc:
+    pathmatch:
+      matching-strategy: ant_path_matcher
+
+  # MariaDB
+  datasource:
+    driver-class-name: org.mariadb.jdbc.Driver
+    url: jdbc:mariadb://i9a403.p.ssafy.io/soyun
+    username: root
+    password: 1234
+
+  # JPA
+  jpa:
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        show_sql: true
+
+  # Security
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 576948301615-8ufadev53dgsclrt6ssobvbnmksbg2cl.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile,email  # 받아올 범위
+
+# RabbitMQ Alias
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health, prometheus
+
+# Openvidu Alias
+OPENVIDU_URL: http://localhost:4443/
+OPENVIDU_SECRET: MY_SECRET
+
+# JWT Alias
+jwt:
+  access-header: Authorization
+  refresh-header: Refresh
+  secret: fortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforu
+
+# Client Alias
+client:
+  host: localhost
+  url: http://localhost:8080
+  endpoint: /success
