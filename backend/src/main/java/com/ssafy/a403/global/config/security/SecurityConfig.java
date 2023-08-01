@@ -54,7 +54,7 @@ public class SecurityConfig {
                                         .anyRequest().authenticated())
                 .oauth2Login(setOAuth2Config())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)   // why?
                 .csrf().disable()
                 .cors()
                 .configurationSource(corsConfigurationSource())
@@ -64,7 +64,7 @@ public class SecurityConfig {
 
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> setOAuth2Config() {
         return o ->
-                o.authorizationEndpoint(auth -> auth.baseUri("/auth2/authorize"))
+                o.authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize"))
                         .userInfoEndpoint(e -> e.userService(oAuth2UserService))
                         .successHandler(successHandler);
     }
@@ -72,7 +72,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin(clientUrl);
+        configuration.addAllowedOrigin("*");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
