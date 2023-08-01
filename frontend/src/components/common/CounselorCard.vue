@@ -12,17 +12,17 @@
         <p class="card-txt">Unforgiven, I'm a villain, I'm a-Unforgiven, 난 그 길을 걸어Unforgiven, I'm a villain, I'm a-새 시대로 기억될 unforgivenYeah, what you want?불편함이 깃든 face, wanna shut me up
 사냥감을 거듭해 찾는 워리어S너의 개임에 난 문제아 such a freak 골칫거리</p>
         <div class="btn">
-            <ResButton></ResButton>
+            <RoundButton isTarot>예약</RoundButton>
         </div>
     </div>
 </template>
 
 <script>
-import ResButton from './ResButton.vue';
+import { RoundButton } from "../styled-components/StyledButton";
 
 export default {
   components: {
-    ResButton,
+    RoundButton,
   },
   props: {
     counselor: {

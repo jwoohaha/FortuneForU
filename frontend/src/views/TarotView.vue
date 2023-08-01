@@ -22,7 +22,7 @@
               <div>
                 <i class="bi bi-search"></i>
               </div>
-              <div class="search-btn">검색</div>
+              <RoundButton isTarot>검색</RoundButton>
             </div>
           
           </div>
@@ -58,11 +58,13 @@
 <script>
 import CounselorCard from '../components/common/CounselorCard.vue';
 import PageButton from '../components/common/PageButton.vue';
+import { RoundButton } from "../components/styled-components/StyledButton";
 
 export default {
   components: {
     CounselorCard,
-    PageButton
+    PageButton,
+    RoundButton
   },
   data() {
     return {
@@ -150,23 +152,6 @@ input {
   position: absolute;
   left: 10px;
   top: 20px;
-}
-.search-btn {
-  display: flex;
-  height: 40px;
-  padding: 7px 23px;
-  justify-content: center;
-  align-items: center;
-  border-radius: 100px;
-  background: #BFAEE5;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-  color: #FFF;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  white-space: nowrap;
-  box-sizing: border-box;
 }
 .filter {
   width: 70%;
