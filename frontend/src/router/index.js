@@ -20,6 +20,11 @@ const routes = [
     path: '/community',
     name: 'community',
     component: () => import(/* webpackChunkName: "community" */ '../views/CommunityView.vue')
+  },
+  {
+    path: '/reservation',
+    name: 'reservation',
+    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
   }
 ]
 

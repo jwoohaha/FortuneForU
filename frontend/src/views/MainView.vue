@@ -155,8 +155,8 @@ export default {
 }
 </script>
 
-<style lang="scss">
-@import "../assets/scss/color.scss";
+<style lang="scss" scoped="scss">
+// @import "../assets/scss/color.scss";
 
 .boxgroup {
   height: 535px;
@@ -185,10 +185,10 @@ export default {
   line-height: normal;
 }
 #box1 {
-  background-color: var(--color-saju);
+  background-color: #F6B5C6;
 }
 #box2 {
-  background-color: var(--color-tarot);
+  background-color: #BFAEE5;
 }
 #box3 {
   background-color: #50E6F6;
@@ -213,26 +213,30 @@ export default {
   text-align: left;
 }
 #part1-txt1 {
-  color: var(--title-text);
+  color: #333;
   font-size: 2.25em;
   margin-bottom: 30px;
   font-weight: 700;
   line-height: normal;
 }
 #part-txt-pink {
-  color: var(--color-saju);
+  color: #F6B5C6;
 }
 #part-txt-purple {
-  color: var(--color-tarot);
+  color: #BFAEE5;
 }
 #part-txt-blue {
   color:  #50E6F6;
 }
 #part1-txt2 {
   font-size: 1.7em;
-  color: var(--body-text, #666);
+  color: #666;
   font-weight: 700;
   line-height: normal;
+}
+#part1 img {
+  background-color: transparent;
+  background: transparent;
 }
 img {
   height: 220px;
@@ -286,7 +290,7 @@ li {
   width: 70px;
   height: 70px;
   border-radius: 70px;
-  border: 1px solid var(--bg-gray, #F7F7F7);
+  border: 1px solid #F7F7F7;
   background: lightgray 50% / cover no-repeat;
   margin-right: 21px;
 }
@@ -299,7 +303,7 @@ hr {
   width: 222px;
   height: 80px;
   overflow: hidden;
-  color: var(--title-text);
+  color: #333;
   text-overflow: ellipsis;
   /* body1 */
   font-size: 16px;
@@ -308,7 +312,7 @@ hr {
   line-height: normal;
 }
 #card-name { 
-  color: var(--title-text);
+  color: #333;
   text-align: center;
   /* subheading */
   font-size: 17px;
@@ -319,7 +323,7 @@ hr {
   margin-bottom: 7px;
 }
 #card-score {
-  color: var(--title-text);
+  color: #333;
   text-align: center;
   /* caption */
   font-size: 12px;
@@ -338,7 +342,7 @@ hr {
 }
 .part3-txt {
   font-size: 2.25em;
-  color: var(--title-text);
+  color: #333;
   font-style: normal;
   font-weight: 700;
   line-height: normal;
@@ -348,6 +352,8 @@ hr {
 .review-img {
   height: 466px;
   width: 766px;
+  background-color: transparent;
+  background: transparent;
 }
 #part4{
   height: 840px;
@@ -371,7 +377,7 @@ hr {
   width: 169px;
   gap: 10px;
   border-radius: 10px;
-  background: var(--title-text);
+  background: #333;
   color: white;
   margin-top: 40px;
   font-size: 16px;
