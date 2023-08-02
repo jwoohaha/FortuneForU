@@ -1,7 +1,7 @@
 <template>
     <div class="review-card">
         <div class="upper-content">
-            <img class="card-img" src="src/assets/dummy_counselor_img.jpg">
+            <img class="card-img" src="https://a-static.besthdwallpaper.com/huh-yunjin-le-sserafim-kpop-girls-group-wallpaper-2048x1536-99987_26.jpg">
             <div class="card-info">
                 <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.rating }}</span> </p>
                 <p class="card-txt">Unforgiven, I'm a villain, I'm a-Unforgiven, 난 그 길을 걸어 Unforgiven, I'm a villain</p>
@@ -30,8 +30,6 @@ export default {
     border-radius: 10px;
     border: 1px solid #D9D9D9;
     background: #FFF;
-    //margin: 39px 36px 39px 37px;
-    //margin-top: 304px;
     justify-content: space-between;
     padding: 22px 14px;
     box-sizing: border-box;
@@ -48,7 +46,7 @@ export default {
     margin-right: 21px;
 }
 .card-txt {
-    width: 302px;
+    width: 100%;
     height: 138px;
     overflow: hidden;
     color: var(--title-text);
