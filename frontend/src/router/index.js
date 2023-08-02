@@ -29,7 +29,22 @@ const routes = [
   {
     path: '/mypage',
     name: 'mypage',
-    component: () => import(/* webpackChunkName: "mypage" */ '../views/MypageView.vue')
+    component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage/MypageView.vue')
+  },
+  {
+    path: '/mypage/reservationlist',
+    name: 'reservationlist',
+    component: () => import(/* webpackChunkName: "reservationlist" */ '../views/Mypage/MypageView_myreservationlist.vue')
+  },
+  {
+    path: '/mypage/counslingresult',
+    name: 'counslingresult',
+    component: () => import(/* webpackChunkName: "counslingresult" */ '../views/Mypage/MypageView_counselingresult.vue')
+  },
+  {
+    path: '/mypage/review',
+    name: 'review',
+    component: () => import(/* webpackChunkName: "review" */ '../views/Mypage/MypageVue_myreview.vue')
   }
 ]
 

@@ -13,10 +13,10 @@
                     <div class="profile-img"></div>
                     <SquareButton>프로필 사진 변경</SquareButton>
                     <ul class="nav-menu">
-                        <li> | 개인 정보 수정</li>
-                        <li> | 나의 예약 목록</li>
-                        <li> | 상담 결과</li>
-                        <li> | 나의 후기</li>
+                        <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
+                        <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
+                        <router-link to="/mypage/counslingresult"><li> | 상담 결과</li></router-link> 
+                        <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
                     </ul>
                 </div>
                 <div class="userinfo-part">
@@ -60,53 +60,28 @@
                     <div class="like-box">
                         <i class="bi bi-chevron-compact-left"></i>
                         <div class="like-list">
-                            <div class="review-section">
-                                <div v-for="counselor in counselors" :key="counselor.id">
-                                    <ReviewCard :counselor="counselor"></ReviewCard>
-                                </div>
+                            <div v-for="counselor in counselors" :key="counselor.id">
+                                <ReviewCard :counselor="counselor" id="reviewcard"></ReviewCard>
                             </div>
-                            <!-- <div class="each-like">각카드</div> -->
-                            <!-- <div class="each-like">각카드</div>
-                            <div class="each-like">각카드</div>
-                            <div class="each-like">각카드</div>
-                            <div class="each-like">각카드</div> -->
                         </div>
 
-                        <p class="h1 mb-2" style="color: #333; "><i class="bi bi-chevron-compact-right"></i></p>
+                        <i class="bi bi-chevron-compact-right"></i>
                     </div>
                 </div>
             </div>
 
-            <div class="mypage-contents">
-                <div class="profile-nav">
-                    <div class="profile-img"></div>
-                    <SquareButton>프로필 사진 변경</SquareButton>
-                    <ul class="nav-menu">
-                        <li> | 개인 정보 수정</li>
-                        <li> | 나의 예약 목록</li>
-                        <li> | 상담 결과</li>
-                        <li> | 나의 후기</li>
-                    </ul>
-                </div>
-
-                <div class="res-list-part">
-                    <div class="table-header"></div>
-                    <div class="table-contents"></div>
-                    <div class="paging"></div>
-                </div>
-            </div>
         </div>
     </div>
 </template>
 
 <script>
-import { SquareButton } from "../components/styled-components/StyledButton";
-import { ReviewCard } from "../components/common/ReviewCard";
+import { SquareButton } from "../../components/styled-components/StyledButton";
+import ReviewCard from '../../components/common/ReviewCard.vue';
 
 export default {
     components: {
         SquareButton,
-        ReviewCard
+        ReviewCard,
   },
   data() {
     return {
@@ -131,7 +106,7 @@ export default {
   height: 92px;
 }
 .mypage-area{
-    height: 1000px;
+    height: 900px;
     width: 1273px;
     margin-top: 96px;
     // margin-left: 15%;
@@ -291,9 +266,11 @@ export default {
     align-items: center;
 }
 .like-list{
-    height: 480;
+    height: 480px;
     width: 344px;
-    background-color: rebeccapurple;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
 }
 .each-like{
     height: 84px;
@@ -303,27 +280,11 @@ i{
     width: 13.911px;
     height: 25px;
 }
-.bi-chevron-compact-left {
-  color: red($color: #f09723);
-  width: 13.911px;
-  height: 25px;
+
+#reviewcard{
+    // width: 344px;
+    width: 100%;
+    margin-bottom: 5px;
 }
-.bi-chevron-compact-right {
-  color: red($color: #f02361);
-  width: 13.911px;
-  height: 25px;
-}
-.review-section {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 15px;
-}
-.res-list-part{
-    height: 552px;
-    width: 1021px;
-    border-radius: 10px;
-    border: 1px solid #D9D9D9;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
-}
+
 </style>
