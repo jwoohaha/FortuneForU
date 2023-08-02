@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import java.util.Optional;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class RoomCreateTest {
@@ -26,7 +28,7 @@ public class RoomCreateTest {
     }
 
     @Test
-    public void createSession() throws Exception {
+    public void createSession(){
         //given
         Long reservationNo = 3l;
         String sessionId = "sessionId";
@@ -38,14 +40,25 @@ public class RoomCreateTest {
 
         counselingReservationRepository.save(counselingReservation);
 
-//        CounselingReservation counseling = counselingReservationRepository.findById(reservationNo).orElseThrow(
-//                () -> new Exception());
-//
-//        String getSessionId = counseling.getSessionId();
-//
-//        logger.info(getSessionId);
+        Optional<CounselingReservation> counselingInfo = counselingReservationRepository.findById(reservationNo);
+
+        System.out.println(counselingInfo);
     }
 
+    @Test
+    public void enterSession() throws Exception {
+        //given
+//        Long reservationNo = 3l;
+//
+//        CounselingReservation counseling = counselingReservationRepository.findById(reservationNo).orElseThrow(
+//                () -> new Exception()
+//        );
+//
+//        String sessionId = counseling.getSessionId();
+//
+//        logger.info(sessionId);
+
+    }
 
 
 }

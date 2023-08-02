@@ -28,6 +28,7 @@ public class ApiController {
     @Value("${OPENVIDU_SECRET}")
     private String OPENVIDU_SECRET;
 
+
     private OpenVidu openVidu;
 
     private final RoomService roomService;
@@ -45,21 +46,35 @@ public class ApiController {
         //랜덤 sessionId 생성
         String sessionId = UUID.randomUUID().toString();
 
+        //생성시 recording 추가
+//        RecordingProperties recordingProperties = new RecordingProperties.Builder()
+//                .outputMode(Recording.OutputMode.COMPOSED)
+//                .resolution("640*480")
+//                .frameRate(24)
+//                .hasAudio(true)
+//                .hasVideo(false)
+//                .build();
+
         //session생성
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
+//                                            .recordingMode(RecordingMode.MANUAL)
+//                                            .defaultRecordingProperties(recordingProperties)
                                             .customSessionId(sessionId)
                                             .build();
 
         Session session = openVidu.createSession(properties);
 
+        log.info("sessionId : " + session.getSessionId());
+
+        //방 생성 예약DB에 저장
         CounselingReservation counselingReservation = roomService.saveRoom(roomRequest, sessionId);
 
         if (session == null || counselingReservation.getSessionId() == null) {
             log.info("방 생성 실패");
         }
 
-        //방생성 예약DB에 저장 후 반환
+        //sessionId를 response로 반환
         RoomResponse roomResponse = RoomResponse.builder()
                         .sessionId(sessionId)
                         .build();
@@ -93,8 +108,34 @@ public class ApiController {
 
 
     //방 삭제하기
+    @DeleteMapping("/api/sessions/{sessionId}")
+    public ResponseEntity<?> deleteRoom(@PathVariable("sessionId") String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
 
-    //영상 저장하기
+        log.info("---------------------방 삭제-----------------------");
+
+        CounselingReservation counselingReservation = roomService.findBySessionId(sessionId);
+
+//        String recordingId = counselingReservation.getReservationRecorded();
+
+        //sessionID DB상에서 삭제
+        Long reservationNo = counselingReservation.getReservationNo();
+
+//        RoomService.deleteSessionIdByReservationNo(reservationNo);
+
+        //Session close
+        Session session = openVidu.getActiveSession(sessionId);
+
+        if(session != null) {
+            openVidu.getActiveSession(sessionId).close();
+            log.info("방 삭제 완료");
+        }
+
+        //녹화 종료 및 저장
+//        Recording recording = openVidu.stopRecording(recordingId);
+
+        return new ResponseEntity<>(HttpStatus.OK);
+
+    }
 
 
 

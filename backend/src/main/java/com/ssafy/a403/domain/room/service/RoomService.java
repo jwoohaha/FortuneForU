@@ -26,4 +26,22 @@ public class RoomService {
         return counselingReservationRepository.save(counselingReservation);
 
     }
+
+    public CounselingReservation findBySessionId(String sessionId) {
+
+        CounselingReservation counselingReservation = counselingReservationRepository.findBySessionId(sessionId);
+
+        return counselingReservation;
+
+    }
+
+    public static void deleteSessionIdByReservationNo(Long reservationNo) {
+
+
+
+    }
+
+
+
+
 }
