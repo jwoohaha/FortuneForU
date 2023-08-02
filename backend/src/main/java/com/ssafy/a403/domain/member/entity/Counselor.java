@@ -13,8 +13,13 @@ import javax.persistence.*;
 public class Counselor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "counselor_no")
     private Long no;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="member_no")
+    private Member member;
 
     @Enumerated(EnumType.STRING)
     private CounselorType counselorType;
