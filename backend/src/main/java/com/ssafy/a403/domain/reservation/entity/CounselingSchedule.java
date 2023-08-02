@@ -15,7 +15,7 @@ public class CounselingSchedule {
 
     @Id
     @JoinColumn(name="userNo")
-    private int userNo;
+    private Long userNo;
 
     private String mon;
 

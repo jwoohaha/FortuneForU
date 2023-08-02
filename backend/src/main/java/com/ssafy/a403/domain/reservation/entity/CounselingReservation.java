@@ -1,5 +1,6 @@
 package com.ssafy.a403.domain.reservation.entity;
 
+import com.ssafy.a403.domain.model.ReservationStatus;
 import com.ssafy.a403.domain.user.entity.User;
 import lombok.Builder;
 import lombok.Getter;
@@ -18,19 +19,20 @@ public class CounselingReservation {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long reservationNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_id")
     private User user;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "counselor_id")
     private User counselor;
 
     @Column(name="rez_time")
     private LocalDateTime reservationDateTime;
 
+    @Enumerated(EnumType.STRING)
     @Column(name="rez_status")
-    private String reservationStatus;
+    private ReservationStatus reservationStatus;
 
     @Column(name="rez_url")
     private String reservationURL;
@@ -49,8 +51,9 @@ public class CounselingReservation {
 
 
     @Builder
-    public CounselingReservation(User user, User counselor, LocalDateTime reservationDateTime, String reservationStatus,
+    public CounselingReservation(Long reservationNo, User user, User counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
                                  String reservationURL, Boolean reservationReviewStatus, String reservationReview, String reservationReport, String reservationRecorded) {
+        this.reservationNo = reservationNo;
         this.user = user;
         this.counselor = counselor;
         this.reservationDateTime = reservationDateTime;
@@ -61,5 +64,15 @@ public class CounselingReservation {
         this.reservationReport = reservationReport;
         this.reservationRecorded = reservationRecorded;
     }
+
+//    주문 취소
+    public void cancel() {
+        if (reservationDateTime.isAfter(LocalDateTime.now())) {
+            this.reservationStatus = ReservationStatus.Cancel;
+        } else {
+            throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
+        }
+    }
+
 
 }

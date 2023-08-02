@@ -18,7 +18,7 @@ public class Article {
     @Column(name="article_no")
     private int articleNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "user_no")
     private User user;
 
