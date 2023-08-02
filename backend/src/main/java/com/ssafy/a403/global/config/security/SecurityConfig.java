@@ -50,7 +50,8 @@ public class SecurityConfig {
                                                 "/swagger-ui.html",
                                                 "/webjars/**",
                                                 "/v3/api-docs/**",
-                                                "/swagger-ui/**").permitAll()
+                                                "/swagger-ui/**",
+                                                "/auth").permitAll()
                                         .anyRequest().authenticated())
                 .oauth2Login(setOAuth2Config())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
@@ -72,7 +73,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.addAllowedOrigin("*");
+        configuration.addAllowedOrigin(clientUrl);
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
