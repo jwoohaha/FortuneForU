@@ -1,11 +1,12 @@
 package com.ssafy.a403.domain.reservation.controller;
 
+import com.ssafy.a403.domain.reservation.dto.ScheduleResponse;
+import com.ssafy.a403.domain.reservation.dto.UpdateScheduleRequest;
 import com.ssafy.a403.domain.reservation.entity.CounselingSchedule;
 import com.ssafy.a403.domain.reservation.service.CounselingScheduleService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
 
 @RestController
@@ -14,9 +15,23 @@ public class CounselingScheduleController {
 
     private final CounselingScheduleService counselingScheduleService;
 
-    // Todo: 권한 추가
-    @GetMapping("/counselor/time/{memberNo}")
-    public CounselingSchedule getCounselingSchedule(@PathVariable("memberNo") Long id) {
-        return counselingScheduleService.findOne(id);
+
+    /**
+     * 상담 가능 시간 조회
+     */
+    @GetMapping("/counselor/time/{counselorNo}")
+    public ResponseEntity<ScheduleResponse> getCounselingSchedule(@PathVariable("counselorNo") Long counselorNo) {
+        CounselingSchedule scheduleResponse = counselingScheduleService.findByCounselorNo(counselorNo);
+        return ResponseEntity.ok(ScheduleResponse.from(scheduleResponse));
+    }
+
+    /**
+     * 상담 가능 시간 수정
+     */
+    @PatchMapping("/counselor/time/update")
+    public ResponseEntity<ScheduleResponse> updateCounselingSchedule(
+            @RequestBody UpdateScheduleRequest updateScheduleRequest) {
+        CounselingSchedule scheduleResponse = counselingScheduleService.updateSchedule(updateScheduleRequest);
+        return ResponseEntity.ok(ScheduleResponse.from(scheduleResponse));
     }
 }
