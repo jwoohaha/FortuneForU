@@ -8,6 +8,7 @@
         <router-link to="/community">커뮤니티</router-link>
       </nav>
       <button @click="click()">로그인</button>
+      <router-link to="/mypage"><button>마이페이지</button></router-link>
     </div>
   </header>
 </template>
