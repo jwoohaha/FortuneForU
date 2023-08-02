@@ -25,7 +25,7 @@ public class LoginUser implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return member.getName();
+        return member.getNo().toString();
     }
 
     @Override
@@ -45,7 +45,7 @@ public class LoginUser implements UserDetails, OAuth2User {
 
     @Override
     public String getUsername() {
-        return Long.toString(member.getNo());
+        return member.getNo().toString();
     }
 
     @Override
