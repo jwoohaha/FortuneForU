@@ -25,6 +25,11 @@ const routes = [
     path: '/reservation',
     name: 'reservation',
     component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
+  },
+  {
+    path: '/redirect',
+    name: 'login',
+    component: () => import('../views/RedirectView.vue')
   }
 ]
 

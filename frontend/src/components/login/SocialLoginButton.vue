@@ -12,12 +12,7 @@ export default {
   },
   methods: {
     socialLogin() {
-      const url = 'https://accounts.google.com/o/oauth2/v2/auth?client_id=' +
-      process.env.VUE_APP_GOOGLE_CLIENT_ID +
-      '&redirect_uri=' +
-      process.env.VUE_APP_GOOGLE_REDIRECT_URL +
-      '&response_type=code' +
-      '&scope=email profile';
+      const url = 'http://localhost:5000/oauth2/authroize/google';
 
       location.href = url;
     }
