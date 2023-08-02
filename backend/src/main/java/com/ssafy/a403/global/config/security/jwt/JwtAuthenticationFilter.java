@@ -37,8 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        Optional<String> token = Optional.ofNullable(getTokensFromHeader(request));
-        
+        Optional<String> token = Optional.ofNullable(getTokensFromCookies(request.getCookies()));
+        log.trace("Token: {}", token);
         token.ifPresent(
                 t -> {
                 	log.info("AccessToken: {}", t);
