@@ -21,7 +21,7 @@ public class CounselingScheduleController {
      */
     @GetMapping("/counselor/time/{counselorNo}")
     public ResponseEntity<ScheduleResponse> getCounselingSchedule(@PathVariable("counselorNo") Long counselorNo) {
-        CounselingSchedule scheduleResponse = counselingScheduleService.findByCounselorNo(counselorNo);
+        CounselingSchedule scheduleResponse = counselingScheduleService.getSchedule(counselorNo);
         return ResponseEntity.ok(ScheduleResponse.from(scheduleResponse));
     }
 

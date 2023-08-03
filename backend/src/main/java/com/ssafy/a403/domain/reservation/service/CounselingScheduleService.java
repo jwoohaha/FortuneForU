@@ -21,7 +21,7 @@ public class CounselingScheduleService {
      * @param memberNo
      * @return
      */
-    public CounselingSchedule findByCounselorNo(Long memberNo) {
+    public CounselingSchedule getSchedule(Long memberNo) {
         return counselingScheduleRepository.findByCounselorNo(memberNo).
                 orElseThrow(EntityNotFoundException::new);
     }
@@ -40,10 +40,14 @@ public class CounselingScheduleService {
     /**
      * 상담 가능 시간 변경
      */
+    @Transactional
     public CounselingSchedule updateSchedule(UpdateScheduleRequest request) {
         CounselingSchedule schedule = counselingScheduleRepository.findByCounselorNo(request.getCounselorNo()).
                 orElseThrow(EntityNotFoundException::new);
+
         schedule.updateCounselingSchedule(request);
+
+        counselingScheduleRepository.save(schedule);
 
         return counselingScheduleRepository.findByCounselorNo(request.getCounselorNo()).
                 orElseThrow(EntityNotFoundException::new);
