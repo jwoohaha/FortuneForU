@@ -16,8 +16,10 @@ public class ReservationRepository {
         em.persist(counselingReservation);
     }
 
-    public CounselingReservation findOne(Long id) {
+    public CounselingReservation findId(Long id) {
         return em.find(CounselingReservation.class, id);
     }
+
+
 
 }

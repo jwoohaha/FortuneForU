@@ -29,14 +29,12 @@ public class Member {
     @Column(unique = true)
     private String name;
 
-    private String birth;
-
     @ColumnDefault("true")
     private Boolean isActive;
 
     private String profileImage;
 
-    @OneToOne(mappedBy = "member_no")
+    @OneToOne(mappedBy = "member")
     private Counselor counselor;
 
     @Embedded
@@ -48,12 +46,11 @@ public class Member {
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
     @Builder
-    public Member(Long no, String email, String name, String birth,
-                  String profileImage, String accountId, AuthProvider authProvider) {
+    public Member(Long no, String email, String name, String profileImage,
+                  String accountId, AuthProvider authProvider) {
         this.no = no;
         this.email = email;
         this.name = name;
-        this.birth = birth;
         this.profileImage = profileImage;
         this.oauth2 = new Oauth2(authProvider, accountId);
     }

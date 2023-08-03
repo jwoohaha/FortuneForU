@@ -33,9 +33,10 @@ public class Counselor {
     private String phone;
 
     @Builder
-    public Counselor(Long no, CounselorType counselorType, String major, String intro,
+    public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
                      String address, String phone) {
         this.no = no;
+        this.member = member;
         this.counselorType = counselorType;
         this.major = major;
         this.intro = intro;

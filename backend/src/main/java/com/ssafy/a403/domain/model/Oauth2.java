@@ -17,7 +17,7 @@ public class Oauth2 {
     @Enumerated(EnumType.STRING)
     private AuthProvider authProvider;
 
-    @Column(nullable = false, unique = true)
+    @Column(unique = true)
     private String accountId;
 
     public Oauth2(AuthProvider authProvider, String accountId) {

@@ -22,6 +22,7 @@ public class CounselingSchedule {
     @JoinColumn(name="counselor_no")
     private Counselor counselor;
 
+
     private String mon;
 
     private String tue;
@@ -35,7 +36,6 @@ public class CounselingSchedule {
     private String sat;
 
     private String sun;
-
 
     @Builder
     public CounselingSchedule(Counselor counselor, String mon, String tue, String wed, String thu, String fri, String sat, String sun){
