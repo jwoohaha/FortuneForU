@@ -31,10 +31,12 @@ spring:
 #    url: jdbc:mariadb://i9a403.p.ssafy.io/soyun
 #    username: root
 #    password: 1234
+
     url: jdbc:h2:tcp://localhost/~/test
     username: sa
     password:
     driver-class-name: org.h2.Driver
+
 
   # JPA
   jpa:

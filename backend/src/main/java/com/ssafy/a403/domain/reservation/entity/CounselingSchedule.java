@@ -17,6 +17,7 @@ public class CounselingSchedule {
     @JoinColumn(name="member_no")
     private int memberNo;
 
+
     private String mon;
 
     private String tue;
