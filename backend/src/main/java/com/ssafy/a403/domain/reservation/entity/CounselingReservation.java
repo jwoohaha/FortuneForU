@@ -5,6 +5,7 @@ import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -13,6 +14,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @NoArgsConstructor
+@ToString
 public class CounselingReservation {
 
     @Id
@@ -36,8 +38,6 @@ public class CounselingReservation {
     @Column(name="rez_url")
     private String reservationURL;
 
-    @Column(name="rez_review_status")
-    private Boolean reservationReviewStatus;
 
     @Column(name="rez_review")
     private String reservationReview;
@@ -49,21 +49,22 @@ public class CounselingReservation {
     private String reservationRecorded;
 
 
-    @Builder
+    @Builder(builderMethodName = "createReservation")
     public CounselingReservation(Member member, Member counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String reservationURL, Boolean reservationReviewStatus, String reservationReview, String reservationReport, String reservationRecorded) {
+                                 String reservationURL, String reservationReview, String reservationReport, String reservationRecorded) {
         this.member = member;
         this.counselor = counselor;
         this.reservationDateTime = reservationDateTime;
         this.reservationStatus = reservationStatus;
         this.reservationURL = reservationURL;
-        this.reservationReviewStatus = reservationReviewStatus;
         this.reservationReview = reservationReview;
         this.reservationReport = reservationReport;
         this.reservationRecorded = reservationRecorded;
     }
 
-    //    주문 취소
+
+
+    //  예약 취소
     public void cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
             this.reservationStatus = ReservationStatus.Cancel;
@@ -71,6 +72,4 @@ public class CounselingReservation {
             throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
         }
     }
-
-
 }

@@ -27,10 +27,14 @@ spring:
 
   # MariaDB
   datasource:
-    driver-class-name: org.mariadb.jdbc.Driver
-    url: jdbc:mariadb://i9a403.p.ssafy.io/soyun
-    username: root
-    password: 1234
+#    driver-class-name: org.mariadb.jdbc.Driver
+#    url: jdbc:mariadb://i9a403.p.ssafy.io/soyun
+#    username: root
+#    password: 1234
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
 
   # JPA
   jpa:
@@ -40,6 +44,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        dialect: org.hibernate.dialect.H2Dialect
 
   # Security
   security:
