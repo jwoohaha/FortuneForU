@@ -9,6 +9,7 @@
       </nav>
       <div v-if="tokenStore.isLoggedIn">
         <router-link to="/mypage"><button>마이페이지</button></router-link>
+        <router-link to="/counselor"><button>상담사전용</button></router-link>
       </div>
       <div v-else>
         <button @click="isModalVisible = true">로그인</button>
@@ -17,6 +18,8 @@
     <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
       <login-content />
     </modal-view>
+
+    </div>
   </header>
 </template>
 
@@ -95,5 +98,6 @@ button {
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  white-space: nowrap;
 }
 </style>
