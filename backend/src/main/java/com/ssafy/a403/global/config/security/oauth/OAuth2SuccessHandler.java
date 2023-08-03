@@ -32,6 +32,7 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
         String authToken = jwtSetupService.createAuthToken(loginUser);
+//        String authToken = jwtSetupService.addJwtTokensToCookie(response, loginUser);
         getRedirectStrategy().sendRedirect(request, response, clientUrl + redirectEndPoint + "?token=" + authToken);
     }
 

@@ -11,7 +11,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import lombok.Getter;
 
 @Getter
-public class LoginUser implements UserDetails, OAuth2User {
+public class LoginUser implements OAuth2User {
 
 	private final Member member;
     private final Map<String, Object> attribute;
@@ -25,7 +25,7 @@ public class LoginUser implements UserDetails, OAuth2User {
 
     @Override
     public String getName() {
-        return member.getName();
+        return member.getNo().toString();
     }
 
     @Override
@@ -37,35 +37,4 @@ public class LoginUser implements UserDetails, OAuth2User {
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return authorities;
     }
-
-    @Override
-    public String getPassword() {
-        return "password";
-    }
-
-    @Override
-    public String getUsername() {
-        return Long.toString(member.getNo());
-    }
-
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return member.getIsActive();
-    }
-
 }

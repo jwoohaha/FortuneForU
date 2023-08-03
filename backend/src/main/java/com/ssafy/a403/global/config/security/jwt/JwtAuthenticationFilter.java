@@ -19,6 +19,12 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+/**
+ * dispatcher servlet 이전에 실행되는 filter
+ * 헤더에서 access token 추출
+ * Authentication 검증
+ * SecurityContextHolder에 Authentication 등록
+ */
 @Slf4j
 @Component
 @RequiredArgsConstructor
@@ -32,7 +38,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Optional<String> token = Optional.ofNullable(getTokensFromHeader(request));
-        
+        log.trace("Token: {}", token);
         token.ifPresent(
                 t -> {
                 	log.info("AccessToken: {}", t);
