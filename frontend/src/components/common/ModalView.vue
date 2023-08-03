@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <div class="overlay" @click="$emit('close-modal')"></div>
+    <div class="modal-overlay" @click="$emit('close-modal')"></div>
     <modal-content modalWidth="3" modalHeight="1.2">
       <login-content></login-content>
     </modal-content>
@@ -8,7 +8,7 @@
 </template>
 
 <script>
-import { ModalContent } from "@/styled-components/components.js";
+import { ModalContent } from "@/components/styled-components/StyledModal.js";
 import LoginContent from "@/components/login/LoginContent.vue";
 
 export default {
@@ -21,15 +21,16 @@ export default {
 
 <style lang="scss">
 .modal,
-.overlay {
+.modal-overlay {
   width: 100%;
   height: 100%;
   position: fixed;
   left: 0;
   right: 0;
+  top: 0;
 }
 
-.overlay {
+.modal-overlay {
   opacity: 0.5;
   background-color: #000000;
 }

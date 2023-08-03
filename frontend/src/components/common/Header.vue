@@ -14,11 +14,9 @@
       <div v-else>
         <button @click="isModalVisible = true">로그인</button>
       </div>
-    </div>
     <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
       <login-content />
     </modal-view>
-
     </div>
   </header>
 </template>
