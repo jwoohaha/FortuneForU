@@ -7,7 +7,6 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
-import org.springframework.lang.Nullable;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 
 import javax.persistence.*;
@@ -30,17 +29,13 @@ public class Member {
     @Column(unique = true)
     private String name;
 
-    private String birth;
-
     @ColumnDefault("true")
     private Boolean isActive;
 
     private String profileImage;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @Nullable
-    @JoinColumn(name = "counselor_no")
-    private Counselor counselorInfo;
+    @OneToOne(mappedBy = "member")
+    private Counselor counselor;
 
     @Embedded
     private Oauth2 oauth2;
@@ -51,15 +46,12 @@ public class Member {
     private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
 
     @Builder
-    public Member(Long no, String email, String name, String birth,
-                  String profileImage, Counselor counselorInfo,
+    public Member(Long no, String email, String name, String profileImage,
                   String accountId, AuthProvider authProvider) {
         this.no = no;
         this.email = email;
         this.name = name;
-        this.birth = birth;
         this.profileImage = profileImage;
-        this.counselorInfo = counselorInfo;
         this.oauth2 = new Oauth2(authProvider, accountId);
     }
 
