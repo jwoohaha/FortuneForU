@@ -1,5 +1,5 @@
 <template>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">  
     <div class="mypage">
         <div class="empty-box"></div>
         <div class="mypage-area">
@@ -23,63 +23,74 @@
                         <router-link to="/counselor/counreview"><li id="coun"> | 후기 관리</li></router-link>
                     </ul>
                 </div>
-                <div class="my-review-part">
-                    <i class="bi bi-chevron-compact-left"></i>
-                    
-                    <div class="review-cards-section">
-                        <!-- 카드하나 -->
-                        <div class="review-card">
-                            <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                            <div class="coun-info">
-                                <div>이쟁점 ⭐ 4.5</div>
-                                <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                            </div>
-                            <div>✖</div>
+                
+                <div>
+                    <div class="get-count">상담 가능 시간 설정</div>
+                    <div class="time-info-part">
+                        <div class="datelabel-part">
+                            <ul>
+                                <li class="each-date">월요일</li>
+                                <li class="each-date">화요일</li>
+                                <li class="each-date">수요일</li>
+                                <li class="each-date">목요일</li>
+                                <li class="each-date">금요일</li>
+                                <li class="each-date">토요일</li>
+                                <li class="each-date">일요일</li>
+                            </ul>
                         </div>
-                            <!-- 카드 하나 -->
-                            <div class="review-card">
-                            <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                            <div class="coun-info">
-                                <div>이쟁점 ⭐ 4.5</div>
-                                <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                            </div>
-                            <div>✖</div>
-                        </div>
-                        <div class="review-card">
-                            <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                            <div class="coun-info">
-                                <div>이쟁점 ⭐ 4.5</div>
-                                <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                            </div>
-                            <div>✖</div>
-                        </div>
-                        <div class="review-card">
-                            <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                            <div class="coun-info">
-                                <div>이쟁점 ⭐ 4.5</div>
-                                <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                            </div>
-                            <div>✖</div>
-                        </div>
-                        <div class="review-card">
-                            <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                            <div class="coun-info">
-                                <div>이쟁점 ⭐ 4.5</div>
-                                <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                            </div>
-                            <div>✖</div>
-                        </div>
-                        <div class="review-card">
-                            <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                            <div class="coun-info">
-                                <div>이쟁점 ⭐ 4.5</div>
-                                <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                            </div>
-                            <div>✖</div>
+                        <div class="selected-part">
+                            <!-- 한줄 -->
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <!-- 한줄 -->
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton isClicked>00 : 00</TimeButton>
+                            <TimeButton isClicked>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>
+                            <TimeButton>00 : 00</TimeButton>                            
                         </div>
                     </div>
-
-                    <i class="bi bi-chevron-compact-right"></i>
                 </div>
 
             </div>
@@ -89,22 +100,19 @@
 </template>
     
 <script>
+import { TimeButton } from "../../components/styled-components/StyledButton";
 
 export default {
     components: {
+        TimeButton,
     },
     data() {
     return {
-        counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        ],
     };
     },
 }
 </script>
-
+    
 <style lang="scss" scoped="scss">
 
 .mypage {
@@ -119,6 +127,8 @@ export default {
     height: 900px;
     width: 1273px;
     margin-top: 96px;
+    // margin-left: 15%;
+    // margin-right: 15%;
 }
 .mypage-header { 
     height: 57px;
@@ -141,8 +151,6 @@ export default {
     width: 100%;
     margin-top: 81px;
     display: flex;
-    justify-content: space-around;
-    // background-color: red;
 }
 .profile-nav {
     height: 588px;
@@ -175,62 +183,66 @@ export default {
 .nav-menu #coun{
     color: #9C7AE7;
 }
-.my-review-part{
+    
+    
+.time-info-part{
     height: 552px;
-    width: 1021px;
+    width: 1080px;
     border-radius: 10px;
     background: #FCFAF1;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     display: flex;
-    justify-content: space-around;
-    align-items: center;
-    margin-left: 70px;
-    margin-top: 36px;
-}
-.review-cards-section {
-    width: 743px;
-    height: 500px;
-    display: flex;
-    flex-wrap: wrap;
     justify-content: space-between;
-}
-.review-card {
-    width: 344px;
-    height: 140px;
-    border-radius: 10px;
-    border: 1px solid #D7D7D7;
-    background: #FFF;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-    display: flex;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-.card-img {
-    width: 70px;
-    height: 70px;
-    border-radius: 70px;
-    border: 1px solid #F7F7F7;
-    background: lightgray 50% / cover no-repeat;
-    margin-right: 21px;
-}
-.coun-info {
-    color: #333;
-    text-align: center;
-    font-size: 16px;
+    font-size: 20px;
     font-style: normal;
-    font-weight: 700;
-    line-height: normal;
-    text-align: left;
-    margin-top: 10px;
-}
-.review-txt {
-    overflow: hidden;
-    color: #333;
-    text-overflow: ellipsis;
-    font-size: 12px;
+    font-weight: 400;
+    line-height: normal;    
+    padding: 44px 32px;
+    display: flex;
+    flex-direction: column;
+    margin-left: 100px;
+}   
+
+.get-count {
+    color: #000;
+    font-size: 25px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    margin-top: 5px;
+    text-align: left;
+    margin-bottom: 20px;
+    margin-left: 100px;
 }
+
+.datelabel-part > ul{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;   
+    color: #000;
+    text-align: center;
+    font-size: 25px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+.each-date{
+    padding: 5px 20px;
+    box-sizing: border-box;
+}
+
+.selected-part{
+    width: 100%;
+    height: 513px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    margin-top: 10px;
+    border-radius: 0px 20px 20px 20px;
+    border: 2px solid #D7D7D7;
+    background: #FFF;
+    padding: 20px 40px;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+}
+
 </style>

@@ -18,8 +18,9 @@
                         <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
                         <li id="coun"> 상담사 전용</li>
                         <router-link to="/counselor"><li id="coun"> | 상담사 정보 수정</li></router-link>
+                        <router-link to="/counselor/timeset"><li id="coun"> | 상담가능시간설정</li></router-link>
                         <router-link to="/counselor/counseling"><li id="coun"> | 상담 관리</li></router-link>
-                        <router-link to="/counselor/review"><li id="coun"> | 후기 관리</li></router-link>
+                        <router-link to="/counselor/counreview"><li id="coun"> | 후기 관리</li></router-link>
                     </ul>
                 </div>
                 
@@ -28,7 +29,7 @@
                     <div class="left-part">
                         <div class="each-row">
                             <h3 class="info-label">상담 분야</h3>
-                            <div>
+                            <div class="radio-btns">
                                 <label>
                                     <input type="radio" name="saju" value="saju" />
                                     <span class="radio-label">사주</span>
@@ -172,6 +173,8 @@ export default {
     line-height: normal;
     padding: 33px;
     box-sizing: border-box;
+    margin-left: 70px;
+    margin-top: 36px;
 }   
 .left-part {
     width: 547px;
@@ -179,8 +182,10 @@ export default {
     display: flex;
     flex-direction: column;
     justify-content: space-around;
+    padding-top: 20px;
 } 
 .info-label {
+    color: #000;
     font-size: 20px;
     font-style: normal;
     font-weight: 400;
@@ -192,6 +197,11 @@ export default {
     justify-content: space-between;
     align-items: center;
     padding-right: 30px;
+}
+.radio-btns{
+    width: 320px;
+    display: flex;
+    justify-content: space-around;
 }
 .radio-label{
     margin-left: 10px;
@@ -220,7 +230,7 @@ export default {
     box-sizing: border-box;
 }
 .right-part > .info-edit {
-    height: 80%;
+    height: 75%;
     align-items: start;
 }
 #edit-save-btn{

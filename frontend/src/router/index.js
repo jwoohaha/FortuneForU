@@ -57,6 +57,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "counseling" */ '../views/Mypage/CounselorView_counseling.vue')
   },
   {
+    path: '/counselor/timeset',
+    name: 'timeset',
+    component: () => import(/* webpackChunkName: "timeset" */ '../views/Mypage/CounselorView_timeset.vue')
+  },
+  {
     path: '/counselor/counreview',
     name: 'counreview',
     component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
