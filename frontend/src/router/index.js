@@ -44,7 +44,22 @@ const routes = [
   {
     path: '/mypage/review',
     name: 'review',
-    component: () => import(/* webpackChunkName: "review" */ '../views/Mypage/MypageVue_myreview.vue')
+    component: () => import(/* webpackChunkName: "review" */ '../views/Mypage/MypageView_myreview.vue')
+  },
+  {
+    path: '/counselor',
+    name: 'counselor',
+    component: () => import(/* webpackChunkName: "counselor" */ '../views/Mypage/CounselorView.vue')
+  },
+  {
+    path: '/counselor/counseling',
+    name: 'counseling',
+    component: () => import(/* webpackChunkName: "counseling" */ '../views/Mypage/CounselorView_counseling.vue')
+  },
+  {
+    path: '/counselor/counreview',
+    name: 'counreview',
+    component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
   }
 ]
 

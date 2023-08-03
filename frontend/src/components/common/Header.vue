@@ -9,6 +9,7 @@
       </nav>
       <button @click="click()">로그인</button>
       <router-link to="/mypage"><button>마이페이지</button></router-link>
+      <router-link to="/counselor"><button>상담사전용</button></router-link>
     </div>
   </header>
 </template>
@@ -79,5 +80,6 @@ button{
   font-style: normal;
   font-weight: 700;
   line-height: normal;
+  white-space: nowrap;
 }
 </style>
