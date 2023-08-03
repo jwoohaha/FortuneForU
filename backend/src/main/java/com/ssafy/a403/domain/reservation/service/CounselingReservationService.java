@@ -23,32 +23,33 @@ public class CounselingReservationService {
     private final CounselingReservationRepository reservationRepository;
 
     //예약하기
-    public Long reservation(Long memberId, Long counselorId, LocalDateTime reservationDate) {
-        // (예외)가능한 시간이 아니야
+//    public Long reservation(Long memberId, Long counselorId, LocalDateTime reservationDate) {
+//        // (예외)가능한 시간이 아니야
+//
+//
+//        Member member = memberRepository.findById(memberId).orElseThrow(
+//                () -> {
+//                    throw new IllegalArgumentException("존재하지 않는 회원입니다.");
+//                }
+//        );
+//        Member counselor = memberRepository.findById(counselorId).orElseThrow(
+//                () -> {
+//                    throw new IllegalArgumentException("존재하지 않는 상담가입니다.");
+//                }
+//        );
 
+//        builder 이름 설정
+//        CounselingReservation counselingReservation = CounselingReservation.createReservation()
+//                .member(member)
+//                .counselor(counselor)
+//                .reservationDateTime(reservationDate)
+//                .reservationStatus(ReservationStatus.Waiting)
+//                .build();
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> {
-                    throw new IllegalArgumentException("존재하지 않는 회원입니다.");
-                }
-        );
-        Member counselor = memberRepository.findById(counselorId).orElseThrow(
-                () -> {
-                    throw new IllegalArgumentException("존재하지 않는 상담가입니다.");
-                }
-        );
-
-        CounselingReservation counselingReservation = CounselingReservation.createReservation()
-                .member(member)
-                .counselor(counselor)
-                .reservationDateTime(reservationDate)
-                .reservationStatus(ReservationStatus.Waiting)
-                .build();
-
-        CounselingReservation savedReservation = counselingReservationRepository.save(counselingReservation);
-
-        return savedReservation.getReservationNo();
-    }
+//        CounselingReservation savedReservation = counselingReservationRepository.save(counselingReservation);
+//
+//        return savedReservation.getReservationNo();
+//    }
 
     // 일반회원 예약 조회
     public List<CounselingReservation> getReservation(Long memberId) {

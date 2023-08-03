@@ -18,15 +18,11 @@ public class Article {
     @Column(name="article_no")
     private int articleNo;
 
-<<<<<<< HEAD
     @ManyToOne
     @JoinColumn(name = "member_no")
     private Member member;
-=======
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_no")
-    private User user;
->>>>>>> b4b7c0a706fd0fa2bc6672e322f6c95753693c66
+
+
 
 //    @Enumerated(EnumType.STRING)
     private String category;
