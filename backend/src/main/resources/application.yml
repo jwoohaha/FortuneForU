@@ -51,8 +51,9 @@ spring:
       client:
         registration:
           google:
-            client-id: 576948301615-8ufadev53dgsclrt6ssobvbnmksbg2cl.apps.googleusercontent.com
-            client-secret: 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
+            client-id: 576948301615-rulk67ue42f71ef21f127k8it1leoltd.apps.googleusercontent.com
+            client-secret: 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
+            redirect-uri: "{baseUrl}/{action}/oauth2/code/{registrationId}"
             scope: profile,email  # 받아올 범위
 
 # RabbitMQ Alias
@@ -70,10 +71,18 @@ OPENVIDU_SECRET: MY_SECRET
 jwt:
   access-header: Authorization
   refresh-header: Refresh
-  secret: fortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforu
+  secret: fortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforufortuneforu
 
 # Client Alias
 client:
   host: localhost
   url: http://localhost:8080
-  endpoint: /success
+  endpoint: /redirect
+
+# Logging level
+logging:
+  level:
+    com:
+      ssafy:
+        a403:
+          global: trace

@@ -3,30 +3,46 @@
     <div class="nav-contents">
       <Logo />
       <nav>
-        <router-link to="/tarot">타로상담</router-link> 
+        <router-link to="/tarot">타로상담</router-link>
         <router-link to="/saju">사주상담</router-link>
         <router-link to="/community">커뮤니티</router-link>
       </nav>
-      <button @click="click()">로그인</button>
-      <router-link to="/mypage"><button>마이페이지</button></router-link>
+      <div v-if="tokenStore.isLoggedIn">
+        <router-link to="/mypage"><button>마이페이지</button></router-link>
+      </div>
+      <div v-else>
+        <button @click="isModalVisible = true">로그인</button>
+      </div>
     </div>
+    <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
+      <login-content />
+    </modal-view>
   </header>
 </template>
 
 <script>
-import Logo from '../common/Logo.vue';
+import Logo from "../common/Logo.vue";
+import ModalView from "@/components/common/ModalView.vue";
+import { useTokenStore } from "@/stores/token";
 
-  export default {
+export default {
   components: {
-    Logo
+    Logo,
+    ModalView,
   },
-  methods:{
-    click(){
-      alert("버튼을 클릭 했습니다.")
+  data() {
+    return {
+      isModalVisible: false,
+    };
+  },
+  setup() {
+    const tokenStore = useTokenStore();
+
+    return {
+      tokenStore,
     }
   }
 };
-
 </script>
 
 <style lang="scss" scoped>
@@ -40,17 +56,17 @@ header {
   right: 0;
   padding: 0 14%;
   //justify-content: center;
-  background: rgba(247, 247, 247, 0.70);
+  background: rgba(247, 247, 247, 0.7);
   z-index: 1;
 }
-.nav-contents{
+.nav-contents {
   position: relative;
   width: 70%;
   display: flex;
   justify-content: space-between;
   align-items: center;
 }
-nav{
+nav {
   display: flex;
   align-items: flex-start;
   gap: 63px;
@@ -61,19 +77,19 @@ nav{
   font-weight: 700;
   line-height: normal;
 }
-.router-link-exact-active{ 
+.router-link-exact-active {
   color: var(--title-text, #333);
 }
-button{
+button {
   display: flex;
   padding: 0.5% 1.25%;
-  position: relative ;
+  position: relative;
   justify-content: center;
   align-items: center;
   gap: 10px;
   border-radius: 8px;
   background: var(--title-text, #333);
-  color: #FFF;
+  color: #fff;
   text-align: center;
   font-size: 1em;
   font-style: normal;

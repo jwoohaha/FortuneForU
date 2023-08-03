@@ -50,12 +50,13 @@ public class SecurityConfig {
                                                 "/swagger-ui.html",
                                                 "/webjars/**",
                                                 "/v3/api-docs/**",
-                                                "/swagger-ui/**",
+                                                "/swagger-ui/**"
+                                                "/auth"
                                                 "/**").permitAll()
                                         .anyRequest().authenticated())
                 .oauth2Login(setOAuth2Config())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)   // why?
                 .csrf().disable()
                 .cors()
                 .configurationSource(corsConfigurationSource())
@@ -65,7 +66,7 @@ public class SecurityConfig {
 
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> setOAuth2Config() {
         return o ->
-                o.authorizationEndpoint(auth -> auth.baseUri("/auth2/authorize"))
+                o.authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize"))
                         .userInfoEndpoint(e -> e.userService(oAuth2UserService))
                         .successHandler(successHandler);
     }

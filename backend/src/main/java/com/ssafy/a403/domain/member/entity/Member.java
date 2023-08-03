@@ -51,6 +51,7 @@ public class Member {
         this.no = no;
         this.email = email;
         this.name = name;
+        this.isActive = true;
         this.profileImage = profileImage;
         this.oauth2 = new Oauth2(authProvider, accountId);
     }
