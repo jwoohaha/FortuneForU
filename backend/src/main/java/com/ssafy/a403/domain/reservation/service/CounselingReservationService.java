@@ -86,13 +86,13 @@ public class CounselingReservationService {
 
     //취소
     public void cancelReservation(Long reservationNo) {
-       CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).get();
+       CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElse(null);
+       if (counselingReservation == null) {
+           throw new IllegalArgumentException("ID" + reservationNo + "로 예약을 찾을 수 없습니다.");
+       }
+
        System.out.println(counselingReservation);
-        counselingReservation.cancel();
-
+       counselingReservation.cancel();
+       counselingReservationRepository.save(counselingReservation);
     }
-
 }
-
-
-
