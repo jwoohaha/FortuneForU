@@ -61,4 +61,5 @@ public class Member {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
+
 }

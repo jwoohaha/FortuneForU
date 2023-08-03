@@ -18,13 +18,15 @@ public class ArticleComment {
     @Column(name="comment_no")
     private int commentNo;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "article_no")
     private Article article;
+
 
     @ManyToOne
     @JoinColumn(name = "member_no")
     private Member member;
+
 
     //댓글 내용
     @Column(name="comment_content")

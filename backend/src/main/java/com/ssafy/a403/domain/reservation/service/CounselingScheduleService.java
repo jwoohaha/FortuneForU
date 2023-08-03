@@ -15,5 +15,6 @@ public class CounselingScheduleService {
 
     // 상담 가능 시간 조회
     public CounselingSchedule findOne(Long id) { return counselingScheduleRepository.getReferenceById(id); }
+
 }
 

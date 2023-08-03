@@ -31,6 +31,7 @@ public class CounselingReservation {
     @Column(name="rez_time")
     private LocalDateTime reservationDateTime;
 
+
     @Column(name="rez_status")
     @Enumerated(EnumType.STRING)
     private ReservationStatus reservationStatus;
@@ -67,7 +68,7 @@ public class CounselingReservation {
         this.reservationRecorded = reservationRecorded;
     }
 
-    //    주문 취소
+
     public void cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
             this.reservationStatus = ReservationStatus.Cancel;
