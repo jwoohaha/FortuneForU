@@ -13,8 +13,13 @@ import javax.persistence.*;
 public class Counselor {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "counselor_no")
     private Long no;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="member_no")
+    private Member member;
 
     @Enumerated(EnumType.STRING)
     private CounselorType counselorType;
@@ -28,9 +33,10 @@ public class Counselor {
     private String phone;
 
     @Builder
-    public Counselor(Long no, CounselorType counselorType, String major, String intro,
+    public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
                      String address, String phone) {
         this.no = no;
+        this.member = member;
         this.counselorType = counselorType;
         this.major = major;
         this.intro = intro;
