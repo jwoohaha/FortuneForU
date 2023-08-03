@@ -8,10 +8,10 @@ import lombok.*;
 @NoArgsConstructor
 public class RoomResponse {
 
-    String roomId;
+    String sessionId;
 
     @Builder
-    public RoomResponse(String roomId) {
-        this.roomId = roomId;
+    public RoomResponse(String sessionId) {
+        this.sessionId = sessionId;
     }
 }

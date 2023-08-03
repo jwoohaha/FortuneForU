@@ -37,7 +37,7 @@ public class ReservationResponse {
         reservationResponse.counselor = counselingReservation.getCounselor();
         reservationResponse.reservationDateTime = counselingReservation.getReservationDateTime();
         reservationResponse.reservationStatus = counselingReservation.getReservationStatus();
-        reservationResponse.reservationURL = counselingReservation.getReservationURL();
+        reservationResponse.reservationURL = counselingReservation.getSessionId();
         reservationResponse.reservationReview = counselingReservation.getReservationReview();
         reservationResponse.reservationReport = counselingReservation.getReservationReport();
 
