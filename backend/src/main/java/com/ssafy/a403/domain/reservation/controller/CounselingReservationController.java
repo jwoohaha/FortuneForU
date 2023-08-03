@@ -33,22 +33,14 @@ public class CounselingReservationController {
     public String reserve(@RequestBody ReservationRequest reservationRequest,
                           RedirectAttributes redirectAttributes){
         //임의로 회원 정보 저장
-        Member member1 = new Member();
-        member1.setId(1L);
-        Member member2 = new Member();
-        member2.setId(2L);
-        Member member3 = new Member();
-        member3.setId(3L);
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
+
 
         Long memberId = reservationRequest.getMemberId();
         Long counselorId = reservationRequest.getCounselorId();
         LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
-        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
+//        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
+//        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
 
         return "redirect:/api/mypage";
     }

@@ -61,9 +61,5 @@ public class Member {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
     }
-    public void setId(Long id) {
-        this.no = id;
-    }
-
 
 }
