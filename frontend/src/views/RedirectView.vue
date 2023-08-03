@@ -5,13 +5,20 @@
 <script>
 import router from '@/router';
 import { apiInstance } from '@/api/index'
-
-const api = apiInstance();
+import { useTokenStore } from '@/stores/token'
 
 export default { 
-    
+
     created() {
-        this.auth();  
+        this.auth(); 
+    },
+    setup() {
+        const store = useTokenStore();
+        const api = apiInstance();
+        return {
+            store,
+            api
+        };
     },
     methods: {
         async auth() {
@@ -19,18 +26,25 @@ export default {
             console.log('AuthToken', authToken);
 
             if (authToken) {
-                await api({
-                    method: 'POST',
-                    url: '/auth',
-                    data: authToken,
-                    headers: {
-                        'Content-Type': 'application/json;charset=utf-8'
-                    },
-                }).then((result) => console.log(result)).catch((error) => console.log(error));
+                await this.api.post('/auth', authToken)
+                .then((result) => this.onSuccess(result.data))
+                .catch((error) => this.onError(error));
             } else {
                 window.alert("로그인에 실패하였습니다.");
                 router.push({path: '/'});
             }   
+        },
+        async onSuccess(tokens) {
+            const accessToken = tokens.accessToken;
+            const refreshToken = tokens.refreshToken;
+            console.log("accessToken: " + accessToken);
+            console.log("refreshToken: " + refreshToken);
+            this.store.saveTokens(accessToken, refreshToken);
+            this.store.login();
+            router.push({path: '/'});
+        },
+        onError(error) {
+            console.log(error);
         }
     }
 }

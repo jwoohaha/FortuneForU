@@ -7,8 +7,12 @@
         <router-link to="/saju">사주상담</router-link>
         <router-link to="/community">커뮤니티</router-link>
       </nav>
-      <button @click="isModalVisible = true">로그인</button>
-      <router-link to="/mypage"><button>마이페이지</button></router-link>
+      <div v-if="tokenStore.isLoggedIn">
+        <router-link to="/mypage"><button>마이페이지</button></router-link>
+      </div>
+      <div v-else>
+        <button @click="isModalVisible = true">로그인</button>
+      </div>
     </div>
     <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
       <login-content />
@@ -19,6 +23,7 @@
 <script>
 import Logo from "../common/Logo.vue";
 import ModalView from "@/components/common/ModalView.vue";
+import { useTokenStore } from "@/stores/token";
 
 export default {
   components: {
@@ -30,6 +35,13 @@ export default {
       isModalVisible: false,
     };
   },
+  setup() {
+    const tokenStore = useTokenStore();
+
+    return {
+      tokenStore,
+    }
+  }
 };
 </script>
 
