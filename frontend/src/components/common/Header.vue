@@ -8,6 +8,7 @@
         <router-link to="/community">커뮤니티</router-link>
       </nav>
       <button @click="isModalVisible = true">로그인</button>
+      <router-link to="/mypage"><button>마이페이지</button></router-link>
     </div>
     <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
       <login-content />
