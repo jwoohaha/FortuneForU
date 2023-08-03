@@ -1,6 +1,7 @@
 package com.ssafy.a403.domain.reservation.entity;
 
 import com.ssafy.a403.domain.member.entity.Counselor;
+import com.ssafy.a403.domain.reservation.dto.UpdateScheduleRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +22,7 @@ public class CounselingSchedule {
     @JoinColumn(name="counselor_no")
     private Counselor counselor;
 
+
     private String mon;
 
     private String tue;
@@ -35,7 +37,6 @@ public class CounselingSchedule {
 
     private String sun;
 
-
     @Builder
     public CounselingSchedule(Counselor counselor, String mon, String tue, String wed, String thu, String fri, String sat, String sun){
         this.counselor = counselor;
@@ -46,6 +47,16 @@ public class CounselingSchedule {
         this.fri = fri;
         this.sat = sat;
         this.sun = sun;
+    }
+
+    public void updateCounselingSchedule(UpdateScheduleRequest updateScheduleRequest) {
+        this.mon = updateScheduleRequest.getMon();
+        this.tue = updateScheduleRequest.getTue();
+        this.wed = updateScheduleRequest.getWed();
+        this.thu = updateScheduleRequest.getThu();
+        this.fri = updateScheduleRequest.getFri();
+        this.sat = updateScheduleRequest.getSat();
+        this.sun = updateScheduleRequest.getSun();
     }
 }
 
