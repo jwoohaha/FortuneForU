@@ -35,12 +35,6 @@ public class RoomService {
 
     }
 
-    public static void deleteSessionIdByReservationNo(Long reservationNo) {
-
-
-
-    }
-
 
 
 

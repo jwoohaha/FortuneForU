@@ -8,6 +8,7 @@ import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,19 +23,9 @@ import java.util.UUID;
 @Slf4j
 public class ApiController {
 
-    @Value("${OPENVIDU_URL}")
-    private String OPENVIDU_URL;
-
-    @Value("${OPENVIDU_SECRET}")
-    private String OPENVIDU_SECRET;
-
-
-    private OpenVidu openVidu;
+    private final OpenVidu openVidu;
 
     private final RoomService roomService;
-
-    @PostConstruct
-    public void init(){ this.openVidu = new OpenVidu(OPENVIDU_URL, OPENVIDU_SECRET); }
 
     //방 생성
     @PostMapping("/api/roomsession")
@@ -46,20 +37,9 @@ public class ApiController {
         //랜덤 sessionId 생성
         String sessionId = UUID.randomUUID().toString();
 
-        //생성시 recording 추가
-//        RecordingProperties recordingProperties = new RecordingProperties.Builder()
-//                .outputMode(Recording.OutputMode.COMPOSED)
-//                .resolution("640*480")
-//                .frameRate(24)
-//                .hasAudio(true)
-//                .hasVideo(false)
-//                .build();
-
         //session생성
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
-//                                            .recordingMode(RecordingMode.MANUAL)
-//                                            .defaultRecordingProperties(recordingProperties)
                                             .customSessionId(sessionId)
                                             .build();
 
@@ -88,7 +68,7 @@ public class ApiController {
             throws OpenViduJavaClientException, OpenViduHttpException{
 
         log.info("--------------------방 접속 시작---------------------------");
-        log.info("url session Id : " + sessionId);
+        log.info("session Id : " + sessionId);
 
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
@@ -120,7 +100,7 @@ public class ApiController {
         //sessionID DB상에서 삭제
         Long reservationNo = counselingReservation.getReservationNo();
 
-//        RoomService.deleteSessionIdByReservationNo(reservationNo);
+//        CounselingReservation updateCounselingReservation = RoomService.updateSessionId(reservationNo);
 
         //Session close
         Session session = openVidu.getActiveSession(sessionId);
@@ -137,6 +117,29 @@ public class ApiController {
 
     }
 
+    //녹화 시작
+    @GetMapping(value = "/api/recording/{sessionId}")
+    public ResponseEntity<?> startRecording(@PathVariable String sessionId){
+
+        log.info("------------------------녹화 시작-------------------");
+
+        RecordingProperties recordingProperties = new RecordingProperties.Builder()
+                .hasAudio(true)
+                .hasVideo(false)
+                .build();
+
+        CounselingReservation counselingReservation = roomService.findBySessionId(sessionId);
+
+        try {
+            Recording recording = openVidu.startRecording(sessionId, recordingProperties);
+            log.info("start recording : " + recording.getUrl());
+            return new ResponseEntity<>(recording, HttpStatus.OK);
+        } catch (OpenViduHttpException | OpenViduJavaClientException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
 
 
 }
