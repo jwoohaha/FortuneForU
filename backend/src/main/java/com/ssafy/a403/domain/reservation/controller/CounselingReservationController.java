@@ -33,38 +33,54 @@ public class CounselingReservationController {
     public String reserve(@RequestBody ReservationRequest reservationRequest,
                           RedirectAttributes redirectAttributes){
         //임의로 회원 정보 저장
+        Member member1 = new Member();
+        member1.setId(1L);
+        Member member2 = new Member();
+        member2.setId(2L);
+        Member member3 = new Member();
+        member3.setId(3L);
+        memberRepository.save(member1);
+        memberRepository.save(member2);
+        memberRepository.save(member3);
 
 
         Long memberId = reservationRequest.getMemberId();
         Long counselorId = reservationRequest.getCounselorId();
         LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-//        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
-//        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
+        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
+        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
 
         return "redirect:/api/mypage";
     }
 
     // 예약 조회
-    @GetMapping("/reservation_info/{memberId}")
+    @GetMapping("/member_rez_info/{memberId}")
     public List<CounselingReservation> getRezInfo(@PathVariable Long memberId){
         List<CounselingReservation> reservations = counselingReservationService.getReservation(memberId);
-//        List<CounselingReservation> allReservations = counselingReservationService.getAllReservations();
         JSONArray jsonArray = new JSONArray();
-
         JSONArray resultArray = new JSONArray();
         System.out.println(reservations);
-
-
-        // memberid, counselorid, 시간, 상태, 후기, 요약리포트, 상담방url 반환
-
-//        System.out.println(reservations);
-//        System.out.println("여기!!!!!!!!!!!!!!"+reservations.get(0).getReservationNo());
 
         return reservations;
     }
 
+    @GetMapping("/counselor_rez_info/{counselorId}")
+    public List<CounselingReservation> getCounselorRezInfo(@PathVariable Long counselorId){
+        List<CounselingReservation> reservations = counselingReservationService.getCoReservation(counselorId);
+        JSONArray jsonArray = new JSONArray();
+        JSONArray resultArray = new JSONArray();
+        System.out.println(reservations);
 
+        return reservations;
+    }
+
+    //예약 취소
+    @GetMapping("/cancel/{reservationNo}")
+    public String cancel(@PathVariable Long reservationNo) {
+        counselingReservationService.cancelReservation(reservationNo);
+        return "redirect:/";
+    }
 
 
 }

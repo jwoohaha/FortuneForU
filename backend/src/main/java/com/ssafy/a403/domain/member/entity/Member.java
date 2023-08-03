@@ -62,4 +62,8 @@ public class Member {
                 .collect(Collectors.toList());
     }
 
+    // 테스트용!!!!!!!!!!!!!!!!!!!
+    public void setId(Long memberId) {
+        this.no = memberId;
+    }
 }
