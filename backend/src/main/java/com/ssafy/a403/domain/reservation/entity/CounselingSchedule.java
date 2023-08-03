@@ -1,12 +1,12 @@
 package com.ssafy.a403.domain.reservation.entity;
 
+import com.ssafy.a403.domain.member.entity.Counselor;
+import com.ssafy.a403.domain.reservation.dto.UpdateScheduleRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.*;
 
 @Getter
 @Entity
@@ -14,8 +14,14 @@ import javax.persistence.JoinColumn;
 public class CounselingSchedule {
 
     @Id
-    @JoinColumn(name="member_no")
-    private int memberNo;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "schedule_no")
+    private Long no;
+
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name="counselor_no")
+    private Counselor counselor;
+
 
     private String mon;
 
@@ -32,7 +38,8 @@ public class CounselingSchedule {
     private String sun;
 
     @Builder
-    public CounselingSchedule(String mon, String tue, String wed, String thu, String fri, String sat, String sun){
+    public CounselingSchedule(Counselor counselor, String mon, String tue, String wed, String thu, String fri, String sat, String sun){
+        this.counselor = counselor;
         this.mon = mon;
         this.tue = tue;
         this.wed = wed;
@@ -42,5 +49,14 @@ public class CounselingSchedule {
         this.sun = sun;
     }
 
+    public void updateCounselingSchedule(UpdateScheduleRequest updateScheduleRequest) {
+        this.mon = updateScheduleRequest.getMon();
+        this.tue = updateScheduleRequest.getTue();
+        this.wed = updateScheduleRequest.getWed();
+        this.thu = updateScheduleRequest.getThu();
+        this.fri = updateScheduleRequest.getFri();
+        this.sat = updateScheduleRequest.getSat();
+        this.sun = updateScheduleRequest.getSun();
+    }
 }
 
