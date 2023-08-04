@@ -75,6 +75,13 @@ public class CounselingReservationServiceTest {
 
     }
 
+    @Test
+    @Transactional
+    public void cancelTest() throws Exception {
+        Long reservationNo = 1L;
+        counselingReservationService.cancelReservation(reservationNo);
+    }
+
 
 
 
