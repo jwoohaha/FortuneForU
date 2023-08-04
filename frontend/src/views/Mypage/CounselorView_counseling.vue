@@ -83,7 +83,7 @@
                                 <div class="cell-txt">A1234</div>
                             </div>
                             <div class="res-cell" id="cell-btns">
-                                <SquareButton id="start-btn">상담 시작</SquareButton>
+                                <SquareButton id="start-btn" @click="createSession">상담 시작</SquareButton>
                                 <SquareButton isTarot id="cancel-btn">취소</SquareButton>
                             </div>
                         </div>
@@ -98,6 +98,7 @@
     
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
+import { apiInstance } from "@/api";
 
 export default {
     components: {
@@ -107,6 +108,43 @@ export default {
     return {
     };
     },
+    setup() {
+
+        const api = apiInstance();
+
+        const roomRequest = {
+            reservationNo : 0,
+        }
+
+        return {
+            api,
+            roomRequest
+        }
+        
+    },
+    methods: {
+        async createSession(){
+           await this.api.post('/api/roomsession', this.roomRequest)
+            .then(({data}) => {
+                console.log(data.sessionId)
+                this.connectSession(data.sessionId)
+            })
+            .catch(({error}) => {
+                console.log(error)
+            })
+        },
+
+        async connectSession(sessionId){
+
+            this.api.post(`/api/sessions/${sessionId}/connections`)
+            .then((response) =>{
+                console.log(response)
+            })
+            .catch((error) =>{
+                console.log(error)
+            })
+        }
+    }
 }
 </script>
     
