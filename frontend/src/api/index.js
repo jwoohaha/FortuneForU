@@ -11,7 +11,7 @@ function apiInstance() {
             'Content-Type': 'application/json;charset=utf-8',
             'Authorization': store.getAccessToken,
             'Refresh': store.getRefreshToken
-        }
+        },
     });
     return instance;
 }

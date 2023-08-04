@@ -31,31 +31,31 @@
                             <h3 class="info-label">상담 분야</h3>
                             <div class="radio-btns">
                                 <label>
-                                    <input type="radio" name="saju" value="saju" />
+                                    <input type="radio" name="saju" value="SAJU" v-model="radioval" />
                                     <span class="radio-label">사주</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="tarot" value="tarot" />
+                                    <input type="radio" name="tarot" value="TAROT" v-model="radioval"/>
                                     <span class="radio-label">타로</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="sajutarot" value="sajutarot" />
+                                    <input type="radio" name="sajutarot" value="BOTH" v-model="radioval"/>
                                     <span class="radio-label">사주/타로</span>
                                 </label>
                             </div>
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">전문 영역</h3>
-                            <div class="info-edit">연애, 재물</div>
+                            <div class="info-edit">{{ counselor.major }}</div>
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">매장 주소</h3>
-                            <div class="info-edit">서울시 멀티캠퍼스</div>
+                            <div class="info-edit">{{ counselor.address }}</div>
                         </div>
                     </div>
                     <div class="right-part">
                         <h3 class="info-label">경력 사항</h3>
-                        <div class="info-edit">내용</div>
+                        <div class="info-edit">{{ counselor.intro }}</div>
                         <SquareButton id="edit-save-btn">상담가 정보 수정하기</SquareButton>
                     </div>           
                     
@@ -69,6 +69,7 @@
     
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
+import { apiInstance } from '@/api/index'
 
 export default {
     components: {
@@ -77,12 +78,49 @@ export default {
     data() {
     return {
         counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
+            { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
+            { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
+            { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         ],
+        counselor:{},
+        radioval: "",
     };
     },
+    methods: {
+    async getUserInfo(){
+
+        var result = "";
+        await this.api.get('/counselor/222')
+            .then((re) => result = re.data)
+            .catch((error) => console.log(error));
+        console.log("hi");
+        console.log(result);
+        this.counselor= result;
+        //const userInfo = result.data;
+        console.log(this.counselor);
+
+        // $('.radio-btns > input').on('click', function() {
+        //     var valueCheck = $('input:checked').val(); // 체크된 Radio 버튼의 값을 가져옵니다.
+        //     console.log(valueCheck);
+        // });
+        console.log(this.counselor.counselorType);
+        this.radioval = this.counselor.counselorType;
+        
+    } 
+
+  },
+  created(){
+    this.getUserInfo();
+  },
+  setup(){
+    
+    const api = apiInstance();
+
+    return {
+        api
+    };
+  },
+  
 }
 </script>
     
