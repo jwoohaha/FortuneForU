@@ -12,6 +12,11 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 
+/**
+ * i. access token을 이용해 서드파티 서버로부터 사용자 정보를 받아옴
+ * ii. 사용자 정보를 파탕으로 회원가입된 사용자인지 확인
+ * iii. LoginUser(User Principal) 반환
+ */
 @Service
 @RequiredArgsConstructor
 public class DefaultUserService extends DefaultOAuth2UserService {
@@ -23,10 +28,11 @@ public class DefaultUserService extends DefaultOAuth2UserService {
     @Override
     public OAuth2User loadUser(OAuth2UserRequest userRequest) throws OAuth2AuthenticationException {
         AuthProvider authProvider = AuthProvider.valueOf(userRequest.getClientRegistration().getClientName().toUpperCase());
+        // access token으로 서드파티에 요청해서 사용자 정보 얻어옴
         OAuth2User oAuth2User = super.loadUser(userRequest);
         OAuth2Request oAuth2Request = attributeMapperFactory.getAttributeMapper(authProvider)
                 .mapToDto(oAuth2User.getAttributes());
 
-        return loginUserMapper.toLoginUser(authService.saveIfNotExists(oAuth2Request));
+        return loginUserMapper.toLoginUser(authService.saveIfNotExists(oAuth2Request)); // OAuth2User 객체 리턴
     }
 }

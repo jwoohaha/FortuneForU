@@ -9,16 +9,17 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final MemberRepository userRepository;
+    private final MemberRepository memberRepository;
 
     public Member saveIfNotExists(OAuth2Request oAuth2Request) {
-        return userRepository.findByOauth2AccountId(oAuth2Request.getAccountId())
+        return memberRepository.findByOauth2AccountId(oAuth2Request.getAccountId())
                 .orElseGet(() -> save(oAuth2Request));
     }
 
     private Member save(OAuth2Request oAuth2Request) {
-        return userRepository.save(
+        return memberRepository.save(
                 Member.builder()
+                        .email(oAuth2Request.getEmail())
                         .name(oAuth2Request.getName())
                         .authProvider(oAuth2Request.getAuthProvider())
                         .accountId(oAuth2Request.getAccountId())

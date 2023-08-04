@@ -5,6 +5,7 @@ import java.util.Date;
 
 import com.ssafy.a403.global.config.security.LoginUser;
 import io.jsonwebtoken.Jwts;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -15,6 +16,7 @@ import javax.persistence.EntityNotFoundException;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class JwtProvider {
 	private final Key key;
 
@@ -27,6 +29,8 @@ public class JwtProvider {
 
     public JwtToken createJwtToken(LoginUser loginUser) {
         Claims claims = getClaims(loginUser);
+        log.trace("JWT token created");
+        log.trace("loginUser: {}", loginUser.getMember().getName());
 
         String accessToken = getToken(loginUser, claims, ACCESS_TOKEN_VALIDATION_SECOND);
         String refreshToken = getToken(loginUser, claims, REFRESH_TOKEN_VALIDATION_SECOND);
@@ -35,11 +39,13 @@ public class JwtProvider {
     }
     
     public String createAuthToken(LoginUser loginUser) {
+        log.trace("Auth token created");
     	Claims claims = getClaims(loginUser);
     	return getToken(loginUser, claims, AUTH_TOKEN_VALIDATION_SECOND);
     }
     
     public JwtToken createJwtTokenByAuthToken(String authToken) throws NumberFormatException, EntityNotFoundException {
+        log.trace("create JWT token by Auth token");
     	return createJwtToken(jwtValidator.getLoginUser(authToken));
     }
 

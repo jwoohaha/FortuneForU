@@ -14,4 +14,5 @@ public interface CounselingReservationRepository extends JpaRepository<Counselin
 
     List<CounselingReservation> findByCounselor(Counselor counselor);
 
+    CounselingReservation findBySessionId(String sessionId);
 }

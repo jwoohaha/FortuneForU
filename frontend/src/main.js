@@ -1,4 +1,5 @@
 import { createApp } from 'vue';
+import { createPinia } from 'pinia';
 import App from './App.vue';
 
 //라우터
@@ -11,4 +12,5 @@ import 'v-calendar/style.css';
 const app = createApp(App)
 app.use(router)
 app.use(VCalendar, {})
+app.use(createPinia());
 app.mount('#app')

@@ -1,11 +1,14 @@
 package com.ssafy.a403.domain.reservation.dto;
 
+import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.ReservationStatus;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
+
 
 @Getter
 @NoArgsConstructor

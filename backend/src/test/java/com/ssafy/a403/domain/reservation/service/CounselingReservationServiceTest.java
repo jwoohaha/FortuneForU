@@ -31,21 +31,21 @@ public class CounselingReservationServiceTest {
     public void setup() {
 
         //테스트용!!!!!!!!!!!!!!!!!!!!!
-        Member member1 = new Member();
-        member1.setId(1L);
-        Member member2 = new Member();
-        member2.setId(2L);
-        Member member3 = new Member();
-        member3.setId(3L);
-        Counselor counselor1 = new Counselor();
-        counselor1.setId(1L);
-        Counselor counselor2 = new Counselor();
-        counselor1.setId(2L);
-        memberRepository.save(member1);
-        memberRepository.save(member2);
-        memberRepository.save(member3);
-        counselorRepository.save(counselor1);
-        counselorRepository.save(counselor2);
+//        Member member1 = new Member();
+//        member1.setId(1L);
+//        Member member2 = new Member();
+//        member2.setId(2L);
+//        Member member3 = new Member();
+//        member3.setId(3L);
+//        Counselor counselor1 = new Counselor();
+//        counselor1.setId(1L);
+//        Counselor counselor2 = new Counselor();
+//        counselor1.setId(2L);
+//        memberRepository.save(member1);
+//        memberRepository.save(member2);
+//        memberRepository.save(member3);
+//        counselorRepository.save(counselor1);
+//        counselorRepository.save(counselor2);
 
     }
 
