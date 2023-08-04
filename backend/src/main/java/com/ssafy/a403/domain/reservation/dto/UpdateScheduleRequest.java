@@ -1,12 +1,13 @@
 package com.ssafy.a403.domain.reservation.dto;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 
 @Data
-@Builder
+@Getter
+@AllArgsConstructor
 public class UpdateScheduleRequest {
-    private Long counselorNo;
     private String mon;
     private String tue;
     private String wed;
@@ -14,4 +15,8 @@ public class UpdateScheduleRequest {
     private String fri;
     private String sat;
     private String sun;
+
+    public UpdateScheduleRequest() {
+
+    }
 }
