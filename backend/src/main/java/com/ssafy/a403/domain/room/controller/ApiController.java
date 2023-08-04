@@ -33,6 +33,7 @@ public class ApiController {
             throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 만들기 시작----------------------");
+        log.info("roomRequest reservationNo: " + roomRequest.getReservationNo());
 
         //랜덤 sessionId 생성
         String sessionId = UUID.randomUUID().toString();
@@ -82,13 +83,13 @@ public class ApiController {
         ConnectionProperties properties = new ConnectionProperties.Builder().build();
         Connection connection = session.createConnection(properties);
 
-        return new ResponseEntity<>(connection, HttpStatus.OK);
+        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
 
     }
 
 
     //방 삭제하기
-    @DeleteMapping("/api/sessions/{sessionId}")
+    @PatchMapping("/api/sessions/{sessionId}")
     public ResponseEntity<?> deleteRoom(@PathVariable("sessionId") String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 삭제-----------------------");
@@ -118,7 +119,7 @@ public class ApiController {
     }
 
     //녹화 시작
-    @GetMapping(value = "/api/recording/{sessionId}")
+    @PostMapping(value = "/api/recording/{sessionId}")
     public ResponseEntity<?> startRecording(@PathVariable String sessionId){
 
         log.info("------------------------녹화 시작-------------------");
@@ -133,6 +134,7 @@ public class ApiController {
         try {
             Recording recording = openVidu.startRecording(sessionId, recordingProperties);
             log.info("start recording : " + recording.getUrl());
+            //db에 recording url 넣어주고
             return new ResponseEntity<>(recording, HttpStatus.OK);
         } catch (OpenViduHttpException | OpenViduJavaClientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
