@@ -72,8 +72,10 @@ public class CounselingReservationServiceTest {
         Long memberId = 1L;
         List<CounselingReservation> result = counselingReservationService.getReservation(memberId);
         result.forEach(r -> System.out.println(r.toString()));
-//        System.out.println(result);
+
     }
+
+
 
 
 

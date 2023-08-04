@@ -43,9 +43,4 @@ public class Counselor {
         this.address = address;
         this.phone = phone;
     }
-    //테스트용!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    public void setId(Long counselorId) {
-        this.no = counselorId;
-    }
-
 }

@@ -72,12 +72,9 @@ public class CounselingReservation {
 
     public void cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
-            System.out.println("되나?");
-            this.reservationStatus = ReservationStatus.Cancel;
+            reservationStatus = ReservationStatus.Cancel;
         } else {
             throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
         }
     }
-
-
 }
