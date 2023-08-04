@@ -43,6 +43,4 @@ public class Counselor {
         this.address = address;
         this.phone = phone;
     }
-
-
 }
