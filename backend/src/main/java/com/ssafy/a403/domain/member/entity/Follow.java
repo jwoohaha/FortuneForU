@@ -1,28 +1,21 @@
 package com.ssafy.a403.domain.member.entity;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@NoArgsConstructor
+@Getter
 @Entity
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
-)
-@IdClass(Follow.PK.class)
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Follow {
 
-    @Id
-    @Column(name = "to_user")
-    private Long toUser;
+    @EmbeddedId
+    private FollowId id;
 
-    @Id
-    @Column(name="from_user")
-    private Long fromUser;
-
-    public static class PK implements Serializable {
-        Long toUser;
-        Long fromUser;
+    public Follow(Member follower, Member followee) {
+        this.id = new FollowId(follower, followee);
     }
 }
