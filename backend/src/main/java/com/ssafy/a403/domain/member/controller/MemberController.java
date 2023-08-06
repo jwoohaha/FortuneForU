@@ -11,13 +11,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.List;
 
 @RestController
 @RequestMapping("/api/members")
@@ -39,7 +35,7 @@ public class MemberController {
 
     // Member 정보 조회
     @GetMapping("/info")
-    public ResponseEntity<MemberInfoResponse> memberinfo(@AuthenticationPrincipal LoginUser loginUser) {
+    public ResponseEntity<MemberInfoResponse> memberInfo(@AuthenticationPrincipal LoginUser loginUser) {
         log.trace("loginUser: {}", loginUser.getName());
 
         return new ResponseEntity<>(
@@ -52,7 +48,10 @@ public class MemberController {
     @GetMapping("/details")
     public ResponseEntity<MemberDetailsResponse> memberDetails(@AuthenticationPrincipal LoginUser loginUser) {
 
-        return new ResponseEntity<>(memberService.getMemberDetails(loginUser.getMember()), HttpStatus.OK);
+        return new ResponseEntity<>(
+                memberService.getMemberDetails(loginUser.getMember()),
+                HttpStatus.OK
+        );
     }
 
     @GetMapping("/logout")
@@ -61,10 +60,17 @@ public class MemberController {
         // TODO: 로그아웃 -> refresh token 삭제
     }
 
-    @GetMapping("follow/{followeeId}")
-    public ResponseEntity follow(@PathVariable Long followeeId, @AuthenticationPrincipal LoginUser loginUser) {
+    @PutMapping("follow/{followeeId}")
+    public HttpStatus follow(@PathVariable Long followeeId, @AuthenticationPrincipal LoginUser loginUser) {
 
         followService.follow(loginUser.getMember(), memberService.findById(followeeId));
-        return ResponseEntity.ok().build();
+        return HttpStatus.OK;
+    }
+
+    @DeleteMapping("unfollow/{followeeId}")
+    public HttpStatus unfollow(@PathVariable Long followeeId, @AuthenticationPrincipal LoginUser loginUser) {
+
+        followService.unfollow(loginUser.getMember(), memberService.findById(followeeId));
+        return HttpStatus.OK;
     }
 }
