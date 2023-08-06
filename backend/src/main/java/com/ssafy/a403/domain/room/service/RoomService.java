@@ -36,6 +36,22 @@ public class RoomService {
     }
 
 
+    public void updateRecording(CounselingReservation counselingReservation, String recordingUrl) {
 
+        Long reservationNo = counselingReservation.getReservationNo();
+    }
 
+    public boolean updateSessionIdAndRecordingUrl(Long reservationNo, String recordingUrl) {
+
+        CounselingReservation counselingReservation = CounselingReservation.builder()
+                .reservationNo(reservationNo)
+                .reservationRecorded(recordingUrl)
+//                .reservationStatus()
+                .build();
+
+        counselingReservationRepository.save(counselingReservation);
+
+        return true;
+
+    }
 }
