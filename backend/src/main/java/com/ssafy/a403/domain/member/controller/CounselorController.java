@@ -5,8 +5,10 @@ import com.ssafy.a403.domain.member.dto.UpdateCounselorRequest;
 import com.ssafy.a403.domain.member.dto.UpdateCounselorResponse;
 import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.service.CounselorService;
+import com.ssafy.a403.domain.model.CounselorType;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,6 +41,26 @@ public class CounselorController {
                 .map(m -> CounselorInfoResponse.from(m))
                 .collect(Collectors.toList());
         return ResponseEntity.ok(counselorInfoList);
+    }
+
+    /**
+     * 상담사 평점 순 조회
+     */
+    @GetMapping("/api/counselors/by_ratings")
+    public Page<Counselor> getCounselorInfoByRating(@RequestParam(defaultValue = "BOTH") CounselorType counselorType,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "6") int size) {
+        return counselorService.findByRating(counselorType, page, size);
+    }
+
+    /**
+     * 상담사 후기 순 조회
+     */
+    @GetMapping("/api/counselors/by_review")
+    public Page<Counselor> getCounselorInfoByReview(@RequestParam(defaultValue = "BOTH") CounselorType counselorType,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "6") int size) {
+        return counselorService.findByReview(counselorType, page, size);
     }
 
     /**
