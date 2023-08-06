@@ -43,7 +43,7 @@ public class FollowServiceTest {
     }
 
     @Test
-    @DisplayName("상담사 좋아요")
+    @DisplayName("상담사 팔로우 성공")
     @Transactional
     void followCounselorSuccess(){
 
@@ -65,7 +65,7 @@ public class FollowServiceTest {
     }
 
     @Test
-    @DisplayName("상담사 좋아요 중복")
+    @DisplayName("상담사 팔로우 중복")
     @Transactional
     void followDuplicatedCounselor(){
 
@@ -85,5 +85,27 @@ public class FollowServiceTest {
         // then
         Assertions.assertThat(followService.followerList(follower).size()).isEqualTo(2);
         followService.followerList(follower).forEach(f -> log.trace("followee{} : {}", f.getNo(), f.getName()));
+    }
+
+    @Test
+    @DisplayName("상담사 팔로우 취소")
+    @Transactional
+    void unfollowCounselor(){
+
+        log.trace("=========== Member Find ============");
+        // given
+        Member follower = memberService.findById(1L);
+        Member followee1 = memberService.findById(2L);
+        Member followee2 = memberService.findById(3L);
+
+        log.trace("=========== Follow Save ============");
+        // when
+        followService.follow(follower, followee1);
+        followService.follow(follower, followee2);
+        followService.unfollow(follower, followee1);    // followee1을 언팔로우
+
+        log.trace("=========== Follow Find ============");
+        // then
+        Assertions.assertThat(followService.followerList(follower).size()).isEqualTo(1);
     }
 }
