@@ -5,6 +5,7 @@ import com.ssafy.a403.domain.model.CounselorType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -33,6 +34,12 @@ public class Counselor {
 
     private String phone;
 
+    @ColumnDefault("0")
+    private int reviewCnt;
+
+    @ColumnDefault("0.00")
+    private float ratingAvg;
+
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
                      String address, String phone) {
@@ -52,5 +59,12 @@ public class Counselor {
         this.address = request.getAddress();
         this.phone = request.getPhone();
     }
+
+    public void updateCounselorReview(float rating) {
+        this.ratingAvg = Math.round((this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1));
+        this.reviewCnt += 1;
+    }
+
+
 
 }
