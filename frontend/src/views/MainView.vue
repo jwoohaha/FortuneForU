@@ -138,7 +138,7 @@
 
     <div class="part-box" id="part4">
       <div class="part4-txt">최초의 사주&타로 화상 상담 서비스 <br/>Fortune for U와 함께 할 <br/>상담사를 찾습니다.</div>
-      <button class="counselor-form-btn">자세히 보기</button>
+      <router-link to="/counselor-form"><button class="counselor-form-btn">자세히 보기</button></router-link>
     </div>  
   </div>
 </template>

@@ -36,7 +36,7 @@ const routes = [
     path: '/mypage',
     name: 'mypage',
     component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage/MypageView.vue'),
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/mypage/reservationlist',
@@ -72,6 +72,11 @@ const routes = [
     path: '/counselor/counreview',
     name: 'counreview',
     component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
+  },
+  {
+    path: '/counselor-form',
+    name: 'counselor-form-view',
+    component: () => import(/* webpackChunkName: "counreview" */ '@/views/CounselorFormView')
   }
 ]
 
