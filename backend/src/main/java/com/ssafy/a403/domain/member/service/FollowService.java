@@ -27,11 +27,21 @@ public class FollowService {
         followRepository.save(new Follow(follower, followee));
     }
 
+    @Transactional
+    public void unfollow(Member follower, Member followee) {
+
+        if (!isFollowedCounselor(follower, followee)) {
+            log.info("해당 상담가를 아직 팔로우하지 않았습니다.");
+            return;
+        }
+        followRepository.deleteById(new FollowId(follower, followee));
+    }
+
     private Boolean isFollowedCounselor(Member follower, Member followee) {
         return followRepository.existsById(new FollowId(follower, followee));
     }
 
-    // TODO: 매개변수로 ID를 줄 때와, Member 객체를 줄 때의 쿼리 차이 확인 -> 차이가 없는 것으로 확인
+    // 매개변수로 ID를 줄 때와, Member 객체를 줄 때의 쿼리 차이 확인 -> 차이가 없는 것으로 확인
     public List<Member> followerList(Member member) {
         return followRepository.findAllByFollower(member);
     }
