@@ -31,32 +31,48 @@
                             <h3 class="info-label">상담 분야</h3>
                             <div class="radio-btns">
                                 <label>
-                                    <input type="radio" name="saju" value="SAJU" v-model="radioval" />
+                                    <input type="radio" name="saju" value="SAJU" v-model="radioval" v-if="!isEditable" onclick="return(false);"/>
+                                    <input type="radio" name="saju" value="SAJU" v-model="radioval" v-else/>
                                     <span class="radio-label">사주</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="tarot" value="TAROT" v-model="radioval"/>
+                                    <input type="radio" name="tarot" value="TAROT" v-model="radioval" v-if="!isEditable" onclick="return(false);"/>
+                                    <input type="radio" name="tarot" value="TAROT" v-model="radioval" v-else/>
                                     <span class="radio-label">타로</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="sajutarot" value="BOTH" v-model="radioval"/>
+                                    <input type="radio" name="sajutarot" value="BOTH" v-model="radioval" v-if="!isEditable" onclick="return(false);"/>
+                                                                        <input type="radio" name="sajutarot" value="BOTH" v-model="radioval" v-else/>
                                     <span class="radio-label">사주/타로</span>
                                 </label>
                             </div>
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">전문 영역</h3>
-                            <div class="info-edit">{{ counselor.major }}</div>
+                            <div class="info-edit" v-if="!isEditable">{{ counselor.major }}</div>
+                            <input class="info-edit" v-else :value="majortxt">
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">매장 주소</h3>
-                            <div class="info-edit">{{ counselor.address }}</div>
+                            <div class="info-edit" v-if="!isEditable">{{ counselor.address }}</div>
+                            <input class="info-edit" v-else :value="addresstxt">
+                        </div>
+                        <div class="each-row">
+                            <h3 class="info-label">전화번호</h3>
+                            <div class="info-edit" v-if="!isEditable">{{ counselor.phone }}</div>
+                            <input class="info-edit" v-else :value="phonetxt">
+                        </div>
+                        <div class="each-row">
+                            <h3 class="info-label">한 줄 소개</h3>
+                            <div class="info-edit" v-if="!isEditable">{{ counselor.intro }}</div>
+                            <input class="info-edit" v-else :value="introtxt">
                         </div>
                     </div>
                     <div class="right-part">
                         <h3 class="info-label">경력 사항</h3>
-                        <div class="info-edit">{{ counselor.intro }}</div>
-                        <SquareButton id="edit-save-btn">상담가 정보 수정하기</SquareButton>
+                        <div class="info-edit" v-if="!isEditable">{{ counselor.career }}</div>
+                        <textarea class="info-edit" v-else :value="careertxt"></textarea>
+                        <SquareButton id="edit-save-btn" v-on:click="changeEditable">상담가 정보 수정하기</SquareButton>
                     </div>           
                     
                 </div>
@@ -76,37 +92,52 @@ export default {
         SquareButton,
     },
     data() {
-    return {
-        counselors: [
-            { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-            { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-            { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        ],
-        counselor:{},
-        radioval: "",
-    };
+        return {
+            isEditable : false,
+            counselor:{},
+            radioval: "",
+            majortxt: "",
+            addresstxt: "",
+            introtxt: "",
+            phonetxt: "",
+            careertxt: "",
+        };
     },
     methods: {
     async getUserInfo(){
 
         var result = "";
-        await this.api.get('/counselor/222')
+        await this.api.get('/counselor/1')
             .then((re) => result = re.data)
             .catch((error) => console.log(error));
-        console.log("hi");
+            
         console.log(result);
         this.counselor= result;
-        //const userInfo = result.data;
-        console.log(this.counselor);
-
-        // $('.radio-btns > input').on('click', function() {
-        //     var valueCheck = $('input:checked').val(); // 체크된 Radio 버튼의 값을 가져옵니다.
-        //     console.log(valueCheck);
-        // });
-        console.log(this.counselor.counselorType);
         this.radioval = this.counselor.counselorType;
+        this.majortxt = this.counselor.major;
+        this.addresstxt = this.counselor.address;
+        this.introtxt = this.counselor.intro;
+        this.phonetxt = this.counselor.phone;
+        this.careertxt = this.counselor.career;
         
-    } 
+    }, 
+
+    async changeEditable(){
+        if(this.isEditable){
+            this.isEditable = false;
+            await this.editUserInfo();
+            await this.getUserInfo();
+        }            
+        else
+            this.isEditable = true;
+    },
+
+    async editUserInfo(){
+        await this.api.put('/counselors/update/2', {counselorNo: this.counselor.counselorNo, major: this.majortxt, intro: this.introtxt, address: this.addresstxt, phone: this.counselor.phone, counselorType: this.radioval })
+        .then((re) => {
+            console.log(re.data);
+        })
+    }
 
   },
   created(){
@@ -216,11 +247,11 @@ export default {
 }   
 .left-part {
     width: 547px;
-    height: 247px;
     display: flex;
     flex-direction: column;
     justify-content: space-around;
     padding-top: 20px;
+    padding-bottom: 100px;
 } 
 .info-label {
     color: #000;
@@ -257,6 +288,9 @@ export default {
     justify-content: left;
     padding: 10px 33px;
     box-sizing: border-box;
+}
+.info-edit>input:focus {
+    outline:none;
 }
 .right-part {
     width: 465px;
