@@ -1,5 +1,6 @@
 package com.ssafy.a403.domain.reservation.entity;
 
+import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
@@ -26,7 +27,7 @@ public class CounselingReservation {
 
     @ManyToOne
     @JoinColumn(name = "counselor_no")
-    private Member counselor;
+    private Counselor counselor;
 
     @Column(name="rez_time")
     private LocalDateTime reservationDateTime;
@@ -54,7 +55,7 @@ public class CounselingReservation {
 
 
     @Builder
-    public CounselingReservation(Long reservationNo, Member member, Member counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
+    public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
                                  String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded) {
         this.reservationNo = reservationNo;
         this.member = member;
@@ -71,11 +72,9 @@ public class CounselingReservation {
 
     public void cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
-            this.reservationStatus = ReservationStatus.Cancel;
+            reservationStatus = ReservationStatus.Cancel;
         } else {
             throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
         }
     }
-
-
 }

@@ -17,6 +17,7 @@ public class RoomService {
 
     public CounselingReservation saveRoom(RoomRequest roomRequest, String sessionId){
         Long reservationNo = roomRequest.getReservationNo();
+//        Long reservationNo = 1l;
 
         CounselingReservation counselingReservation = CounselingReservation.builder()
                 .reservationNo(reservationNo)

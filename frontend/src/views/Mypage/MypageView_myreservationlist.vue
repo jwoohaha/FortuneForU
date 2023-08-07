@@ -23,7 +23,7 @@
                         <div class="status-part">
                             <div id="status1">🤍 예약중</div>
                             <div id="status2">🤍 완료</div>
-                            <div id="status3">🤍 취소</div>
+                            <div id="status3">🤍 취소</div>을 
                         </div>
                         <div class="table-header">
                             <div>상담가</div>
@@ -105,7 +105,7 @@
                                 <div id="coun-satus">대기</div>
                                 <div class="divider">|</div>
                                 <div id="coun-room">
-                                    <div>🏠</div>
+                                    <div @click="enterRoom">🏠</div>
                                     <div>📑</div>
                                 </div>
                             </div>
@@ -123,10 +123,10 @@
     
 <script>
 import PageButton from '../../components/common/PageButton.vue';
-
 export default {
     components: {
-        PageButton
+        PageButton,
+
     },
     data() {
     return {
@@ -135,9 +135,22 @@ export default {
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         ],
+        name:"user",
+        sessionId:"cadc200d-486b-44df-8f18-aac2153db32f"
     };
     },
-}
+    methods:{
+        enterRoom(){
+            this.$router.push({
+                name:"chatview",
+                query:{
+                    name:this.name,
+                    sessionId: this.sessionId,
+                }
+            });
+        },
+    },
+};
 </script>
 
 <style lang="scss" scoped="scss">
