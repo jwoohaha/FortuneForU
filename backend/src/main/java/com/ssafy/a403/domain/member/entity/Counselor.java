@@ -6,6 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 
 @Entity
 @Getter
@@ -32,9 +33,12 @@ public class Counselor {
 
     private String phone;
 
+    @Column(precision = 2, scale = 1)
+    private BigDecimal counselorScore;
+
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone) {
+                     String address, String phone, BigDecimal counselorScore) {
         this.no = no;
         this.member = member;
         this.counselorType = counselorType;
@@ -42,5 +46,6 @@ public class Counselor {
         this.intro = intro;
         this.address = address;
         this.phone = phone;
+        this.counselorScore = counselorScore;
     }
 }

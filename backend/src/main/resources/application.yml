@@ -33,6 +33,13 @@ spring:
 #    password: D8C74FDD9DC1E2B7C2D7F5833C7CF51461904456EE6C0DC65303D9B9D38B346C
 #
 
+#테스트
+  datasource:
+    url: jdbc:h2:tcp://localhost/~/test
+    username: sa
+    password:
+    driver-class-name: org.h2.Driver
+
 
 
   # JPA
