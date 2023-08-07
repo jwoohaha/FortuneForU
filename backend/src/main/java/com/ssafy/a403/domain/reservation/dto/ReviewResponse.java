@@ -17,7 +17,7 @@ public class ReviewResponse {
     private String memberName;
     private String counselorName;
     private String profileImage;
-    private BigDecimal counselorScore;
+    private float ratingAvg;
     private BigDecimal reservationScore;
     private String review;
 
@@ -28,7 +28,7 @@ public class ReviewResponse {
         reviewResponse.counselorName = counselingReservation.getCounselor().getMember().getName();
         reviewResponse.review = counselingReservation.getReservationReview();
         reviewResponse.profileImage = counselingReservation.getCounselor().getMember().getProfileImage();
-        reviewResponse.counselorScore = counselingReservation.getCounselor().getCounselorScore();
+        reviewResponse.ratingAvg = counselingReservation.getCounselor().getRatingAvg();
         reviewResponse.reservationScore = counselingReservation.getReservationScore();
 
         return reviewResponse;

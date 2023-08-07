@@ -4,6 +4,7 @@ import com.ssafy.a403.domain.model.CounselorType;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
@@ -33,12 +34,16 @@ public class Counselor {
 
     private String phone;
 
-    @Column(precision = 2, scale = 1)
-    private BigDecimal counselorScore;
+    @ColumnDefault("0")
+    private int reviewCnt;
+
+    @ColumnDefault("0.00")
+    private float ratingAvg;
+
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone, BigDecimal counselorScore) {
+                     String address, String phone) {
         this.no = no;
         this.member = member;
         this.counselorType = counselorType;
@@ -46,6 +51,10 @@ public class Counselor {
         this.intro = intro;
         this.address = address;
         this.phone = phone;
-        this.counselorScore = counselorScore;
+    }
+
+    public void updateCounselorReview(float rating) {
+        this.ratingAvg = Math.round((this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1));
+        this.reviewCnt += 1;
     }
 }

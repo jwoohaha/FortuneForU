@@ -106,7 +106,7 @@ public class CounselingReservation {
 
     // 리뷰가 비어있는지 확인
     public boolean checkEmpty() {
-        return reservationReview.isEmpty();
+        return reservationReview == null || reservationReview.isEmpty();
     }
 
     // 권한 확인

@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class ReservationRequest {
 
-//    private Long reservationNo;
+
     private Long memberId;
     private Long counselorId;
     private LocalDateTime reservationDate;

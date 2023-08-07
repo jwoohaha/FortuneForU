@@ -26,7 +26,7 @@ public class CounselingReservationService {
     private final CounselingReservationRepository counselingReservationRepository;
     private final MemberRepository memberRepository;
     private final CounselorRepository counselorRepository;
-//    private final ReviewInfo reviewInfo;
+
 
     //예약하기
     public Long reservation(Long memberId, Long counselorId, LocalDateTime reservationDate) {
@@ -71,11 +71,8 @@ public class CounselingReservationService {
 
 //        // 예약 가능한 시간인지 확인?
 
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new EntityNotFoundException("존재하지 않는 회원입니다."));
-        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(
-                () -> new EntityNotFoundException("존재하지 않는 상담가입니다."));
-
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
 
         CounselingReservation counselingReservation = CounselingReservation.builder()
                 .member(member)
@@ -102,9 +99,7 @@ public class CounselingReservationService {
 
     // 일반회원 예약 조회
     public List<ReservationResponse> getReservation(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다.")
-        );
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
         List<CounselingReservation> reservations = counselingReservationRepository.findByMember(member);
         if (reservations.isEmpty()) {
             return Collections.emptyList();
@@ -117,9 +112,7 @@ public class CounselingReservationService {
 
     // 상담가 예약 조회
     public List<ReservationResponse> getCoReservation(Long counselorId) {
-        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다.")
-        );
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
         List<CounselingReservation> reservations = counselingReservationRepository.findByCounselor(counselor);
         if (reservations.isEmpty()) {
             return Collections.emptyList();
@@ -132,9 +125,7 @@ public class CounselingReservationService {
 
     // 예약 번호로 예약 조회
     public ReservationResponse checkReservation(Long reservationNo) {
-        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 예약입니다.")
-        );
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
         return new ReservationResponse().from(counselingReservation);
     }
 
@@ -143,15 +134,9 @@ public class CounselingReservationService {
     //예약 취소
     @Transactional
     public void cancelReservation(Long reservationNo) {
-       CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(
-               () -> new IllegalArgumentException("존재하지 않는 예약입니다.")
-       );
-       Long memberId = counselingReservation.getMember().getNo();
-       if (counselingReservation.getMember().getNo().equals(memberId)){
-           counselingReservation.cancel();
-       } else {
-           throw new IllegalArgumentException("You do not have permission to delete.");
-       }
+       CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
+
+       counselingReservation.cancel();
     }
 
 
@@ -160,9 +145,7 @@ public class CounselingReservationService {
     // 후기 작성
     @Transactional
     public void postReview(Long reservationNo, Long memberId, String review) {
-        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 예약입니다.")
-        );
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
         if (!counselingReservation.checkEmpty()) {
             throw new IllegalArgumentException("Review already written");
@@ -182,7 +165,7 @@ public class CounselingReservationService {
     // 후기 삭제
     @Transactional
     public void deleteReview(Long reservationNo) {
-        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElse(null);
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
         if (counselingReservation != null) {
             counselingReservation.deleteReview();
@@ -205,9 +188,8 @@ public class CounselingReservationService {
 
     // 일반회원 후기 조회
     public List<ReviewResponse> getReview(Long memberId) {
-        Member member = memberRepository.findById(memberId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 회원입니다.")
-        );
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+
         List<CounselingReservation> reservations = counselingReservationRepository.findByMember(member);
         if (reservations.isEmpty()) {
             return Collections.emptyList();
@@ -219,9 +201,8 @@ public class CounselingReservationService {
 
     // 상담사 후기 조회
     public List<ReviewResponse> getCoReview(Long counselorId){
-        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(
-                () -> new IllegalArgumentException("존재하지 않는 상담사입니다.")
-        );
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
+
         List<CounselingReservation> reservations = counselingReservationRepository.findByCounselor(counselor);
         if (reservations.isEmpty()) {
             return Collections.emptyList();
