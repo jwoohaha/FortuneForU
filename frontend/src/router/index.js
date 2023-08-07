@@ -75,8 +75,18 @@ const routes = [
   },
   {
     path: '/counselor-form',
-    name: 'counselor-form-view',
+    name: 'counselor-form',
     component: () => import(/* webpackChunkName: "counreview" */ '@/views/CounselorFormView')
+  },
+  {
+    path: '/admin/counselor-form-list',
+    name: 'counselor-form-list-view',
+    component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormListView')
+  },
+  {
+    path: '/admin/counselor-form-view',
+    name: 'counselor-form-view',
+    component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormDetailView')
   }
 ]
 
