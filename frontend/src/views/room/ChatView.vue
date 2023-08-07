@@ -96,8 +96,6 @@
   import { apiInstance } from '@/api/index'
   axios.defaults.headers.post["Content-Type"] = "application/json";
   
-  const APPLICATION_SERVER_URL = process.env.NODE_ENV === 'production' ? '' : 'http://localhost:5000/';
-  
 
   export default {
     
@@ -132,7 +130,11 @@
         hasAudio:'true',
         hasVideo:'true',
         forceRecordingId: "",
-        res:{}
+        res:{},
+
+        roomRequest : {
+          reservationNo : 1,
+        },
 
       };
     },
@@ -325,9 +327,7 @@ async stopRecording() {
   
       async createSession() {
         
-        const response = await axios.post(APPLICATION_SERVER_URL + 'api/roomsession', {
-          headers: { 'Content-Type': 'application/json', },
-        });
+        const response = await this.api.post('/api/roomsession', this.roomRequest)
         console.log("2. createsession 함수 정상실행");
         console.log("받아온 sessionId"+response.data.sessionId);
         this.sessionId= response.data.sessionId;
@@ -336,9 +336,7 @@ async stopRecording() {
   
       async createToken(sessionId) {
         console.log("createToken 넘어옴");
-        const response = await axios.post(APPLICATION_SERVER_URL + 'api/sessions/' + sessionId + '/connections', {}, {
-          headers: { 'Content-Type': 'application/json', },
-        });
+        const response = await this.api.post('/api/sessions/' + sessionId + '/connections')
         console.log("createToken 함수 정상실행");
         console.log(response.data);
         return response.data; // The token

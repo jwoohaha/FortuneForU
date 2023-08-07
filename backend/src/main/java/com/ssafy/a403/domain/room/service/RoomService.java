@@ -1,5 +1,6 @@
 package com.ssafy.a403.domain.room.service;
 
+import com.ssafy.a403.domain.model.ReservationStatus;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.reservation.repository.CounselingReservationRepository;
 import com.ssafy.a403.domain.room.dto.RoomRequest;
@@ -7,24 +8,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-@Transactional
 public class RoomService {
 
     private final CounselingReservationRepository counselingReservationRepository;
 
-    public CounselingReservation saveRoom(RoomRequest roomRequest, String sessionId){
-        Long reservationNo = roomRequest.getReservationNo();
-//        Long reservationNo = 1l;
+    @Transactional
+    public Optional<CounselingReservation> saveRoom(RoomRequest roomRequest, String sessionId){
 
-        CounselingReservation counselingReservation = CounselingReservation.builder()
-                .reservationNo(reservationNo)
-                .sessionId(sessionId)
-                .build();
+        counselingReservationRepository.saveRoom(sessionId, ReservationStatus.Proceeding, roomRequest.getReservationNo());
 
-        return counselingReservationRepository.save(counselingReservation);
+        return counselingReservationRepository.findById(roomRequest.getReservationNo());
 
     }
 
