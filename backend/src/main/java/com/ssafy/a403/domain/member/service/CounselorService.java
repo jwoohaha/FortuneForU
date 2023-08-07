@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.util.Arrays;
 import java.util.List;
 
 @Service
@@ -31,14 +32,16 @@ public class CounselorService {
 
     // 상담가 평점 순 조회
     public Page<Counselor> findByRating(CounselorType counselorType, int pageNumber, int pageSize) {
-        Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "averageRating"));
-        return counselorRepository.findAllByCounselorTypeOrderByRatingAvgDesc(counselorType, pageable);
+        PageRequest pageRequest = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "ratingAvg"));
+        List<CounselorType> counselorTypes = Arrays.asList(CounselorType.BOTH, counselorType);
+        return counselorRepository.findAllByCounselorTypeInOrderByRatingAvgDesc(counselorTypes, pageRequest);
     }
 
     // 상담가 후기 순 조회
     public Page<Counselor> findByReview(CounselorType counselorType, int pageNumber, int pageSize) {
         Pageable pageable = PageRequest.of(pageNumber, pageSize, Sort.by(Sort.Direction.DESC, "reviewCnt"));
-        return counselorRepository.findAllByCounselorTypeOrderByReviewCntDesc(counselorType, pageable);
+        List<CounselorType> counselorTypes = Arrays.asList(CounselorType.BOTH, counselorType);
+        return counselorRepository.findAllByCounselorTypeInOrderByReviewCntDesc(counselorTypes, pageable);
     }
 
     // 상담사 정보 수정

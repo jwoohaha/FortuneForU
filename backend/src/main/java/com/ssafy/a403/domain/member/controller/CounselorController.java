@@ -47,20 +47,26 @@ public class CounselorController {
      * 상담사 평점 순 조회
      */
     @GetMapping("/api/counselors/by_ratings")
-    public Page<Counselor> getCounselorInfoByRating(@RequestParam(defaultValue = "BOTH") CounselorType counselorType,
+    public ResponseEntity<Page<CounselorInfoResponse>> getCounselorInfoByRating(@RequestParam CounselorType counselorType,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "6") int size) {
-        return counselorService.findByRating(counselorType, page, size);
+        Page<Counselor> counselorPage = counselorService.findByRating(counselorType, page, size);
+        Page<CounselorInfoResponse> counselorResponsePage = counselorPage
+                .map(counselor -> CounselorInfoResponse.from(counselor));
+        return ResponseEntity.ok(counselorResponsePage);
     }
 
     /**
      * 상담사 후기 순 조회
      */
-    @GetMapping("/api/counselors/by_review")
-    public Page<Counselor> getCounselorInfoByReview(@RequestParam(defaultValue = "BOTH") CounselorType counselorType,
+    @GetMapping("/api/counselors/by_reviews")
+    public ResponseEntity<Page<CounselorInfoResponse>> getCounselorInfoByReview(@RequestParam CounselorType counselorType,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "6") int size) {
-        return counselorService.findByReview(counselorType, page, size);
+        Page<Counselor> counselorPage = counselorService.findByReview(counselorType, page, size);
+        Page<CounselorInfoResponse> counselorResponsePage = counselorPage
+                .map(counselor -> CounselorInfoResponse.from(counselor));
+        return ResponseEntity.ok(counselorResponsePage);
     }
 
     /**
