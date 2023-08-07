@@ -30,6 +30,8 @@ public class Counselor {
 
     private String intro;
 
+    private String career;
+
     private String address;
 
     private String phone;
@@ -42,12 +44,13 @@ public class Counselor {
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone) {
+                    String career, String address, String phone) {
         this.no = no;
         this.member = member;
         this.counselorType = counselorType;
         this.major = major;
         this.intro = intro;
+        this.career = career;
         this.address = address;
         this.phone = phone;
     }
@@ -56,6 +59,7 @@ public class Counselor {
         this.counselorType = request.getCounselorType();
         this.major = request.getMajor();
         this.intro = request.getIntro();
+        this.career = request.getCareer();
         this.address = request.getAddress();
         this.phone = request.getPhone();
     }
@@ -64,7 +68,5 @@ public class Counselor {
         this.ratingAvg = Math.round((this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1));
         this.reviewCnt += 1;
     }
-
-
 
 }

@@ -10,6 +10,7 @@ public class UpdateCounselorRequest {
     private CounselorType counselorType;
     private String major;
     private String intro;
+    private String career;
     private String address;
     private String phone;
 
