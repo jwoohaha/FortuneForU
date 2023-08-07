@@ -2,7 +2,7 @@
   <div class="modal">
     <div class="modal-overlay" @click="$emit('close-modal')"></div>
     <modal-content modalWidth="3" modalHeight="1.2">
-      <login-content></login-content>
+      <login-content @close-modal="$emit('close-modal')"></login-content>
     </modal-content>
   </div>
 </template>

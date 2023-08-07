@@ -20,8 +20,8 @@
     <table id="counselor-form-list-table">
       <tr>
         <th class="counselor-form-list-th" style="width: 30%;">이름</th>
-        <th class="counselor-form-list-th" style="width: 40%;">신청일시</th>
-        <th class="counselor-form-list-th" style="width: 20%;">상태</th>
+        <th class="counselor-form-list-th" style="width: 55%;">신청일시</th>
+        <th class="counselor-form-list-th" style="width: 15%;">상태</th>
       </tr>
       <tr>
         <td><div class="hr-wrapper"></div></td>
@@ -71,7 +71,7 @@ export default {
 }
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 #counselor-form-header-container{
   width: 50%;
   margin-left: auto;

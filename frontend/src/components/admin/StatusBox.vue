@@ -26,7 +26,7 @@ export default {
   height: 35px;
   align-items: center;
   justify-content: center;
-  border-radius: 5px;
+  border-radius: 10px;
   font-size: 16px;
   font-style: normal;
   font-weight: 700;

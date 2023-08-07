@@ -22,7 +22,7 @@ export default {
 
 <style lang="scss">
 #counselor-form-header-container{
-  width: 59%;
+  width: 55%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 120px;

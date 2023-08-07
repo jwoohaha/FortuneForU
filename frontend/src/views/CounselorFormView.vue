@@ -25,7 +25,7 @@ export default {
 
 <style lang="scss">
 #counselor-form-header-container{
-  width: 59%;
+  width: 55%;
   margin-left: auto;
   margin-right: auto;
   margin-top: 120px;
@@ -62,7 +62,7 @@ export default {
 .hr-wrapper {
   border:#333333 0.5px solid;
   height: 0px;
-  width: 65%;
+  width: 80%;
   padding: 0;
   margin-top: 10px;
   margin-bottom: 50px;

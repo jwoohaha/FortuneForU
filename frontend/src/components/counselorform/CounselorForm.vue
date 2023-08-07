@@ -85,7 +85,7 @@ export default {
 
 #counselor-form-container {
   display: flex;
-  width: 75%;
+  width: 70%;
   margin-left: auto;
   margin-right: auto;
 }
