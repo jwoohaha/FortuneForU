@@ -83,7 +83,9 @@
                                 <div class="cell-txt">A1234</div>
                             </div>
                             <div class="res-cell" id="cell-btns">
-                                <SquareButton id="start-btn">상담 시작</SquareButton>
+                                <SquareButton id="start-btn">
+                                    <router-link to="/chatview">상담 시작</router-link>
+                                    </SquareButton>
                                 <SquareButton isTarot id="cancel-btn">취소</SquareButton>
                             </div>
                         </div>
@@ -98,15 +100,17 @@
     
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
-
 export default {
+    
     components: {
         SquareButton,
     },
     data() {
     return {
+        name:'consultant'
     };
     },
+
 }
 </script>
     

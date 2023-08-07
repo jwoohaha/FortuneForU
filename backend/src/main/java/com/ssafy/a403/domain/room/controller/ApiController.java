@@ -31,7 +31,7 @@ public class ApiController {
     @PostMapping("/api/roomsession")
     public ResponseEntity<?> makeRoomSession(@RequestBody RoomRequest roomRequest, HttpServletRequest request)
             throws OpenViduJavaClientException, OpenViduHttpException {
-
+        System.out.println("넘어옴");
         log.info("---------------------방 만들기 시작----------------------");
 
         //랜덤 sessionId 생성
@@ -82,7 +82,7 @@ public class ApiController {
         ConnectionProperties properties = new ConnectionProperties.Builder().build();
         Connection connection = session.createConnection(properties);
 
-        return new ResponseEntity<>(connection, HttpStatus.OK);
+        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
 
     }
 
@@ -118,7 +118,7 @@ public class ApiController {
     }
 
     //녹화 시작
-    @GetMapping(value = "/api/recording/{sessionId}")
+    @PostMapping(value = "/api/recording/{sessionId}")
     public ResponseEntity<?> startRecording(@PathVariable String sessionId){
 
         log.info("------------------------녹화 시작-------------------");
@@ -135,6 +135,24 @@ public class ApiController {
             log.info("start recording : " + recording.getUrl());
             return new ResponseEntity<>(recording, HttpStatus.OK);
         } catch (OpenViduHttpException | OpenViduJavaClientException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+
+    }
+    // 녹화 중지
+    @PostMapping(value = "/api/recording/stop/{sessionId}")
+    public ResponseEntity<?> stopRecording(@PathVariable String sessionId){
+
+        log.info("------------------------녹화 중지-------------------");
+
+        String recordingId = sessionId;
+
+        try {
+            Recording recording = this.openVidu.stopRecording(recordingId); // 안에 정보가 들어간다.
+//            this.sessionRecordings.remove(recording.getSessionId()); // 만들지 않았으니 없앨것도 없고
+            return new ResponseEntity<>(recording, HttpStatus.OK);
+        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
