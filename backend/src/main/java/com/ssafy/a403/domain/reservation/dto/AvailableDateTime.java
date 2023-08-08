@@ -14,9 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class AvailableDateTime {
 
-    private LocalDateTime startDatetime;
+    private String startTime;
 
-    private LocalDateTime endDatetime;
+    private String endTime;
 
     private List<LocalDateTime> reservationList = new ArrayList<>();
 
@@ -24,8 +24,8 @@ public class AvailableDateTime {
 
     public AvailableDateTime from(Counselor counselor, List<LocalDateTime> reservations){
         AvailableDateTime availableDateTime = new AvailableDateTime();
-        availableDateTime.startDatetime = counselor.getStartDatetime();
-        availableDateTime.endDatetime = counselor.getEndDatetime();
+        availableDateTime.startTime = counselor.getStartTime();
+        availableDateTime.endTime = counselor.getEndTime();
         availableDateTime.reservationList = reservations;
 
         return availableDateTime;

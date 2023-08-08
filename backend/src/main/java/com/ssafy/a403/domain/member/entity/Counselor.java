@@ -42,14 +42,14 @@ public class Counselor {
     @ColumnDefault("0.00")
     private float ratingAvg;
 
-    private String startDatetime;
+    private String startTime;
 
-    private String endDatetime;
+    private String endTime;
 
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone, String startDatetime, String endDatetime,
+                     String address, String phone, String startTime, String endTime,
                     String career) {
         this.no = no;
         this.member = member;
@@ -59,8 +59,8 @@ public class Counselor {
         this.career = career;
         this.address = address;
         this.phone = phone;
-        this.startDatetime = startDatetime;
-        this.endDatetime = endDatetime;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
 
 
