@@ -327,7 +327,7 @@ async stopRecording() {
   
       async createSession() {
         
-        const response = await this.api.post('/api/roomsession', this.roomRequest)
+        const response = await this.api.post('/roomsession', this.roomRequest)
         console.log("2. createsession 함수 정상실행");
         console.log("받아온 sessionId"+response.data.sessionId);
         this.sessionId= response.data.sessionId;
@@ -336,7 +336,7 @@ async stopRecording() {
   
       async createToken(sessionId) {
         console.log("createToken 넘어옴");
-        const response = await this.api.post('/api/sessions/' + sessionId + '/connections')
+        const response = await this.api.post('/sessions/' + sessionId + '/connections')
         console.log("createToken 함수 정상실행");
         console.log(response.data);
         return response.data.token; // The token
