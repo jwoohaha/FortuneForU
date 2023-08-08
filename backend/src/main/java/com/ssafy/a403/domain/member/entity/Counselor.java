@@ -50,7 +50,7 @@ public class Counselor {
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone, LocalDateTime startDate, LocalDateTime endDatetime,
+                     String address, String phone, LocalDateTime startDatetime, LocalDateTime endDatetime,
                     String career) {
         this.no = no;
         this.member = member;
@@ -60,7 +60,7 @@ public class Counselor {
         this.career = career;
         this.address = address;
         this.phone = phone;
-        this.startDatetime = startDate;
+        this.startDatetime = startDatetime;
         this.endDatetime = endDatetime;
     }
 
