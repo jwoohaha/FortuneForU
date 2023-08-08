@@ -339,7 +339,7 @@ async stopRecording() {
         const response = await this.api.post('/api/sessions/' + sessionId + '/connections')
         console.log("createToken 함수 정상실행");
         console.log(response.data);
-        return response.data; // The token
+        return response.data.token; // The token
       },
     },
   };

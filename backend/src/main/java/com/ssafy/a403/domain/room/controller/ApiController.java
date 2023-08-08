@@ -5,6 +5,8 @@ import com.ssafy.a403.domain.room.dto.RoomCloseRequest;
 import com.ssafy.a403.domain.room.dto.RoomRequest;
 import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
+import com.ssafy.a403.global.advice.CustomException;
+import com.ssafy.a403.global.advice.GlobalControllerAdvice;
 import com.ssafy.a403.global.config.security.LoginUser;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.HttpClientErrorException;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -71,7 +74,7 @@ public class ApiController {
 
     //방 입장하기
     @PostMapping("/api/sessions/{sessionId}/connections")
-    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId)
+    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException{
 
         log.info("--------------------방 접속 시작---------------------------");
@@ -80,33 +83,51 @@ public class ApiController {
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
 
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
+
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
 
-        //TODO JWT로 userinfo 불러와서 userId와 sessionId 비교해서 oepnviudRole 부여
         //연결과 토큰 만들기
-        ConnectionProperties properties = new ConnectionProperties.Builder().build();
-        Connection connection = session.createConnection(properties);
+        ConnectionProperties properties;
+        Connection connection;
 
-        return new ResponseEntity<>(connection.getToken(), HttpStatus.OK);
+        if(sessionId.startsWith(memberId)){
+            properties = new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build();
+            connection = session.createConnection(properties);
+        }else{
+            properties = new ConnectionProperties.Builder().role(OpenViduRole.SUBSCRIBER).build();
+            connection = session.createConnection(properties);
+        }
+
+        return new ResponseEntity<>(connection, HttpStatus.OK);
 
     }
 
 
     //방 삭제하기
-    @PutMapping("/api/sessions")
-    public ResponseEntity<?> closeRoom(@RequestBody RoomCloseRequest roomCloseRequest) throws OpenViduJavaClientException, OpenViduHttpException {
+    @PutMapping("/api/sessions/{sessionId}")
+    public ResponseEntity<?> closeRoom(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser) throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 삭제-----------------------");
 
-        String sessionId = roomCloseRequest.getSessionId();
-        String recordingId = roomCloseRequest.getRecordingId();
+        String recordingId = sessionId;
 
         CounselingReservation counselingReservation = roomService.findBySessionId(sessionId);
 
         Long reservationNo = counselingReservation.getReservationNo();
+
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
+
+        if(!sessionId.startsWith(memberId)){
+            throw new RuntimeException("error");
+        }
 
         //todo openvidurole 받아와서 상담가만 방삭제 + 녹화종료 가능하게 변경, 방 퇴장 따로 생성해야하는지 체크
 
@@ -117,6 +138,7 @@ public class ApiController {
         log.info("recordingUrl : " + recordingUrl);
 
         //sessionID null, recordingUrl update
+        //todo update 쿼리문 추가 , 성공 실패 시 구분 작업 필요
         if(roomService.updateSessionIdAndRecordingUrl(reservationNo, recordingUrl)){
             log.info("수정 완료");
         };
@@ -133,7 +155,6 @@ public class ApiController {
 
     }
 
-    //todo 녹화시작 따로 만들지 않고 방 생성할때 연동되는지 확인
     //녹화 시작
     @PostMapping(value = "/api/recording/{sessionId}")
     public ResponseEntity<?> startRecording(@PathVariable String sessionId){
