@@ -1,26 +1,18 @@
 package com.ssafy.a403.domain.room.controller;
 
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
-import com.ssafy.a403.domain.room.dto.RoomCloseRequest;
 import com.ssafy.a403.domain.room.dto.RoomRequest;
 import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
-import com.ssafy.a403.global.advice.CustomException;
-import com.ssafy.a403.global.advice.GlobalControllerAdvice;
 import com.ssafy.a403.global.config.security.LoginUser;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.client.HttpClientErrorException;
 
-import javax.annotation.PostConstruct;
-import javax.servlet.http.HttpServletRequest;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -125,11 +117,10 @@ public class ApiController {
         int idx = email.indexOf("@");
         String memberId = email.substring(0, idx);
 
+        //방 생성자만 삭제할 수 있게 설정
         if(!sessionId.startsWith(memberId)){
             throw new RuntimeException("error");
         }
-
-        //todo openvidurole 받아와서 상담가만 방삭제 + 녹화종료 가능하게 변경, 방 퇴장 따로 생성해야하는지 체크
 
         //녹화 종료 및 저장
         Recording recording = openVidu.stopRecording(recordingId);
@@ -138,9 +129,10 @@ public class ApiController {
         log.info("recordingUrl : " + recordingUrl);
 
         //sessionID null, recordingUrl update
-        //todo update 쿼리문 추가 , 성공 실패 시 구분 작업 필요
         if(roomService.updateSessionIdAndRecordingUrl(reservationNo, recordingUrl)){
             log.info("수정 완료");
+        }else{
+            throw new RuntimeException("error"); //수정 필요
         };
 
         //Session close
@@ -175,25 +167,5 @@ public class ApiController {
         }
 
     }
-    // 녹화 중지
-    @PostMapping(value = "/api/recording/stop/{sessionId}")
-    public ResponseEntity<?> stopRecording(@PathVariable String sessionId){
-
-        log.info("------------------------녹화 중지-------------------");
-
-        String recordingId = sessionId;
-
-        try {
-            Recording recording = this.openVidu.stopRecording(recordingId); // 안에 정보가 들어간다.
-            log.info("stop recording : " + recording.getUrl());
-//            this.sessionRecordings.remove(recording.getSessionId()); // 만들지 않았으니 없앨것도 없고
-            return new ResponseEntity<>(recording, HttpStatus.OK);
-        } catch (OpenViduJavaClientException | OpenViduHttpException e) {
-            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
-        }
-
-
-    }
-
 
 }
