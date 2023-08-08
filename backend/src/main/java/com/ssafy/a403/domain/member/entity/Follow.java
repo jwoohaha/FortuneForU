@@ -1,28 +1,29 @@
 package com.ssafy.a403.domain.member.entity;
 
+import com.ssafy.a403.global.audit.BaseTime;
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import org.springframework.data.domain.Persistable;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
-@NoArgsConstructor
+@Getter
 @Entity
-@Table(
-        uniqueConstraints = @UniqueConstraint(columnNames = {"to_user", "from_user"})
-)
-@IdClass(Follow.PK.class)
-public class Follow {
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+public class Follow extends BaseTime implements Persistable<FollowId> {
 
-    @Id
-    @Column(name = "to_user")
-    private Long toUser;
+    @EmbeddedId
+    private FollowId id;
 
-    @Id
-    @Column(name="from_user")
-    private Long fromUser;
+    public Follow(Member follower, Member followee) {
+        this.id = new FollowId(follower, followee);
+    }
 
-    public static class PK implements Serializable {
-        Long toUser;
-        Long fromUser;
+    @Override
+    public boolean isNew() {
+        return getCreated() == null;
     }
 }

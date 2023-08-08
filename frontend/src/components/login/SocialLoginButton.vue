@@ -13,6 +13,7 @@ export default {
   methods: {
     socialLogin() {
       const url = 'http://localhost:5000/oauth2/authroize/google';
+      //local 에서는 ssafytest.shop 안됨
 
       location.href = url;
     }

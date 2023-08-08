@@ -1,5 +1,8 @@
 package com.ssafy.a403.domain.member.service;
 
+import com.ssafy.a403.domain.member.dto.MemberDetailsResponse;
+import com.ssafy.a403.domain.member.dto.MemberInfoResponse;
+import com.ssafy.a403.domain.member.entity.FollowId;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -9,33 +12,31 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
-import java.util.Optional;
+import java.util.List;
 
 @Service
 @Transactional(readOnly = true)
 @RequiredArgsConstructor
 public class MemberService {
-    private final MemberRepository userRepository;
+
+    private final FollowService followService;
+    private final MemberRepository memberRepository;
 
     public Member findById(Long id) {
-        return userRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        return memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
-    public Boolean checkLoginIdDuplication( ) {
-
-        return null;
+    public MemberInfoResponse getMemberInfo(Member member) {
+        return MemberInfoResponse.of(member);
     }
 
-    @Transactional
-    public void deleteById(Long id) {
-        Optional<Member> member = userRepository.findById(id);
-        if (member.isEmpty()) {
-            return;
-        }
-        userRepository.delete(member.get());
+    public MemberDetailsResponse getMemberDetails(Member member){
+
+        List<Member> followers = followService.followerList(member);
+        return MemberDetailsResponse.of(member, followers);
     }
 
     public Page<Member> findPaging(Pageable pageable) {
-        return userRepository.findPaging(pageable);
+        return memberRepository.findPaging(pageable);
     }
 }
