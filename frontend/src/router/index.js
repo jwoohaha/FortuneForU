@@ -23,7 +23,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "community" */ '../views/CommunityView.vue')
   },
   {
-    path: '/reservation',
+    path: '/reservation/:id',
     name: 'reservation',
     component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
   },

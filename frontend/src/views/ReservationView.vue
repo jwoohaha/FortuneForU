@@ -1,13 +1,13 @@
 <template>
     <div class="reservation-view">
       <div class="empty-box"></div>
-      <div class="contents">
+      <div class="reservation-contents">
         
         <div class="reservation-header">
           <div class="top-header">
             <div class="left-header">
               <div class="top-title">
-                타로 상담 예약
+                상담 예약
                   <span class="top-subtitle">
                     원하는 상담사를 선택한 후 예약하세요.
                   </span>
@@ -22,27 +22,27 @@
 
           <div class="reservation-box">
             <div class="res-title">
-                안녕하세요. 타로 외길 인생 24년, 소윤파크입니다.
+                안녕하세요. 타로 외길 인생 24년, {{ counselor.name }}입니다.
                 <div class="hr-wrapper"></div>
             </div>
 
-           <div class="reservation-content">
+           <div class="reservation-section">
              <div class="profile-section">
                 <div class="profile-img">
-                    <img src="../assets/dummy_counselor_img.jpg" alt="">
+                    <img src={{counselor.profileImg}}>
                 </div>
                 <div class="profile-txt">
-                    <div>성명 : 소윤파크</div>
-                    <div>소개 : MBTI 박사 과정</div>
-                    <div>전문분야 : 궁합/애정, 취업/시험</div>
+                    <div>성명 : {{ counselor.name }}</div>
+                    <div>경력 : {{ counselor.career }}</div>
+                    <div>전문분야 : {{ counselor.major }}</div>
                     <div class="tag-info">#솔직담백 #연애전문</div>
                 </div>
             </div>
             
             <div class="review-section">
                 <div class="review-title">생생한 상담 후기</div>
-                <div v-for="counselor in counselors" :key="counselor.id">
-                    <ReviewCard :counselor="counselor"></ReviewCard>
+                <div v-for="coun in counselors" :key="coun.id">
+                    <ReviewCard :counselor="coun"></ReviewCard>
                 </div>
             </div>
 
@@ -80,6 +80,7 @@
 
 <script>
 import ReviewCard from '../components/common/ReviewCard.vue';
+import { apiInstance } from '@/api/index';
 
 export default {
   components: {
@@ -92,8 +93,24 @@ export default {
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
       ],
+      counselor: [],
     };
   },
+  methods: {
+    async getCounselorInfo(id){
+      const getCounselorsRequest = apiInstance();
+      await getCounselorsRequest.get(`counselors/${id}`)
+      .then((re) => {
+        console.log(re);
+        this.counselor = re.data;
+      })
+      .catch((e) => console.log(e))
+    }
+    
+  },
+  created(){
+    this.getCounselorInfo(this.$route.params.id)
+  }
  };
 </script>
 <style lang="scss" scoped>
@@ -103,6 +120,11 @@ export default {
 }
 .empty-box {
   height: 92px;
+}
+.reservation-contents{
+  padding-top: 82px;
+  width: 70vw;
+  margin-bottom: 200px;
 }
 .top-header {
   display: flex;
@@ -131,28 +153,23 @@ export default {
   display: inline-block;
 }
 .hr-wrapper {
-    border:#000000 0.5px solid;
-    height: 0px;
-    width: 65%;
-    padding: 0;
-    margin-top: 20px;
+  height: 1.5px;
+  background: #000;
+  width: 50%;
+  padding: 0;
+  margin-top: 20px;
     margin-bottom: 67px;
 }
-.contents {
-    width: 70%;
-    padding-top: 82px;
-    margin-bottom: 300px;
-}
 .reservation-box {
-    width: 1353px;
-    height: 836px;
-    flex-shrink: 0;
+    width: 100%;
+    height: 900px;
     border-radius: 10px;
     border: 2px solid #D7D7D7;  
     padding-top: 75px;
     padding-left: 65px;
     padding-bottom: 64px;
     padding-right: 65px;
+    box-sizing: border-box;
 }
 .res-title {
     color: #333;
@@ -164,10 +181,11 @@ export default {
     //text-decoration: underline;
     //text-underline-position : under;
 }
-.reservation-content {
+.reservation-section {
     display: flex;
     justify-content: space-between;
     margin-top: 64px;
+    flex-wrap: wrap;
 }
 .profile-section {
     display: inline-flex;
