@@ -1,10 +1,6 @@
 package com.ssafy.a403.domain.reservation.controller;
 
-
-import com.ssafy.a403.domain.reservation.dto.ReservationRequest;
-import com.ssafy.a403.domain.reservation.dto.ReservationResponse;
-import com.ssafy.a403.domain.reservation.dto.ReviewRequest;
-import com.ssafy.a403.domain.reservation.dto.ReviewResponse;
+import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.service.CounselingReservationService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +18,14 @@ public class CounselingReservationController {
     public CounselingReservationController(CounselingReservationService counselingReservationService) {
         this.counselingReservationService = counselingReservationService;
     }
+
+
+    @GetMapping("/availabledate/{counselorNo}/{date}")
+    public AvailableDateTime availableDate(@PathVariable Long counselorNo, @PathVariable String date){
+
+        return counselingReservationService.availableDateTime(counselorNo, date);
+    }
+
 
 
     //예약 db에 저장

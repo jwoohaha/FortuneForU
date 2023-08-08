@@ -8,6 +8,7 @@ import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -40,10 +41,14 @@ public class Counselor {
     @ColumnDefault("0.00")
     private float ratingAvg;
 
+    private LocalDateTime startDatetime;
+
+    private LocalDateTime endDatetime;
+
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone) {
+                     String address, String phone, LocalDateTime startDate, LocalDateTime endDatetime) {
         this.no = no;
         this.member = member;
         this.counselorType = counselorType;
@@ -51,6 +56,8 @@ public class Counselor {
         this.intro = intro;
         this.address = address;
         this.phone = phone;
+        this.startDatetime = startDate;
+        this.endDatetime = endDatetime;
     }
 
     public void updateCounselorReview(float rating) {

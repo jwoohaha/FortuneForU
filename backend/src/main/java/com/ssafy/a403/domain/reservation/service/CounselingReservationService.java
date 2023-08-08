@@ -5,6 +5,7 @@ import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import com.ssafy.a403.domain.model.ReservationStatus;
+import com.ssafy.a403.domain.reservation.dto.AvailableDateTime;
 import com.ssafy.a403.domain.reservation.dto.ReservationResponse;
 import com.ssafy.a403.domain.reservation.dto.ReviewResponse;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
@@ -12,7 +13,6 @@ import com.ssafy.a403.domain.reservation.repository.CounselingReservationReposit
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import javax.persistence.EntityNotFoundException;
 import java.time.LocalDateTime;
 import java.util.*;
@@ -30,46 +30,6 @@ public class CounselingReservationService {
 
     //예약하기
     public Long reservation(Long memberId, Long counselorId, LocalDateTime reservationDate) {
-        Member member1 = Member.builder()
-                .no(1L)
-                .name("John Doe")
-                .email("john@example.com")
-                .build();
-
-        Member member2 = Member.builder()
-                .no(2L)
-                .name("Jane Smith")
-                .email("jane@example.com")
-                .build();
-
-        Member member3 = Member.builder()
-                .no(3L)
-                .name("sudo wane")
-                .email("jane@example.com")
-                .build();
-
-        Member member4 = Member.builder()
-                .no(4L)
-                .name("kelly smith")
-                .email("smithe@example.com")
-                .build();
-
-        memberRepository.saveAll(Arrays.asList(member1, member2, member3, member4));
-
-        // 더미 데이터 생성 및 저장
-        Counselor counselor1 = Counselor.builder()
-                .no(1L)
-                .member(member1)
-                .build();
-
-        Counselor counselor2 = Counselor.builder()
-                .no(2L)
-                .member(member2)
-                .build();
-        counselorRepository.saveAll(Arrays.asList(counselor1, counselor2));
-
-
-//        // 예약 가능한 시간인지 확인?
 
         Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
         Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
@@ -84,6 +44,24 @@ public class CounselingReservationService {
         CounselingReservation savedReservation = counselingReservationRepository.save(counselingReservation);
 
         return savedReservation.getReservationNo();
+    }
+
+
+
+    // 특정 날짜 예약 가능한 시간
+    public AvailableDateTime availableDateTime(Long counselorId, String date) {
+
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
+        List<LocalDateTime> reservationDatetimeList = new ArrayList<>();
+        // 상담사의 모든 예약들
+        List<ReservationResponse> reservationResponseList = getCoReservation(counselorId);
+        for (ReservationResponse reservation : reservationResponseList) {
+            if (reservation.getReservationDateTime().toLocalDate().toString().equals(date)) {
+                reservationDatetimeList.add(reservation.getReservationDateTime());
+            }
+        }
+
+        return new AvailableDateTime().from(counselor, reservationDatetimeList);
     }
 
 
@@ -153,9 +131,10 @@ public class CounselingReservationService {
         if (!counselingReservation.checkMemberId(memberId)) {
             throw new IllegalArgumentException("Member does not match");
         }
-//        if (!counselingReservation.checkStatus()) {
-//            throw new IllegalArgumentException("Counseling session is not yet completed");
-//        }
+        if (!counselingReservation.checkStatus()) {
+            throw new IllegalArgumentException("Counseling is not finished");
+        }
+
         counselingReservation.saveReview(review);
         counselingReservationRepository.save(counselingReservation);
     }
@@ -209,8 +188,6 @@ public class CounselingReservationService {
         }
         return reviewList(reservations);
     }
-
-
 
 }
 
