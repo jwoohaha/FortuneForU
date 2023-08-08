@@ -35,21 +35,22 @@
           <div class="filter">
             <div>
               <ul class="filter-list">
-                <li>이름순</li>
-                <li>후기순</li>
-                <li>별점순</li>
+                <li @click="orderByReview()">후기순</li>
+                <li @click="orderByRating()">별점순</li>
               </ul>
             </div>
           </div>
           <div class="counselor-list">
-            <div v-for="counselor in counselors" :key="counselor.id">
-              <router-link to="/reservation"><CounselorCard :counselor="counselor"></CounselorCard></router-link> 
+            <div v-for="(counselor, idx) in counselors" :key="idx">
+              <router-link to="/reservation">
+                <CounselorCard :counselor="counselor"></CounselorCard>
+              </router-link> 
             </div>
           </div>
       </div>
       
       <div class="paging-section">
-        <PageButton></PageButton>
+        <PageButton :totalPages="totalPages" @page-changed="handlePageChange"></PageButton>
       </div>
     </div>
   </div>
@@ -59,6 +60,7 @@
 import CounselorCard from '../components/common/CounselorCard.vue';
 import PageButton from '../components/common/PageButton.vue';
 import { RoundButton } from "../components/styled-components/StyledButton";
+import { apiInstance } from '@/api/index';
 
 export default {
   components: {
@@ -68,16 +70,79 @@ export default {
   },
   data() {
     return {
-      counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-      ],
+      counselors: null,
+      criteria: 'review',
     };
   },
+  methods: {
+    getCounselorsByRatings(pageNum) {
+      const getCounselorsRequest = apiInstance();
+      getCounselorsRequest({
+        method: 'GET',
+        url: '/counselors/by_ratings/',
+        params: {
+          counselorType: 'TARO',
+          page: pageNum
+        }
+      })
+      .then((res) => {
+        console.log(res.data)
+        this.counselors = res.data.content
+        this.totalPages = res.data.totalPages
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    getCounselorsByReviews(pageNum) {
+      const getCounselorsRequest = apiInstance();
+      getCounselorsRequest({
+        method: 'GET',
+        url: '/counselors/by_reviews/',
+        params: {
+          counselorType: 'TARO',
+          page: pageNum
+        }
+      })
+      .then((res) => {
+        console.log(res.data.content)
+        this.counselors = res.data.content
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    // 페이지 버튼을 눌렀을 때 후기 순, 별점 순에 맞게 해당 페이지 조회
+    handlePageChange(pageNum) {
+      if(this.criteria == "review") {
+        this.getCounselorsByReviews(pageNum)
+      } else {
+        this.getCounselorsByRatings(pageNum)
+      }
+    },
+    // 버튼 클릭 -> 정렬 순서 변경 처리
+    orderByRating() {
+      if(this.criteria == "rating") {
+        return
+      } else {
+        this.criteria = "rating"
+        this.getCounselorsByRatings(0)
+      }
+    },
+    orderByReview() {
+      if(this.criteria == "review") {
+        return
+      } else {
+        this.criteria = "review"
+        this.getCounselorsByReviews(0)
+        console.log("실행!")
+      }
+    }
+  },
+
+  created() {
+    this.getCounselorsByRatings(0);
+  }
  };
 </script>
 

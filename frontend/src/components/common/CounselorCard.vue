@@ -1,16 +1,15 @@
 <template>
     <div class="counselor-card">
         <div class="upper-content">
-            <img class="card-img" src="src/assets/dummy_counselor_img.jpg">
+            <img class="card-img" src={{counselor.profileImg}}>
             <div class="card-info">
-                <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.rating }}</span> </p>
-                <p id="review-cnt"><span>{{ counselor.reviews }}</span>개의 후기</p>
-                <p id="possible-time">상담 가능 시간 <br/> 13:00 - 17:00</p>
+                <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.ratingAvg }}</span> </p>
+                <p id="review-cnt"><span>{{ counselor.reviewCnt }}</span>개의 후기</p>
+                <p>{{ counselor.career }}</p>
             </div>
         </div>
         <hr>
-        <p class="card-txt">Unforgiven, I'm a villain, I'm a-Unforgiven, 난 그 길을 걸어Unforgiven, I'm a villain, I'm a-새 시대로 기억될 unforgivenYeah, what you want?불편함이 깃든 face, wanna shut me up
-사냥감을 거듭해 찾는 워리어S너의 개임에 난 문제아 such a freak 골칫거리</p>
+        <p class="card-txt">{{ counselor.intro }}</p>
         <div class="btn">
             <RoundButton isTarot>예약</RoundButton>
         </div>
