@@ -105,7 +105,7 @@
                                 <div id="coun-satus">대기</div>
                                 <div class="divider">|</div>
                                 <div id="coun-room">
-                                    <div>🏠</div>
+                                    <div @click="enterRoom">🏠</div>
                                     <div>📑</div>
                                 </div>
                             </div>
@@ -123,10 +123,10 @@
     
 <script>
 import PageButton from '../../components/common/PageButton.vue';
-
 export default {
     components: {
-        PageButton
+        PageButton,
+
     },
     data() {
     return {
@@ -135,9 +135,22 @@ export default {
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         ],
+        name:"user",
+        sessionId:"mydowson50b83e0b-a37e-4072-9dfb-bffcfd68c897"
     };
     },
-}
+    methods:{
+        enterRoom(){
+            this.$router.push({
+                name:"chatview",
+                query:{
+                    name:this.name,
+                    sessionId: this.sessionId,
+                }
+            });
+        },
+    },
+};
 </script>
 
 <style lang="scss" scoped="scss">
