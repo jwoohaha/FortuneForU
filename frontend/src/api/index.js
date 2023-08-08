@@ -6,7 +6,7 @@ const store = useTokenStore();
 function apiInstance() {
     
     const instance = axios.create({
-        baseURL: 'http://localhost:5000',
+        baseURL: 'https://i9a403.p.ssafy.io/api',
         headers: {
             'Content-Type': 'application/json;charset=utf-8',
             'Authorization': store.getAccessToken,

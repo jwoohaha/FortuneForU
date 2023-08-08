@@ -1,37 +1,9 @@
 <template>
     <div id="main-container" class="container">
-      <!--
-      <div id="join" v-if="!session">
-        <div id="img-div">
-          
-        </div>
-        <div id="join-dialog" class="jumbotron vertical-center">
-          <h1>Join a video session</h1>
-          <div class="form-group">
-            <p>
-              <label>Participant</label>
-              <input v-model="myUserName" class="form-control" type="text" required />
-            </p>
-            <p>
-              <label>Session</label>
-              <input v-model="mySessionId" class="form-control" type="text" required />
-            </p>
-            <p class="text-center">
-              <button class="btn btn-lg btn-success" @click="joinSession()">
-                Join!
-                
-              </button>
-              <nav>{{name}} 하이</nav>
-            </p>
-          </div>
-        </div>
-      </div>
-    -->
       <div id="session" v-if="session">
         <div id="session-header">
           <h1 id="session-title">{{ username }}</h1>
-          <h1>여기 위에 나와야함</h1>
-          <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="leaveSession"
+          <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="closing"
             value="Leave session" />
         </div>
         <div id="main-video" class="col-md-6">
@@ -71,7 +43,7 @@
 					<input class="btn btn-md" type="button" id="buttonDeleteRecording" @mouseup="deleteRecording()" value="Delete recording" disabled>
 					<input class="form-control" id="forceRecordingId" type="text" @keyup="checkBtnsRecordings()">
 				</div>
-				<div class="textarea-container" id="textarea-http-container">
+				<!-- <div class="textarea-container" id="textarea-http-container">
 					<button type="button" class="btn btn-outline-secondary" id="clear-http-btn" @click="clearHttpTextarea()">Clear</button>
 					<span>HTTP responses</span>
 					<textarea id="textarea-http" readonly="true" class="form-control" name="textarea-http"></textarea>
@@ -81,7 +53,7 @@
 					<button type="button" class="btn btn-outline-secondary" id="clear-events-btn" @click="clearEventsTextarea()">Clear</button>
 					<span>OpenVidu events</span>
 					<textarea id="textarea-events" readonly="true" class="form-control" name="textarea-events"></textarea>
-				</div>
+				</div> -->
 			</div>
 
       </div>
@@ -122,7 +94,7 @@
         mainStreamManager: undefined,
         publisher: undefined,
         subscribers: [],
-  
+        isRecorder: false,
         // Join form
 
         myUserName: "Participant" + Math.floor(Math.random() * 100),
@@ -213,6 +185,9 @@
   
               this.session.publish(this.publisher);
               console.log("publish 실행");
+              if(this.isRecorder){
+                this.startRecording();
+              }
             })
             .catch((error) => {
               console.log("There was an error connecting to the session:", error.code, error.message);
@@ -221,20 +196,18 @@
   
         window.addEventListener("beforeunload", this.leaveSession);
       },
-  
-      leaveSession() {
-        // --- 7) Leave the session by calling 'disconnect' method over the Session object ---
-        if (this.session) this.session.disconnect();
-  
-        // Empty all properties...
-        this.session = undefined;
-        this.mainStreamManager = undefined;
-        this.publisher = undefined;
-        this.subscribers = [];
-        this.OV = undefined;
-  
-        // Remove beforeunload listener
-        window.removeEventListener("beforeunload", this.leaveSession);
+      async closing() {
+        
+        const response = await this.api.put('/sessions/'+this.sessionId)
+        console.log("2. createsession 함수 정상실행");
+        console.log("받아온 sessionId"+response.data.sessionId);
+        console.log("현재 받아온 데이터" + response.data);
+        this.sessionId= response.data.sessionId;
+        if(response.data===null){
+          console.log("받아온 데이터가 없다");
+        }
+        // console.log(this.sessionId);
+        return response.data.sessionId; // The sessionId
       },
   
       updateMainVideoStreamManager(stream) {
@@ -252,27 +225,8 @@
 		document.getElementById('buttonDeleteRecording').disabled = false;
 	}
 },
-  //     async startRecording1() {
-  //       await axios({
-  //       method:"POST",
-  //       url:"localhost:5000/recording/start",
-  //       data:{
-  //         session: this.session.sessionId,
-  //         outputMode: this.outputMode,
-  //         hasAudio: this.hasAudio,
-  //         hasVideo: this.hasVideo
-  //       },
-  //     }).then(({data})=>{
-  //       if(data.code==="fail"){
-  //         console.log("fail");
-  //       }else{
-  //         console.log("success");
-  //       }
-  //     })
-  // },
-
   async startRecording() {
-  const response = await axios.post('http://localhost:5000/api/recording/'+this.sessionId, {
+  const response = await axios.post('https://i9a403.p.ssafy.io/api/recording/'+this.sessionId, {
     session: this.session.sessionId,
     outputMode: this.outputMode,
     hasAudio: this.hasAudio,
@@ -287,47 +241,26 @@
   console.log(responseData);
   this.res=responseData;
   return responseData; // The sessionId
-},
-
-
-async stopRecording() {
-  const response = await axios.post('http://localhost:5000/api/recording/stop/'+this.sessionId, {
-    recording:this.session.sessionId
-  }, {
-    headers: { 'Content-Type': 'application/json' },
-    withCredentials: true
-  });
-  console.log("여기까지됨");
-  document.getElementById('forceRecordingId').value = "";
-  const responseData = response.data; // 받아온 데이터
-  this.res=responseData;
-  this.forceRecordingId=responseData.id;
-  //console.log(this.forceRecordingId);
-  // console.log(responseData.id);
-  return responseData; // The sessionId
-},
-  
-  
+},  
       async getToken() {
-        alert(this.sessionId==null);
+        // alert(this.sessionId==null);
         if(this.sessionId==null){
           //상담가일 떄
+          this.isRecorder=true;
           console.log("1. getToken 함수 정상 실행");
           const sessionId = await this.createSession();
           console.log("createSession에서 값 받아오기 성공");
           return await this.createToken(sessionId);
         }else{
           //유저일 때
+          this.isRecorder=false;
           return await this.createToken(this.sessionId);
-        }
-
-        
-        
+        }      
       },
   
       async createSession() {
         
-        const response = await this.api.post('/api/roomsession', this.roomRequest)
+        const response = await this.api.post('/roomsession', this.roomRequest)
         console.log("2. createsession 함수 정상실행");
         console.log("받아온 sessionId"+response.data.sessionId);
         this.sessionId= response.data.sessionId;
@@ -336,9 +269,10 @@ async stopRecording() {
   
       async createToken(sessionId) {
         console.log("createToken 넘어옴");
-        const response = await this.api.post('/api/sessions/' + sessionId + '/connections')
+        const response = await this.api.post('/sessions/' + sessionId + '/connections')
         console.log("createToken 함수 정상실행");
         console.log(response.data);
+
         return response.data.token; // The token
       },
     },

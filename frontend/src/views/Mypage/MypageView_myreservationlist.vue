@@ -136,7 +136,7 @@ export default {
         { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
         ],
         name:"user",
-        sessionId:"bitcoin259159739a9c7-707b-4012-900f-71fff91ec010"
+        sessionId:"sessionA"
     };
     },
     methods:{

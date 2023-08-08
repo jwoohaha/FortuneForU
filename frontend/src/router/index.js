@@ -36,7 +36,7 @@ const routes = [
     path: '/mypage',
     name: 'mypage',
     component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage/MypageView.vue'),
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/mypage/reservationlist',

@@ -51,7 +51,6 @@ public class SecurityConfig {
                                                 "/webjars/**",
                                                 "/v3/api-docs/**",
                                                 "/swagger-ui/**",
-                                                "/auth",
                                                 "/api/**")
                                         .permitAll()
                                         .anyRequest().authenticated())
@@ -76,7 +75,8 @@ public class SecurityConfig {
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
         configuration.addAllowedOrigin(clientUrl);
-        configuration.addAllowedOrigin("http://localhost:4443");
+        configuration.addAllowedOrigin("https://i9a403.p.ssafy.io:8080");
+        configuration.addAllowedOrigin("http://localhost:8080");
         configuration.addAllowedHeader("*");
         configuration.addAllowedMethod("*");
         configuration.setAllowCredentials(true);
