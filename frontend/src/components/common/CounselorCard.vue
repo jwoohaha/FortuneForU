@@ -11,7 +11,8 @@
         <hr>
         <p class="card-txt">{{ counselor.intro }}</p>
         <div class="btn">
-            <RoundButton isTarot>예약</RoundButton>
+            <RoundButton isTarot v-if="colorType">예약</RoundButton>
+            <RoundButton  v-else style="background-color: '#F6B5C6';">예약</RoundButton>
         </div>
     </div>
 </template>
@@ -28,6 +29,10 @@ export default {
       type: Object,
       required: true,
     },
+    colorType: {
+        type: Boolean,
+        required: true
+    } 
   },
 };
 </script>
