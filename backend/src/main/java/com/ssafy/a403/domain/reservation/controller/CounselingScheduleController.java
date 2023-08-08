@@ -19,7 +19,7 @@ public class CounselingScheduleController {
     /**
      * 상담 가능 시간 조회
      */
-    @GetMapping("/counselor/time/{counselorNo}")
+    @GetMapping("/api/counselors/time/{counselorNo}")
     public ResponseEntity<ScheduleResponse> getCounselingSchedule(@PathVariable("counselorNo") Long counselorNo) {
         CounselingSchedule scheduleResponse = counselingScheduleService.getSchedule(counselorNo);
         return ResponseEntity.ok(ScheduleResponse.from(scheduleResponse));
@@ -28,10 +28,11 @@ public class CounselingScheduleController {
     /**
      * 상담 가능 시간 수정
      */
-    @PatchMapping("/counselor/time/update")
+    @PatchMapping("/api/counselors/time/update/{counselorNo}")
     public ResponseEntity<ScheduleResponse> updateCounselingSchedule(
+            @PathVariable("counselorNo") Long counselorNo,
             @RequestBody UpdateScheduleRequest updateScheduleRequest) {
-        CounselingSchedule scheduleResponse = counselingScheduleService.updateSchedule(updateScheduleRequest);
+        CounselingSchedule scheduleResponse = counselingScheduleService.updateSchedule(counselorNo, updateScheduleRequest);
         return ResponseEntity.ok(ScheduleResponse.from(scheduleResponse));
     }
 }

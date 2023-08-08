@@ -34,7 +34,7 @@ public class Member {
 
     private String profileImage;
 
-    @OneToOne(mappedBy = "member")
+    @OneToOne(mappedBy = "member", fetch = FetchType.LAZY)
     private Counselor counselor;
 
     @Embedded
@@ -43,7 +43,7 @@ public class Member {
     @ElementCollection(fetch = FetchType.EAGER)
     @Enumerated(EnumType.STRING)
     @CollectionTable(name="member_role", joinColumns = @JoinColumn(name= "member_no", referencedColumnName = "member_no"))
-    private List<Role> role = new ArrayList<>(List.of(Role.ROLE_USER));
+    private List<Role> roles = new ArrayList<>(List.of(Role.ROLE_USER));
 
     @Builder
     public Member(Long no, String email, String name, String profileImage,
@@ -57,9 +57,13 @@ public class Member {
     }
 
     public List<SimpleGrantedAuthority> getAuthorityRole() {
-        return role.stream()
+        return roles.stream()
                 .map(Role::name)
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
+    }
+
+    public void giveAuthority(Role role) {
+        roles.add(role);
     }
 }

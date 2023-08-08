@@ -23,93 +23,139 @@
                         <router-link to="/counselor/counreview"><li id="coun"> | 후기 관리</li></router-link>
                     </ul>
                 </div>
-                
+            
+
                 <div>
                     <div class="get-count">상담 가능 시간 설정</div>
-                    <div class="time-info-part">
-                        <div class="datelabel-part">
-                            <ul>
-                                <li class="each-date">월요일</li>
-                                <li class="each-date">화요일</li>
-                                <li class="each-date">수요일</li>
-                                <li class="each-date">목요일</li>
-                                <li class="each-date">금요일</li>
-                                <li class="each-date">토요일</li>
-                                <li class="each-date">일요일</li>
-                            </ul>
+                        <div class="time-info-part">
+                            <div class="datelabel-part">
+                                <ul>
+                                    <div v-for="(day, index) in days" :key="index">
+                                        <TimeButton
+                                            :class="{ active: activeDay === index }"
+                                            @click="toggleDay(index)"
+                                        >{{ day }}</TimeButton>
+                                    </div>
+                                    <TimeButton @click="updateSchedule"> 저장 </TimeButton>
+
+                                </ul>
+                            </div>
+                            <div class="selected-part">
+                                <div class="time-buttons">
+                                        <TimeButton
+                                            v-for="(availability, timeIndex) in schedulePerDay[activeDay]"
+                                            :key="timeIndex"
+                                            :class="{ active: availability === 'T' }"
+                                            @click="toggleAvailability(activeDay, timeIndex)"
+                                        >{{ getTimeFromIndex(timeIndex) }}</TimeButton>
+                                    </div>
+                            </div>
                         </div>
-                        <div class="selected-part">
-                            <!-- 한줄 -->
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <!-- 한줄 -->
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton isClicked>00 : 00</TimeButton>
-                            <TimeButton isClicked>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>
-                            <TimeButton>00 : 00</TimeButton>                            
-                        </div>
-                    </div>
+                    </div> 
                 </div>
 
             </div>
 
         </div>
-    </div>
 </template>
     
 <script>
 import { TimeButton } from "../../components/styled-components/StyledButton";
+import { apiInstance } from '@/api/index';
 
 export default {
     components: {
         TimeButton,
     },
     data() {
-    return {
-    };
+        return {
+            counselorNo: 1, // counselorNo 동적 처리 완료 후 null로 변경
+            days: ['월요일', '화요일', '수요일', '목요일', '금요일', '토요일', '일요일'],
+            activeDay: 0,
+            schedulePerDay: [
+                'F'.repeat(48), // Monday
+                'F'.repeat(48), // Tuesday
+                'F'.repeat(48), // Wednesday
+                'F'.repeat(48), // Thursday
+                'F'.repeat(48), // Friday
+                'F'.repeat(48), // Saturday
+                'F'.repeat(48), // Sunday
+            ],
+        };
     },
+    methods: {
+        // Todo: 토큰에서 counselorNo 빼오기
+
+        getSchedule() {
+            const getSchedulerequest = apiInstance();
+            getSchedulerequest({
+                method: 'GET',
+                url: `/counselors/time/${this.counselorNo}/`,
+            })
+            .then((res) => {
+                console.log(res.data)
+                const week = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+                week.forEach((day, index) => {
+                    this.schedulePerDay[index] = res.data[day]
+                })
+            }
+            )
+            .catch((error) => console.log(error));
+        },
+
+        updateSchedule() {
+
+            const week = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+            let schedule = {}
+            week.forEach((day, index) => {
+                schedule[day] = this.schedulePerDay[index]
+            });
+
+            const updateScheduleRequest = apiInstance();
+
+            updateScheduleRequest({
+                method: 'PATCH',
+                url: `counselors/time/update/${this.counselorNo}/`,
+                data: schedule
+            })
+  
+            .then((res) => {
+                console.log(res.data)
+            })
+            .catch((error) => {
+                console.log(error)
+            });
+        },
+
+        toggleDay(index) {
+            this.activeDay = index;
+        },
+
+        // TimeButton 클릭 시 스케줄 변경 처리 (T <-> F)
+        toggleAvailability(dayIndex, timeIndex) {
+            if (!this.schedulePerDay[dayIndex]) {
+                // If the schedulePerDay for the selected day is not initialized, set it to the default string.
+                this.schedulePerDay[dayIndex] = 'F'.repeat(48);
+            }
+            const currentAvailability = this.schedulePerDay[dayIndex][timeIndex];
+            this.schedulePerDay[dayIndex] = this.schedulePerDay[dayIndex].substring(0, timeIndex) +
+                (currentAvailability === 'T' ? 'F' : 'T') +
+                this.schedulePerDay[dayIndex].substring(timeIndex + 1);
+        },
+        
+        // TimeButton에 표시되는 시간
+        getTimeFromIndex(index) {
+        const hour = Math.floor(index / 2);
+        const minute = index % 2 === 0 ? '00' : '30';
+        return `${hour.toString().padStart(2, '0')}:${minute}`;
+        },
+    },
+
+    created() {
+        this.getSchedule();
+    },
+  
+
 }
 </script>
     
@@ -244,5 +290,18 @@ export default {
     box-sizing: border-box;
     flex-wrap: wrap;
 }
+
+.active {
+  background-color: #9C7AE7;
+  color: white;
+}
+
+.time-buttons {
+    display: grid;
+    grid-template-columns: repeat(8, 1fr);
+    gap: 10px;
+    max-width: 1000px; /* 적절한 최대 너비 설정 */
+}
+
 
 </style>
