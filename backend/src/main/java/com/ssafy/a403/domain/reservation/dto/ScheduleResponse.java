@@ -5,7 +5,6 @@ import lombok.Data;
 
 @Data
 public class ScheduleResponse {
-    private Long counselorNo;
     private String mon;
     private String tue;
     private String wed;
@@ -17,7 +16,6 @@ public class ScheduleResponse {
     public static ScheduleResponse from(CounselingSchedule counselingSchedule) {
         ScheduleResponse scheduleResponse = new ScheduleResponse();
 
-        scheduleResponse.counselorNo = counselingSchedule.getCounselor().getNo();
         scheduleResponse.mon = counselingSchedule.getMon();
         scheduleResponse.tue = counselingSchedule.getTue();
         scheduleResponse.wed = counselingSchedule.getWed();
