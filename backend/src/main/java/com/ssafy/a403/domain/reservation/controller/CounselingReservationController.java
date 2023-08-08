@@ -2,7 +2,9 @@ package com.ssafy.a403.domain.reservation.controller;
 
 import com.nimbusds.jose.shaded.json.JSONArray;
 import com.nimbusds.jose.shaded.json.JSONObject;
+import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
+import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import com.ssafy.a403.domain.reservation.dto.ReservationRequest;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
@@ -22,49 +24,53 @@ public class CounselingReservationController {
 
     @Autowired
     MemberRepository memberRepository;
+    @Autowired
+    CounselorRepository counselorRepository;
 
     public CounselingReservationController(CounselingReservationService counselingReservationService) {
         this.counselingReservationService = counselingReservationService;
     }
 
-
     //예약 db에 저장
     @PostMapping("/reserve")
     public String reserve(@RequestBody ReservationRequest reservationRequest,
                           RedirectAttributes redirectAttributes){
-        //임의로 회원 정보 저장
-
 
         Long memberId = reservationRequest.getMemberId();
         Long counselorId = reservationRequest.getCounselorId();
         LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-//        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
-//        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
+        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
+        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
 
         return "redirect:/api/mypage";
     }
 
-    // 예약 조회
-    @GetMapping("/reservation_info/{memberId}")
+    // 일반회원 id로 예약 조회
+    // todo : 예외 처리
+    @GetMapping("/member_rez_info/{memberId}")
     public List<CounselingReservation> getRezInfo(@PathVariable Long memberId){
         List<CounselingReservation> reservations = counselingReservationService.getReservation(memberId);
-//        List<CounselingReservation> allReservations = counselingReservationService.getAllReservations();
-        JSONArray jsonArray = new JSONArray();
-
-        JSONArray resultArray = new JSONArray();
         System.out.println(reservations);
 
-
-        // memberid, counselorid, 시간, 상태, 후기, 요약리포트, 상담방url 반환
-
-//        System.out.println(reservations);
-//        System.out.println("여기!!!!!!!!!!!!!!"+reservations.get(0).getReservationNo());
+        return reservations;
+    }
+    // 상담가 id로 예약 조회
+    // todo : 예외 처리
+    @GetMapping("/counselor_rez_info/{counselorId}")
+    public List<CounselingReservation> getCounselorRezInfo(@PathVariable Long counselorId){
+        List<CounselingReservation> reservations = counselingReservationService.getCoReservation(counselorId);
+        System.out.println(reservations);
 
         return reservations;
     }
 
-
+    //예약 취소
+    @PutMapping("/cancel/{reservationNo}")
+    public String cancel(@PathVariable Long reservationNo) {
+        counselingReservationService.cancelReservation(reservationNo);
+        return "redirect:/";
+    }
 
 
 }

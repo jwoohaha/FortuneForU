@@ -3,6 +3,7 @@ package com.ssafy.a403.domain.reservation.dto;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.ReservationStatus;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -15,15 +16,15 @@ public class ReservationResponse {
 
     private Long reservationNo;
 
-    private Member member;
+    private Long memberId;
 
-    private Member counselor;
+    private Long counselorId;
 
     private LocalDateTime reservationDateTime;
 
     private ReservationStatus reservationStatus;
 
-    private String reservationURL;
+    private String sessionId;
 
     private String reservationReview;
 
@@ -33,11 +34,11 @@ public class ReservationResponse {
     public static ReservationResponse from(CounselingReservation counselingReservation) {
         ReservationResponse reservationResponse = new ReservationResponse();
         reservationResponse.reservationNo = counselingReservation.getReservationNo();
-        reservationResponse.member = counselingReservation.getMember();
-        reservationResponse.counselor = counselingReservation.getCounselor();
+        reservationResponse.memberId = counselingReservation.getMember().getNo();
+        reservationResponse.counselorId = counselingReservation.getCounselor().getNo();
         reservationResponse.reservationDateTime = counselingReservation.getReservationDateTime();
         reservationResponse.reservationStatus = counselingReservation.getReservationStatus();
-        reservationResponse.reservationURL = counselingReservation.getSessionId();
+        reservationResponse.sessionId = counselingReservation.getSessionId();
         reservationResponse.reservationReview = counselingReservation.getReservationReview();
         reservationResponse.reservationReport = counselingReservation.getReservationReport();
 
