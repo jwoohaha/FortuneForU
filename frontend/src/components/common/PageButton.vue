@@ -1,16 +1,28 @@
 <template>
     <div class="pagebtn-list">
         <div class="leftbtn">◀</div>
-        <div class="onebtn">1</div>
-        <div class="twobtn">2</div>
-        <div class="threebtn">3</div>
+        <div v-for="pageNum in totalPages" 
+            :key="pageNum" 
+            @click="goToPage(pageNum-1)">
+            {{ pageNum }}
+        </div>
         <div class="rightbtn">▶</div>
     </div>    
 </template>
 
 <script>
 export default {
-    
+    props: {
+        totalPages: {
+        type: Number,
+        required: true,
+        },
+    },
+    methods: {
+        goToPage(pageNum) {
+            this.$emit('page-changed', pageNum);
+        },
+    },
 }
 </script>
 
