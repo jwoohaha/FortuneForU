@@ -48,12 +48,6 @@ public class Counselor {
     private LocalDateTime endDatetime;
 
 
-    @ColumnDefault("0")
-    private int reviewCnt;
-
-    @ColumnDefault("0.00")
-    private float ratingAvg;
-
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
                      String address, String phone, LocalDateTime startDate, LocalDateTime endDatetime,

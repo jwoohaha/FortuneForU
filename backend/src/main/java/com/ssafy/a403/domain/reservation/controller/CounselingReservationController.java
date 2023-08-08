@@ -19,7 +19,7 @@ public class CounselingReservationController {
         this.counselingReservationService = counselingReservationService;
     }
 
-
+    //예약 가능 시간 조회
     @GetMapping("/availabledate/{counselorNo}/{date}")
     public AvailableDateTime availableDate(@PathVariable Long counselorNo, @PathVariable String date){
 
