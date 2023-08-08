@@ -8,7 +8,6 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -43,14 +42,14 @@ public class Counselor {
     @ColumnDefault("0.00")
     private float ratingAvg;
 
-    private LocalDateTime startDatetime;
+    private String startDatetime;
 
-    private LocalDateTime endDatetime;
+    private String endDatetime;
 
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                     String address, String phone, LocalDateTime startDatetime, LocalDateTime endDatetime,
+                     String address, String phone, String startDatetime, String endDatetime,
                     String career) {
         this.no = no;
         this.member = member;
