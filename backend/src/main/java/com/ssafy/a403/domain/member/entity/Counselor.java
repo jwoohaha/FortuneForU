@@ -71,6 +71,8 @@ public class Counselor {
         this.career = request.getCareer();
         this.address = request.getAddress();
         this.phone = request.getPhone();
+        this.startTime = request.getStartTime();
+        this.endTime = request.getEndTime();
     }
 
     public void updateCounselorReview(float rating) {
