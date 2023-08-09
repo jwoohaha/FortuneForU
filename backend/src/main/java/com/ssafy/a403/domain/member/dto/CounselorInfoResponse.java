@@ -6,16 +6,30 @@ import lombok.Data;
 @Data
 public class CounselorInfoResponse {
     private String name;
+
     private String profileImg;
+
     private Long counselorNo;
+
     private Enum CounselorType;
+
     private String major;
+
     private String intro;
+
     private String career;
+
     private String address;
+
     private String phone;
+
     private int reviewCnt;
+
     private float ratingAvg;
+
+    private String startTime;
+
+    private String endTime;
 
     public static CounselorInfoResponse from(Counselor counselor) {
         CounselorInfoResponse counselorInfoResponse = new CounselorInfoResponse();
@@ -31,6 +45,8 @@ public class CounselorInfoResponse {
         counselorInfoResponse.phone = counselor.getPhone();
         counselorInfoResponse.reviewCnt = counselor.getReviewCnt();
         counselorInfoResponse.ratingAvg = counselor.getRatingAvg();
+        counselorInfoResponse.startTime = counselor.getStartTime();
+        counselorInfoResponse.endTime = counselor.getEndTime();
 
 
         return counselorInfoResponse;

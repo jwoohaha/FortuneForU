@@ -13,6 +13,8 @@ public class UpdateCounselorRequest {
     private String career;
     private String address;
     private String phone;
+    private String startTime;
+    private String endTime;
 
     public UpdateCounselorRequest() {
 
