@@ -61,7 +61,8 @@ management:
         include: health, prometheus
 
 # Openvidu Alias
-OPENVIDU_URL: https://i9a403.p.ssafy.io:8443
+#OPENVIDU_URL: https://i9a403.p.ssafy.io:8443
+OPENVIDU_URL: http://localhost:4443
 OPENVIDU_SECRET: MY_SECRET
 
 # JWT Alias
@@ -72,8 +73,10 @@ jwt:
 
 # Client Alias
 client:
-  host: i9a403.p.ssafy.io
-  url: https://i9a403.p.ssafy.io
+#  host: i9a403.p.ssafy.io
+#  url: https://i9a403.p.ssafy.io
+  host: localhost
+  url: http://localhost:8080
   endpoint: /redirect
 
 # Logging level

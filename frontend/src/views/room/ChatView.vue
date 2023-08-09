@@ -6,55 +6,16 @@
           <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="closing"
             value="Leave session" />
         </div>
-        <div id="main-video" class="col-md-6">
-          <!-- <user-video :stream-manager="mainStreamManager" /> -->
-        </div>
-        <div id="video-container" class="col-md-6">
-          <user-video :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" />
-          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)" />
-        </div>
+        <!-- <div id="main-video" class="col-md-6">
+           <user-video :stream-manager="mainStreamManager" /> 
+        </div> -->
+        <div id="video-container" class="col-md-6" style="display: flex; flex-direction: row;">
 
-        <div id="recording-btns">
-				<div class="btns">
-					<input class="btn btn-md" type="button" id="buttonStartRecording" @mouseup="startRecording()" value="Start recording">
-					<form>
-						<label class="radio-inline">
-							<input type="radio" value="COMPOSED" id="radio-composed" v-model="outputMode">
-						</label>
-						<label class="radio-inline">
-							<input type="radio" value="INDIVIDUAL" id="radio-individual" v-model="outputMode">
-						</label>
-					</form>
-					<form>
-						<label class="checkbox-inline">
-							<input type="checkbox" id="has-audio-checkbox" checked>Has audio
-						</label>
-						<label class="checkbox-inline">
-							<input type="checkbox" id="has-video-checkbox" checked>Has video
-						</label>
-					</form>
-				</div>
-				<div class="btns">
-					<input class="btn btn-md" type="button" id="buttonListRecording" @mouseup="listRecordings()" value="List recordings">
-					<div class="vertical-separator-bottom"></div>
-					<input class="btn btn-md" type="button" id="buttonGetRecording" @mouseup="getRecording()" value="Get recording" disabled>
-					<input class="btn btn-md" type="button" id="buttonStopRecording" @mouseup="stopRecording()" value="Stop recording" disabled>
-					<input class="btn btn-md" type="button" id="buttonDeleteRecording" @mouseup="deleteRecording()" value="Delete recording" disabled>
-					<input class="form-control" id="forceRecordingId" type="text" @keyup="checkBtnsRecordings()">
-				</div>
-				<!-- <div class="textarea-container" id="textarea-http-container">
-					<button type="button" class="btn btn-outline-secondary" id="clear-http-btn" @click="clearHttpTextarea()">Clear</button>
-					<span>HTTP responses</span>
-					<textarea id="textarea-http" readonly="true" class="form-control" name="textarea-http"></textarea>
-          <pre>{{ JSON.stringify(res, null, "\t") }}</pre>
-				</div>
-				<div class="textarea-container" id="textarea-events-container">
-					<button type="button" class="btn btn-outline-secondary" id="clear-events-btn" @click="clearEventsTextarea()">Clear</button>
-					<span>OpenVidu events</span>
-					<textarea id="textarea-events" readonly="true" class="form-control" name="textarea-events"></textarea>
-				</div> -->
-			</div>
+          <user-video :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" style="margin-right: 10px;" />
+
+          <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
+            @click="updateMainVideoStreamManager(sub)" style="margin-right: 10px;" />
+        </div>
 
       </div>
     </div>
@@ -70,7 +31,6 @@
   
 
   export default {
-    
     name:'chatview',
   
     components: {
@@ -97,7 +57,7 @@
         isRecorder: false,
         // Join form
 
-        myUserName: "Participant" + Math.floor(Math.random() * 100),
+        myUserName: "Participant",
         outputMode:'INDIVIDUAL',
         hasAudio:'true',
         hasVideo:'true',
@@ -159,14 +119,24 @@
           console.log("토큰 정보"+token);
           // First param is the token. Second param can be retrieved by every user on event
           // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
-          this.session.connect(token, { clientData: this.myUserName })
+          if(this.isRecorder){
+            this.myUserName="상담가";
+          }else{
+            this.myUserName="사용가";
+          }
+          this.session.connect(token, { clientData: this.myUserName  })
             .then(() => {
-              console.log("connect실행");
+              console.log("connect실행");                                                                 
               // --- 5) Get your own camera stream with the desired properties ---
-  
+              
               // Init a publisher passing undefined as targetElement (we don't want OpenVidu to insert a video
               // element: we will manage it on our own) and with the desired properties
-              let publisher = this.OV.initPublisher(undefined, {
+
+              // if(this.isRecorder){
+                
+              // }
+              
+                let publisher = this.OV.initPublisher(undefined, {
                 audioSource: undefined, // The source of audio. If undefined default microphone
                 videoSource: undefined, // The source of video. If undefined default webcam
                 publishAudio: true, // Whether you want to start publishing with your audio unmuted or not
@@ -180,14 +150,16 @@
               // Set the main video in the page to display our webcam and store our Publisher
               this.mainStreamManager = publisher;
               this.publisher = publisher;
+              
+              
   
               // --- 6) Publish your stream ---
   
               this.session.publish(this.publisher);
               console.log("publish 실행");
-              if(this.isRecorder){
-                this.startRecording();
-              }
+              // if(this.isRecorder){
+              //   this.startRecording();
+              // }
             })
             .catch((error) => {
               console.log("There was an error connecting to the session:", error.code, error.message);
@@ -214,19 +186,10 @@
         if (this.mainStreamManager === stream) return;
         this.mainStreamManager = stream;
       },
-      checkBtnsRecordings() {
-	if (document.getElementById("forceRecordingId").value === "") {
-		document.getElementById('buttonGetRecording').disabled = true;
-		document.getElementById('buttonStopRecording').disabled = true;
-		document.getElementById('buttonDeleteRecording').disabled = true;
-	} else {
-		document.getElementById('buttonGetRecording').disabled = false;
-		document.getElementById('buttonStopRecording').disabled = false;
-		document.getElementById('buttonDeleteRecording').disabled = false;
-	}
-},
+
   async startRecording() {
-  const response = await axios.post('https://i9a403.p.ssafy.io/api/recording/'+this.sessionId, {
+  // const response = await axios.post('https://i9a403.p.ssafy.io/api/recording/'+this.sessionId, {
+    const response = await axios.post('http://localhost:5000/api/recording/'+this.sessionId, {
     session: this.session.sessionId,
     outputMode: this.outputMode,
     hasAudio: this.hasAudio,
@@ -235,8 +198,7 @@
     headers: { 'Content-Type': 'application/json' },
     withCredentials: true
   });
-  document.getElementById('forceRecordingId').value = this.session.sessionId;
-  this.checkBtnsRecordings();
+
   const responseData = response.data; // 받아온 데이터
   console.log(responseData);
   this.res=responseData;
@@ -283,4 +245,5 @@
 #main-container{
   margin-top: 100px;
   }
+
 </style>

@@ -47,9 +47,9 @@ public class ApiController {
 //        String memberId = email.substring(0, idx);
 
         //아이디 + 랜덤 sessionId 생성
- //       String sessionId = memberId + UUID.randomUUID().toString();
+//        String sessionId = memberId + UUID.randomUUID().toString();
         //session생성
-        String sessionId ="sessionA";
+        String sessionId= "sessionA";
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
                 .customSessionId(sessionId)

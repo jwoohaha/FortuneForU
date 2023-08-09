@@ -8,7 +8,8 @@ module.exports = defineConfig({
   devServer: {
     proxy: {
       '/': {
-        target: "https://i9a403.p.ssafy.io",
+        // target: "https://i9a403.p.ssafy.io",
+        target: "http://localhost:5000",
         changeOrigin : true,
       } 
     }
