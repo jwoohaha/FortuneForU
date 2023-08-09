@@ -26,7 +26,7 @@ export const RoundButton = styled('button', btnProps)`
 export const SquareButton = styled('button', btnProps)`
   display: inline-flex;
   height: 40px;
-  padding: 7px 23px;
+  padding: 7px 15px;
   justify-content: center;
   align-items: center;
   gap: 10px;
