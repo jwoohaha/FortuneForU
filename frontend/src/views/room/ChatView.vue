@@ -2,21 +2,19 @@
     <div id="main-container" class="container">
       <div id="session" v-if="session">
         <div id="session-header">
-          <h1 id="session-title">{{ username }}</h1>
-          <input class="btn btn-large btn-danger" type="button" id="buttonLeaveSession" @click="closing"
-            value="Leave session" />
+
+          
         </div>
         <!-- <div id="main-video" class="col-md-6">
            <user-video :stream-manager="mainStreamManager" /> 
         </div> -->
-        <div id="video-container" class="col-md-6" style="display: flex; flex-direction: row;">
-
-          <user-video :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" style="margin-right: 10px;" />
-
+        <div id="video-container" class="col-md-6" style="display: flex; flex-direction: row; justify-content: center;">
+          <user-video :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" style="margin-right: 10px; margin-left:10px;" />
           <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
-            @click="updateMainVideoStreamManager(sub)" style="margin-right: 10px;" />
+            @click="updateMainVideoStreamManager(sub)" style="margin-right: 10px; margin-left:10px;" />
         </div>
-
+        <RoundButton isTarot @click="closing" value="Leave session">나가기</RoundButton>
+        <RoundButton isTarot @click="convert">testing</RoundButton>
       </div>
     </div>
   </template>
@@ -27,6 +25,8 @@
   import UserVideo from "../../components/room/UserVideo";
   import{ useRoute }from "vue-router"
   import { apiInstance } from '@/api/index'
+  import { RoundButton } from "../../components/styled-components/StyledButton";
+
   axios.defaults.headers.post["Content-Type"] = "application/json";
   
 
@@ -35,6 +35,7 @@
   
     components: {
       UserVideo,
+      RoundButton
     },
     setup(){
       const api = apiInstance();
@@ -63,7 +64,7 @@
         hasVideo:'true',
         forceRecordingId: "",
         res:{},
-
+        mp4Url:'',
         roomRequest : {
           reservationNo : 1,
         },
@@ -157,9 +158,9 @@
   
               this.session.publish(this.publisher);
               console.log("publish 실행");
-              // if(this.isRecorder){
-              //   this.startRecording();
-              // }
+              if(this.isRecorder){
+                this.startRecording();
+              }
             })
             .catch((error) => {
               console.log("There was an error connecting to the session:", error.code, error.message);
@@ -168,18 +169,57 @@
   
         window.addEventListener("beforeunload", this.leaveSession);
       },
-      async closing() {
-        
-        const response = await this.api.put('/sessions/'+this.sessionId)
-        console.log("2. createsession 함수 정상실행");
-        console.log("받아온 sessionId"+response.data.sessionId);
-        console.log("현재 받아온 데이터" + response.data);
-        this.sessionId= response.data.sessionId;
-        if(response.data===null){
-          console.log("받아온 데이터가 없다");
+
+      async convert() {
+        try{
+          const response = await this.api.get('/convert');
+          this.mp4Url = response.data;
+          console.log('MP4 URL:', this.mp4Url);
+        }catch(error){
+          console.log("오류발생:" ,error);
         }
-        // console.log(this.sessionId);
-        return response.data.sessionId; // The sessionId
+        
+      },
+      //변환하는 WebM을 MP4로 변환하는 함수
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    //   convertWebMtoMP4() {
+    //   const inputFilePath = 'path/to/your/input/file.webm';
+    //   const outputFilePath = 'path/to/your/output/file.mp4';
+
+    //   ffmpeg()
+    //     .input(inputFilePath)
+    //     .outputOptions('-c:v libx264')
+    //     .output(outputFilePath)
+    //     .on('end', () => {
+    //       console.log('변환 완료');
+    //     })
+    //     .on('error', (err) => {
+    //       console.error('오류 발생:', err);
+    //     })
+    //     .run();
+    // },
+
+      async closing() {
+        if(this.isRecorder){
+          //상담가일 경우 back으로 간 다음 세션을 종료하고 나간다.
+          const response = await this.api.put('/sessions/'+this.sessionId)
+          console.log(response);
+          if(response.data=="success"){
+            console.log("holla");
+          }
+        }else{
+          //사용자일 경우 그냥 나간다 => 즉 세션을 종료하면 안된다.
+          this.session = undefined;
+          this.mainStreamManager = undefined;
+          this.publisher = undefined;
+          this.subscribers = [];
+          this.OV = undefined;
+        }
+        
+        // this.sessionId= response.data.sessionId;
+        // return response.data.sessionId; // The sessionId
+        // Remove beforeunload listener
+        window.removeEventListener("beforeunload", this.leaveSession);
       },
   
       updateMainVideoStreamManager(stream) {
@@ -242,8 +282,20 @@
   </script>
   
   <style>
-#main-container{
-  margin-top: 100px;
+  #main-container{
+    margin-top: 100px;
   }
+/* 추가 CSS 스타일 */
+.custom-button {
+  background-color: #ff5733;
+  border-color: #d9534f;
+  color: white;
+  padding-left: 20px; /* 아이콘과 텍스트 사이의 간격 */
+
+  background-repeat: no-repeat;
+  background-position: 5px center; /* 아이콘 위치 */
+  /* 다른 스타일 변경 및 추가 */
+}
+
 
 </style>
