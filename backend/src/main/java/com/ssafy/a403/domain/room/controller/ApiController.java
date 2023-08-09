@@ -4,7 +4,6 @@ import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.room.dto.RoomRequest;
 import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
-//import com.ssafy.a403.global.advice.CustomException;
 import com.ssafy.a403.global.config.security.LoginUser;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
@@ -35,15 +34,14 @@ public class ApiController {
         log.info("roomRequest reservationNo: " + roomRequest.getReservationNo());
 
         //email @ 앞부분 추출
-//        String email = loginUser.getMember().getEmail();
-//        int idx = email.indexOf("@");
-//        String memberId = email.substring(0, idx);
-
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx); 
+        
         //아이디 + 랜덤 sessionId 생성
- //       String sessionId = memberId + UUID.randomUUID().toString();
-        //session생성
-        String sessionId = "sessionA";
+        String sessionId = memberId + UUID.randomUUID().toString();
 
+        //session생성
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
                 .customSessionId(sessionId)
@@ -60,8 +58,8 @@ public class ApiController {
 
         //sessionId를 response로 반환
         RoomResponse roomResponse = RoomResponse.builder()
-                .sessionId(sessionId)
-                .build();
+                        .sessionId(sessionId)
+                        .build();
 
         return new ResponseEntity<>(roomResponse, HttpStatus.OK);
     }
@@ -77,9 +75,9 @@ public class ApiController {
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
 
-//        String email = loginUser.getMember().getEmail();
-//        int idx = email.indexOf("@");
-//        String memberId = email.substring(0, idx);
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
 
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
@@ -90,10 +88,13 @@ public class ApiController {
         ConnectionProperties properties;
         Connection connection;
 
-
+        if(sessionId.startsWith(memberId)){
             properties = new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build();
             connection = session.createConnection(properties);
-
+        }else{
+            properties = new ConnectionProperties.Builder().role(OpenViduRole.SUBSCRIBER).build();
+            connection = session.createConnection(properties);
+        }
 
         return new ResponseEntity<>(connection, HttpStatus.OK);
 
@@ -112,15 +113,14 @@ public class ApiController {
 
         Long reservationNo = counselingReservation.getReservationNo();
 
-//        String email = loginUser.getMember().getEmail();
-//        int idx = email.indexOf("@");
-//        String memberId = email.substring(0, idx);
-//
-//        if(!sessionId.startsWith(memberId)){
-//            throw new RuntimeException("error");
-//        }
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
 
-        //todo openvidurole 받아와서 상담가만 방삭제 + 녹화종료 가능하게 변경, 방 퇴장 따로 생성해야하는지 체크
+        //방 생성자만 삭제할 수 있게 설정
+        if(!sessionId.startsWith(memberId)){
+            throw new RuntimeException("error");
+        }
 
         //녹화 종료 및 저장
         Recording recording = openVidu.stopRecording(recordingId);
@@ -129,9 +129,10 @@ public class ApiController {
         log.info("recordingUrl : " + recordingUrl);
 
         //sessionID null, recordingUrl update
-        //todo update 쿼리문 추가 , 성공 실패 시 구분 작업 필요
         if(roomService.updateSessionIdAndRecordingUrl(reservationNo, recordingUrl)){
             log.info("수정 완료");
+        }else{
+            throw new RuntimeException("error"); //수정 필요
         };
 
         //Session close
@@ -139,13 +140,10 @@ public class ApiController {
 
         if(session != null) {
             openVidu.getActiveSession(sessionId).close();
-//            FinalResult finalResult = FinalResult.builder()
-//                    .finalResult("success")
-//                    .build();
             log.info("방 삭제 완료");
         }
 
-        return ResponseEntity.ok("success");
+        return ResponseEntity.noContent().build();
 
     }
 
@@ -169,7 +167,5 @@ public class ApiController {
         }
 
     }
-
-
 
 }

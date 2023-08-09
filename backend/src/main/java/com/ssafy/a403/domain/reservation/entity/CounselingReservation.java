@@ -7,15 +7,18 @@ import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
-
+@Slf4j
 @Getter
 @Entity
 @NoArgsConstructor
 public class CounselingReservation {
+
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -53,10 +56,14 @@ public class CounselingReservation {
     @Column(name="rez_recorded")
     private String reservationRecorded;
 
+    @Column(name="rez_score")
+    private float reservationScore;
+
+
 
     @Builder
     public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded) {
+                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded, float reservationScore) {
         this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
@@ -67,14 +74,50 @@ public class CounselingReservation {
         this.reservationReport = reservationReport;
         this.reportStatus = reportStatus;
         this.reservationRecorded = reservationRecorded;
+        this.reservationScore = reservationScore;
     }
 
 
+    //예약 취소
     public void cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
-            reservationStatus = ReservationStatus.Cancel;
+            reservationStatus = ReservationStatus.CANCEL;
         } else {
             throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
         }
+    }
+
+
+    // 리뷰 저장
+    public void saveReview(String review, float score) {
+        if (review.length() > 200) {
+            throw new IllegalArgumentException("200자를 초과하였습니다.");
+        }
+        reservationReview = review;
+        reservationScore = score;
+
+        counselor.updateCounselorReview(score);
+    }
+
+
+    //리뷰 삭제
+    public void deleteReview() {
+        reservationReview = null;
+    }
+
+
+    // 리뷰가 비어있는지 확인
+    public boolean checkEmpty() {
+        return reservationReview == null || reservationReview.isEmpty();
+    }
+
+    // 권한 확인
+    public boolean checkMemberId(Long memberId) {
+        return getMember().getNo().equals(memberId);
+    }
+
+    // 상담 종료 확인
+    public boolean checkStatus(){
+        return reservationStatus.equals(ReservationStatus.END);
     }
 }

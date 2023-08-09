@@ -27,5 +27,4 @@ public interface CounselingReservationRepository extends JpaRepository<Counselin
     @Modifying
     @Query(value = "UPDATE CounselingReservation cr set cr.sessionId = null, cr.reservationStatus = :reservationStatus, cr.reservationRecorded = :recordingUrl where cr.reservationNo = :reservationNo")
     void saveCloseRoom(@Param("reservationStatus")ReservationStatus reservationStatus, @Param("recordingUrl")String recordingUrl, @Param("reservationNo")Long reservationNo);
-
 }
