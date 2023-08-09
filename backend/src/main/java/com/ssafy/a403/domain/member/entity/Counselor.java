@@ -42,9 +42,15 @@ public class Counselor {
     @ColumnDefault("0.00")
     private float ratingAvg;
 
+    private String startTime;
+
+    private String endTime;
+
+
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                    String career, String address, String phone) {
+                     String address, String phone, String startTime, String endTime,
+                    String career) {
         this.no = no;
         this.member = member;
         this.counselorType = counselorType;
@@ -53,7 +59,10 @@ public class Counselor {
         this.career = career;
         this.address = address;
         this.phone = phone;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
+
 
     public void updateCounselorInfo(UpdateCounselorRequest request) {
         this.counselorType = request.getCounselorType();
