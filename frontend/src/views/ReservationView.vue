@@ -7,7 +7,7 @@
           <div class="top-header">
             <div class="left-header">
               <div class="top-title">
-                상담 예약
+                타로 상담 예약
                   <span class="top-subtitle">
                     원하는 상담사를 선택한 후 예약하세요.
                   </span>
@@ -41,8 +41,8 @@
             
             <div class="review-section">
                 <div class="review-title">생생한 상담 후기</div>
-                <div v-for="coun in counselors" :key="coun.id">
-                    <ReviewCard :counselor="coun"></ReviewCard>
+                <div v-for="review in reviews" :key="review.id">
+                    <ReviewCard :review="review"></ReviewCard>
                 </div>
             </div>
 
@@ -52,23 +52,17 @@
                     <div class="calendar-poster">
                         <!-- <VCalendar /> -->
                         <VDatePicker v-model="date" transparent borderless/>
+                        <div>선택된 날짜 : {{ this.formatted_date }}</div>
                     </div>
                     <div class="calendar-hr"></div>
                     <div class="calendar-txt">예약 가능 시간</div>
                     <div class="time-section">
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                    </div>
-                    <div class="time-section">
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
+                      <div v-for="(resTime, idx) in availableTimes" :key="idx" style="margin: 2px 4px;">
+                        <SquareButton isTarot onClick="check">{{ resTime }}</SquareButton>
+                      </div>
                     </div>
                 </div>
-                <div class="res-btn">예약하기</div>
+                <SquareButton isTarot class="res-btn">예약하기</SquareButton>
             </div>
            </div>
           </div>
@@ -80,32 +74,124 @@
 
 <script>
 import ReviewCard from '../components/common/ReviewCard.vue';
+import { SquareButton } from '../components/styled-components/StyledButton'
 import { apiInstance } from '@/api/index';
 
 export default {
   components: {
     ReviewCard,
-  },
+    SquareButton
+},
   data() {
     return {
-      counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-      ],
+      reviews: [],
       counselor: [],
+      date: new Date(),
+      cantReservations: null,
+      availableTimes: [],
+      formatted_date: null
     };
+  },
+  setup(){
+    
   },
   methods: {
     async getCounselorInfo(id){
-      const getCounselorsRequest = apiInstance();
-      await getCounselorsRequest.get(`counselors/${id}`)
-      .then((re) => {
-        console.log(re);
-        this.counselor = re.data;
+      
+    const api = apiInstance();
+
+      await api({
+        method: 'GET',
+        url: `/counselors/${id}/`,
       })
-      .catch((e) => console.log(e))
-    }
+      .then((result) => {
+        console.log(result.data);
+        this.counselor = result.data;
+        console.log(this.counselor.counselorNo);
+        
+        this.getReviewInfo(this.counselor.counselorNo)
+        this.setDate(this.counselor.counselorNo, this.date)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+
+      
+    },
+    async getReviewInfo(id){
+      
+    const api = apiInstance();
+
+      await api({
+        method: 'GET',
+        url: 'reservations/'+ id + '/co_reviews',
+      })
+      .then((result) => {
+        console.log(result.data);
+        this.reviews = result.data;
+        // console.log(this.reviews[0].review)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    async setDate(id, date){
+        const day = date.getDate();
+        var newday = day >= 10 ? day : '0' + day;      
+        const month = date.getMonth() + 1;
+        var newmonth = month >= 10 ? month : '0' + month;
+        const year = date.getFullYear();
+
+        if(this.formatted_date == `${year}-${newmonth}-${newday}`)  return;
+
+        this.formatted_date = `${year}-${newmonth}-${newday}`;
+
+        const api = apiInstance();
+        await api({
+          method: 'GET',
+          url: `reservations/availabledate/${id}/${this.formatted_date}`
+        })
+        .then((result) => {
+          console.log(result.data);
+          this.cantReservations = result.data;
+          this.makeAvailableTimes();
+        })
+    },
+    makeAvailableTimes(){
+      
+      //값이 없을 때의 오류 처리 필요
+
+      var startTimeHour = Number(this.cantReservations.startTime.substr(0, 2));
+      var startTimeMin = Number(this.cantReservations.startTime.substr(3, 5));
+      var endTimeHour = Number(this.cantReservations.endTime.substr(0, 2));
+      var endTimeMin = Number(this.cantReservations.endTime.substr(3, 5));
+
+      while(startTimeHour <= endTimeHour){
+        
+        var txtHour = startTimeHour >= 10 ? startTimeHour.toString() : '0'+startTimeHour.toString();
+        var txtMin = startTimeMin >= 10 ? startTimeMin.toString() : '0'+startTimeMin.toString();
+        this.availableTimes.push( txtHour + ":" + txtMin )
+        
+        if(startTimeHour == endTimeHour && startTimeMin == endTimeMin) break;  
+
+        if(startTimeMin == 0){
+          startTimeMin = 30;
+        }else{
+          startTimeHour += 1;
+          startTimeMin = 0;
+        }
+      }
+
+      for(var i = 0; i <  this.availableTimes.length; i++){ 
+        for(var j = 0; j < this.cantReservations.length; j++){
+          if ( this.availableTimes[i] === this.cantReservations[j]) { 
+            this.availableTimes.splice(i, 1); 
+            i--; 
+          }
+        }
+      }
+
+    },
     
   },
   created(){
@@ -169,7 +255,7 @@ export default {
     padding-left: 65px;
     padding-bottom: 64px;
     padding-right: 65px;
-    box-sizing: border-box;
+    // box-sizing: border-box;
 }
 .res-title {
     color: #333;
@@ -239,13 +325,6 @@ img {
     justify-content: center;
     align-items: center;
 }
-// .calendar-poster {
-//     // height: 293px;
-//     // width: 319px;
-//     // display: inline;
-//     // align-content: center;
-    
-// }
 .res-calendar {
     width: 407px;
     height: 553px;
@@ -254,8 +333,7 @@ img {
     background: #FFF;
     margin-bottom: 45px;
     padding-top: 10px;
-    padding-bottom: 22px;
-    box-sizing: border-box;
+    padding-bottom: 15px;
 }
 .calendar-hr {
     height: 2px;
@@ -270,37 +348,21 @@ img {
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    margin: 12px 0px 10px 55px;
+    margin: 12px 35px 10px 35px;
     text-align: left;
 }
 .time-section{
-    margin: 20px 33px;
+    height: 130px;
+    overflow-y: scroll;
+    margin: 15px 30px;
     display: flex;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    align-items: center;
     flex-wrap : wrap;
 }
-.time-section .res-btn {
-    width: 80px;
-    height: 40px;
-    box-sizing: border-box;
-}
 .res-btn {
-    display: flex;
     width: 346px;
     height: 40px;
-    padding: 7px 23px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    border-radius: 5px;
-    background: #BFAEE5;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-    color: #FFF;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    padding: 20px 23px;
 }
 </style>
