@@ -2,6 +2,7 @@ package com.ssafy.a403.domain.member.service;
 
 import com.ssafy.a403.domain.member.dto.UpdateCounselorRequest;
 import com.ssafy.a403.domain.member.entity.Counselor;
+import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.model.CounselorType;
 import lombok.RequiredArgsConstructor;
@@ -23,8 +24,9 @@ public class CounselorService {
     private final CounselorRepository counselorRepository;
 
     // 상담가 조회
-    public Counselor findById(Long id) {
-        return counselorRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+    public Counselor findCounselor(Member member) {
+        Long counselorId = member.getCounselor().getNo();
+        return counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
     }
 
     // 상담가 전체 조회
@@ -46,12 +48,11 @@ public class CounselorService {
 
     // 상담사 정보 수정
     @Transactional
-    public void updateCounselorInfo(Long id, UpdateCounselorRequest request) {
-        Counselor counselor = counselorRepository.findById(id).
+    public void updateCounselorInfo(Member member, UpdateCounselorRequest request) {
+        Long counselorId = member.getCounselor().getNo();
+        Counselor counselor = counselorRepository.findById(counselorId).
                 orElseThrow(EntityNotFoundException::new);
-
         counselor.updateCounselorInfo(request);
-
         counselorRepository.save(counselor);
     }
 }
