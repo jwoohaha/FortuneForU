@@ -35,13 +35,14 @@ public class ApiController {
         log.info("roomRequest reservationNo: " + roomRequest.getReservationNo());
 
         //email @ 앞부분 추출
-        String email = loginUser.getMember().getEmail();
-        int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx);
+//        String email = loginUser.getMember().getEmail();
+//        int idx = email.indexOf("@");
+//        String memberId = email.substring(0, idx);
 
         //아이디 + 랜덤 sessionId 생성
-        String sessionId = memberId + UUID.randomUUID().toString();
+ //       String sessionId = memberId + UUID.randomUUID().toString();
         //session생성
+        String sessionId = "sessionA";
 
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
@@ -76,9 +77,9 @@ public class ApiController {
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
 
-        String email = loginUser.getMember().getEmail();
-        int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx);
+//        String email = loginUser.getMember().getEmail();
+//        int idx = email.indexOf("@");
+//        String memberId = email.substring(0, idx);
 
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
@@ -111,13 +112,13 @@ public class ApiController {
 
         Long reservationNo = counselingReservation.getReservationNo();
 
-        String email = loginUser.getMember().getEmail();
-        int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx);
-
-        if(!sessionId.startsWith(memberId)){
-            throw new RuntimeException("error");
-        }
+//        String email = loginUser.getMember().getEmail();
+//        int idx = email.indexOf("@");
+//        String memberId = email.substring(0, idx);
+//
+//        if(!sessionId.startsWith(memberId)){
+//            throw new RuntimeException("error");
+//        }
 
         //todo openvidurole 받아와서 상담가만 방삭제 + 녹화종료 가능하게 변경, 방 퇴장 따로 생성해야하는지 체크
 
