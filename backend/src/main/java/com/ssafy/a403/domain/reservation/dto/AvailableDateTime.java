@@ -14,21 +14,17 @@ import java.util.List;
 @NoArgsConstructor
 public class AvailableDateTime {
 
-    private String startTime;
+    private int Hour;
 
-    private String endTime;
+    private int Minute;
 
-    private List<LocalDateTime> reservationList = new ArrayList<>();
-
-
-
-    public AvailableDateTime from(Counselor counselor, List<LocalDateTime> reservations){
+    public AvailableDateTime from(ReservationResponse reservation){
         AvailableDateTime availableDateTime = new AvailableDateTime();
-        availableDateTime.startTime = counselor.getStartTime();
-        availableDateTime.endTime = counselor.getEndTime();
-        availableDateTime.reservationList = reservations;
+        availableDateTime.Hour = reservation.getReservationDateTime().getHour();
+        availableDateTime.Minute = reservation.getReservationDateTime().getMinute();
 
         return availableDateTime;
     }
+
 
 }

@@ -21,7 +21,7 @@ public class CounselingReservationController {
 
     //예약 가능 시간 조회
     @GetMapping("/availabledate/{counselorNo}/{date}")
-    public AvailableDateTime availableDate(@PathVariable Long counselorNo, @PathVariable String date) {
+    public List<AvailableDateTime> availableDate(@PathVariable Long counselorNo, @PathVariable String date) {
         return counselingReservationService.availableDateTime(counselorNo, date);
     }
 
@@ -39,7 +39,7 @@ public class CounselingReservationController {
         Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
         redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
 
-        return "redirect:/api/mypage";
+        return "예약 완료!";
     }
 
 
@@ -53,10 +53,10 @@ public class CounselingReservationController {
 
 
     // 상담가 id로 예약 조회
-    @GetMapping("/counselor_rez_info")
-    public List<ReservationResponse> getCounselorRezInfo(@AuthenticationPrincipal LoginUser loginUser){
+    @GetMapping("/counselor_rez_info/{date}")
+    public List<ReservationResponse> getCounselorRezInfo(@AuthenticationPrincipal LoginUser loginUser, @PathVariable String date){
         Long counselorId = loginUser.getMember().getCounselor().getNo();
-        return counselingReservationService.getCoReservation(counselorId);
+        return counselingReservationService.getCoReservation(counselorId, date);
 
     }
 
@@ -74,7 +74,7 @@ public class CounselingReservationController {
     @PatchMapping("/cancel/{reservationNo}")
     public String cancel(@PathVariable Long reservationNo) {
         counselingReservationService.cancelReservation(reservationNo);
-        return "redirect:/";
+        return "취소";
     }
 
 
@@ -84,7 +84,8 @@ public class CounselingReservationController {
                              @PathVariable Long reservationNo){
         Long memberId = reviewRequest.getMemberId();
         String review = reviewRequest.getReservationReview();
-        counselingReservationService.postReview(reservationNo, memberId, review);
+        float rez_score = reviewRequest.getReservationScore();
+        counselingReservationService.postReview(reservationNo, memberId, review, rez_score);
 
         return "ok";
     }
