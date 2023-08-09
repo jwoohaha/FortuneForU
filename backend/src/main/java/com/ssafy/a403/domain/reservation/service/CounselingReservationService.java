@@ -33,7 +33,15 @@ public class CounselingReservationService {
 
         Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
         Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
-
+        List<CounselingReservation> reservationList = counselingReservationRepository.findByCounselor(counselor);
+        for (CounselingReservation reservation : reservationList) {
+            if(reservation.getReservationDateTime().equals(reservationDate)){
+                throw new IllegalArgumentException("해당 시간에 이미 예약이 존재합니다.");
+            }
+        }
+        if (counselor.isSelf(memberId)){
+            throw new IllegalArgumentException("자기자신은 예약할 수 없습니다.");
+        }
         CounselingReservation counselingReservation = CounselingReservation.builder()
                 .member(member)
                 .counselor(counselor)
