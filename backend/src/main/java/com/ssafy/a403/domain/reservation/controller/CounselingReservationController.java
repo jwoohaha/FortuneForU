@@ -20,10 +20,9 @@ public class CounselingReservationController {
     private final CounselingReservationService counselingReservationService;
 
     //예약 가능 시간 조회
-    @GetMapping("/availabledate/{date}")
-    public AvailableDateTime availableDate(@AuthenticationPrincipal LoginUser loginUser, @PathVariable String date){
-        Long counselorId = loginUser.getMember().getCounselor().getNo();
-        return counselingReservationService.availableDateTime(counselorId, date);
+    @GetMapping("/availabledate/{counselorNo}/{date}")
+    public AvailableDateTime availableDate(@PathVariable Long counselorNo, @PathVariable String date) {
+        return counselingReservationService.availableDateTime(counselorNo, date);
     }
 
 
