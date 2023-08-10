@@ -1,5 +1,6 @@
 package com.ssafy.a403.global.config.security.jwt;
 
+import com.ssafy.a403.domain.member.dto.AuthResponse;
 import com.ssafy.a403.global.config.security.LoginUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
@@ -7,8 +8,6 @@ import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-
-import javax.servlet.http.HttpServletResponse;
 
 @Slf4j
 @Service
@@ -19,9 +18,6 @@ public class JwtSetupService {
 
     @Value("${client.host}")
     private String clientHost;
-
-    @Value("${jwt.access-header}")
-    private String accessTokenHeaderTag;
 
     @Value("${jwt.refresh-header}")
     private String refreshTokenHeaderTag;
@@ -43,11 +39,15 @@ public class JwtSetupService {
     	return jwtProvider.createAuthToken(loginUser);
     }
     
-    public JwtToken createJwtTokenByAuthToken(String authToken) throws NumberFormatException {
-    	return jwtProvider.createJwtTokenByAuthToken(authToken);
+    public AuthResponse createJwtTokenByAuthToken(String authToken) throws NumberFormatException {
+        JwtToken jwtToken = jwtProvider.createJwtTokenByAuthToken(authToken);
+        String accessToken = jwtToken.getAccessToken();
+        String refreshToken = setCookie(refreshTokenHeaderTag, jwtToken.getRefreshToken()).toString();
+
+    	return AuthResponse.of(accessToken, refreshToken);
     }
 
-    public ResponseCookie setCookie(String key, String value) {
+    private ResponseCookie setCookie(String key, String value) {
         return ResponseCookie.from(key, value)
                 .path("/")
                 .httpOnly(true)
