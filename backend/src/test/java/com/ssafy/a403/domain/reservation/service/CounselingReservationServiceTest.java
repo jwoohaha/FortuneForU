@@ -4,27 +4,19 @@ import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
-import com.ssafy.a403.domain.model.ReservationStatus;
-import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.reservation.repository.CounselingReservationRepository;
-import static org.junit.Assert.assertEquals;
 
 import lombok.extern.slf4j.Slf4j;
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.aspectj.lang.annotation.Before;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
 
 @Slf4j
-@RunWith(SpringRunner.class)
 @SpringBootTest
 //@Rollback(value = false)
 public class CounselingReservationServiceTest {
@@ -37,7 +29,6 @@ public class CounselingReservationServiceTest {
     // 에약 저장 확인
 //    @Test
 //    @Transactional
-    @Before
     public void setup() {
         Member member1 = Member.builder()
                 .no(1L)
@@ -69,7 +60,6 @@ public class CounselingReservationServiceTest {
 
     }
 
-    @Before
     public void reservationTest() throws Exception {
         //given
         Long member1 = 1L;
