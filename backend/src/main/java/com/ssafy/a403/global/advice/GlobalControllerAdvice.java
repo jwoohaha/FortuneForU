@@ -49,6 +49,11 @@ public class GlobalControllerAdvice {
         return ResponseEntity.badRequest().body(e.getMessage());
     }
 
+    @ExceptionHandler(CustomException.class)
+    protected ResponseEntity<?> handleCustomException(CustomException e){
+        log.error(e.getMessage());
+        return ResponseEntity.status(e.getStatus()).body(e.getMessage());
+    }
 
 
 }

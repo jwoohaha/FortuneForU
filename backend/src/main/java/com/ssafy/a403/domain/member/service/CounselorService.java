@@ -29,6 +29,11 @@ public class CounselorService {
         return counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
     }
 
+    // 상담가 조회
+    public Counselor findById(Long counselorId) {
+        return counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
+    }
+
     // 상담가 전체 조회
     public List<Counselor> findCounselors() { return counselorRepository.findAll(); }
 
