@@ -7,8 +7,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 
-import java.math.BigDecimal;
-
 @Getter
 @NoArgsConstructor
 public class ReviewResponse {
@@ -18,7 +16,7 @@ public class ReviewResponse {
     private String counselorName;
     private String profileImage;
     private float ratingAvg;
-    private BigDecimal reservationScore;
+    private float reservationScore;
     private String review;
 
     public ReviewResponse from(CounselingReservation counselingReservation) {

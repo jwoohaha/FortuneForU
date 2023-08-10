@@ -39,7 +39,7 @@ public class Counselor {
     @ColumnDefault("0")
     private int reviewCnt;
 
-    @ColumnDefault("0.00")
+    @ColumnDefault("0.0")
     private float ratingAvg;
 
     private String startTime;
@@ -71,11 +71,17 @@ public class Counselor {
         this.career = request.getCareer();
         this.address = request.getAddress();
         this.phone = request.getPhone();
+        this.startTime = request.getStartTime();
+        this.endTime = request.getEndTime();
     }
 
     public void updateCounselorReview(float rating) {
-        this.ratingAvg = Math.round((this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1));
+        this.ratingAvg = (this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1);
         this.reviewCnt += 1;
+    }
+
+    public boolean isSelf(Long memberId) {
+        return member.getNo().equals(memberId);
     }
 
 }
