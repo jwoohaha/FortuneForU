@@ -14,7 +14,7 @@
             @click="updateMainVideoStreamManager(sub)" style="margin-right: 10px; margin-left:10px;" />
         </div>
         <RoundButton isTarot @click="closing" value="Leave session">나가기</RoundButton>
-        <RoundButton isTarot @click="convert">testing</RoundButton>
+        <RoundButton isTarot @click="convert">convert</RoundButton>
       </div>
     </div>
   </template>
@@ -229,7 +229,7 @@
 
   async startRecording() {
   // const response = await axios.post('https://i9a403.p.ssafy.io/api/recording/'+this.sessionId, {
-    const response = await axios.post('http://localhost:5000/api/recording/'+this.sessionId, {
+    const response = await axios.post('https://ssafytest.shop/api/recording/'+this.sessionId, {
     session: this.session.sessionId,
     outputMode: this.outputMode,
     hasAudio: this.hasAudio,

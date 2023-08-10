@@ -22,7 +22,7 @@
                   <i class="bi bi-search"></i>
                 </div>
                 <RoundButton>검색</RoundButton>
-                
+                <RoundButton isTarot @click="convert">convert</RoundButton>
               </div>
             
             </div>
@@ -60,7 +60,7 @@
 import CounselorCard from '../components/common/CounselorCard.vue';
 import PageButton from '../components/common/PageButton.vue';
 import { RoundButton } from "../components/styled-components/StyledButton";
-
+import { apiInstance } from '@/api/index'
 export default {
   components: {
     CounselorCard,
@@ -79,6 +79,26 @@ export default {
       ],
     };
   },
+  setup(){
+      const api = apiInstance();
+
+
+      return {
+        api
+      }
+    },
+  methods:{
+    async convert() {
+        try{
+          const response = await this.api.get('/convert');
+          this.mp4Url = response.data;
+          console.log('MP4 URL:', this.mp4Url);
+        }catch(error){
+          console.log("오류발생:" ,error);
+        }
+        
+      },
+  }
  };
 </script>
 

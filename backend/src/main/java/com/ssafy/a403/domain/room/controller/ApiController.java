@@ -9,11 +9,14 @@ import com.ssafy.a403.global.config.security.LoginUser;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.env.Environment;
 
+import java.io.*;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,6 +30,9 @@ public class ApiController {
 
     private final RoomService roomService;
 
+    @Autowired
+    private Environment environment;
+
     //방 생성
     @PostMapping("/api/roomsession")
     public ResponseEntity<?> makeRoomSession(@RequestBody RoomRequest roomRequest, @AuthenticationPrincipal LoginUser loginUser)
@@ -38,12 +44,11 @@ public class ApiController {
 //        String email = loginUser.getMember().getEmail();
 //        int idx = email.indexOf("@");
 //        String memberId = email.substring(0, idx);
-
-        //아이디 + 랜덤 sessionId 생성
- //       String sessionId = memberId + UUID.randomUUID().toString();
-        //session생성
-        String sessionId = "sessionA";
-
+//
+//        //아이디 + 랜덤 sessionId 생성
+//        String sessionId = memberId + UUID.randomUUID().toString();
+//        //session생성
+        String sessionId ="sessionA";
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
                 .customSessionId(sessionId)
@@ -115,7 +120,7 @@ public class ApiController {
 //        String email = loginUser.getMember().getEmail();
 //        int idx = email.indexOf("@");
 //        String memberId = email.substring(0, idx);
-//
+
 //        if(!sessionId.startsWith(memberId)){
 //            throw new RuntimeException("error");
 //        }
@@ -170,6 +175,27 @@ public class ApiController {
 
     }
 
+//    @GetMapping(value = "/api/convert")
+//    public ResponseEntity<String> converting(){
+//        System.out.println("들어옵니당");
+//
+//        try {
+//            Process process = Runtime.getRuntime().exec("aws s3 ls s3://your-bucket-name/path/to/files/");
+//
+//            InputStream inputStream = process.getInputStream();
+//            byte[] buffer = new byte[1024];
+//            int bytesRead;
+//
+//            while ((bytesRead = inputStream.read(buffer)) != -1) {
+//                System.out.write(buffer, 0, bytesRead);
+//            }
+//
+//            process.waitFor();
+//        } catch (IOException | InterruptedException e) {
+//            e.printStackTrace();
+//        }
+//    }
+//
 
 
 }
