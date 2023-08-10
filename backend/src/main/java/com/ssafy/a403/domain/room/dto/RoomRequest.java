@@ -12,7 +12,5 @@ import lombok.RequiredArgsConstructor;
 public class RoomRequest {
 
     private Long reservationNo;
-
-//    private String reservationStatus;
     
 }

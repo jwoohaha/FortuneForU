@@ -39,12 +39,18 @@ public class Counselor {
     @ColumnDefault("0")
     private int reviewCnt;
 
-    @ColumnDefault("0.00")
+    @ColumnDefault("0.0")
     private float ratingAvg;
+
+    private String startTime;
+
+    private String endTime;
+
 
     @Builder
     public Counselor(Long no, Member member, CounselorType counselorType, String major, String intro,
-                    String career, String address, String phone) {
+                     String address, String phone, String startTime, String endTime,
+                    String career) {
         this.no = no;
         this.member = member;
         this.counselorType = counselorType;
@@ -53,7 +59,10 @@ public class Counselor {
         this.career = career;
         this.address = address;
         this.phone = phone;
+        this.startTime = startTime;
+        this.endTime = endTime;
     }
+
 
     public void updateCounselorInfo(UpdateCounselorRequest request) {
         this.counselorType = request.getCounselorType();
@@ -62,11 +71,17 @@ public class Counselor {
         this.career = request.getCareer();
         this.address = request.getAddress();
         this.phone = request.getPhone();
+        this.startTime = request.getStartTime();
+        this.endTime = request.getEndTime();
     }
 
     public void updateCounselorReview(float rating) {
-        this.ratingAvg = Math.round((this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1));
+        this.ratingAvg = (this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1);
         this.reviewCnt += 1;
+    }
+
+    public boolean isSelf(Long memberId) {
+        return member.getNo().equals(memberId);
     }
 
 }

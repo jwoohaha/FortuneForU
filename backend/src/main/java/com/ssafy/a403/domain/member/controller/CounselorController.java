@@ -6,10 +6,12 @@ import com.ssafy.a403.domain.member.dto.UpdateCounselorResponse;
 import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.service.CounselorService;
 import com.ssafy.a403.domain.model.CounselorType;
+import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,6 +23,15 @@ import java.util.stream.Collectors;
 public class CounselorController {
 
     private final CounselorService counselorService;
+
+    /**
+     * 상담사 정보 조회(본인)
+     */
+    @GetMapping("/api/counselors/info")
+    public ResponseEntity<CounselorInfoResponse> getCounselorInfo(@AuthenticationPrincipal LoginUser loginUser) {
+        Counselor counselor = counselorService.findCounselor(loginUser.getMember());
+        return ResponseEntity.ok(CounselorInfoResponse.from(counselor));
+    }
 
     /**
      * 상담사 정보 조회
@@ -72,12 +83,12 @@ public class CounselorController {
     /**
      * 상담사 정보 변경
      */
-    @PatchMapping("/api/counselors/update/{counselorNo}")
+    @PatchMapping("/api/counselors/update")
     public ResponseEntity<UpdateCounselorResponse> updateCounselorInfo(
-            @PathVariable("counselorNo") Long id,
+            @AuthenticationPrincipal LoginUser loginUser,
             @RequestBody UpdateCounselorRequest request) {
-        counselorService.updateCounselorInfo(id, request);
-        Counselor counselor = counselorService.findById(id);
+        counselorService.updateCounselorInfo(loginUser.getMember(), request);
+        Counselor counselor = counselorService.findCounselor(loginUser.getMember());
         return ResponseEntity.ok(new UpdateCounselorResponse(counselor.getNo()));
     }
 
