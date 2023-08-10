@@ -34,6 +34,7 @@ export default {
             }   
         },
         onSuccess(headers) {
+            console.log(headers);
             const accessToken = headers.accessToken;
             console.log("accessToken: " + accessToken);
             this.store.saveAccessToken(accessToken);
