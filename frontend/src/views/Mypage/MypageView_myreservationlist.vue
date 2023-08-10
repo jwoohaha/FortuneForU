@@ -10,7 +10,8 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"></div>
+                        <div class="profile-img"><img :src="getProfileImg"></div>
+                        <!-- <div class="profile-img" :style="{ backgroundImage : `url(${this.member.profileImage})`}" ></div> -->
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -28,92 +29,39 @@
                         <div class="table-header">
                             <div>상담가</div>
                             <div class="divider">|</div>
-                            <div>이용날짜</div>
+                            <div>예약 시간</div>
                             <div class="divider">|</div>
-                            <div>취소가능날짜</div>
-                            <div class="divider">|</div>
+                            <!-- <div>취소가능날짜</div>
+                            <div class="divider">|</div> -->
                             <div>현재 상태</div>
                             <div class="divider">|</div>
                             <div>상담실</div>
+                            <div class="divider">|</div>
+                            <div>취소</div>
                         </div>
                         <div class="table-contents">
                             
+                            <router-link to="/tarot"><h3 v-if="noReservation">예약하러 가기</h3></router-link>
+                            <div v-for="(reservation, idx) in reservationList" :key="idx" class="each-row">
+                                <div id="coun-name">{{ reservation.counselorName }}</div>
+                                <div class="divider">|</div>
+                                <div id="coun-date">{{ reservation.reservationDateTime }}</div>
+                                <div class="divider">|</div>
+                                <!-- <div id="cancel-date">{{ reservation.cancelableReservationDate }}</div>
+                                <div class="divider">|</div> -->
+                                <div id="coun-satus">{{ reservation.reservationStatus }}</div>
+                                <div class="divider">|</div>
+                                <div id="coun-room">
+                                    
+                                    <div v-if="reservation.reservationStatus==='상담 진행'">
+                                        <a href={{reservation.sessionId}}>🏠</a>
+                                    </div>
+                                    <div v-if="reservation.reservationStatus!='상담 진행'">❌</div>
+                                </div>
+                                <div class="divider">|</div>
+                                <div id="coun-cancel" @click="cancelReservation(reservation.reservationNo)">💥</div>
+                            </div>
                             
-                            <div class="each-row">
-                                <div id="coun-name">한소희</div>
-                                <div class="divider">|</div>
-                                <div id="coun-date">2023년 08월 02일</div>
-                                <div class="divider">|</div>
-                                <div id="cancel-date">2023년 08월 12일</div>
-                                <div class="divider">|</div>
-                                <div id="coun-satus">대기</div>
-                                <div class="divider">|</div>
-                                <div id="coun-room">
-                                    <div>🏠</div>
-                                    <div>📑</div>
-                                </div>
-                            </div>
-                            <div class="each-row">
-                                <div id="coun-name">한소희</div>
-                                <div class="divider">|</div>
-                                <div id="coun-date">2023년 08월 02일</div>
-                                <div class="divider">|</div>
-                                <div id="cancel-date">2023년 08월 12일</div>
-                                <div class="divider">|</div>
-                                <div id="coun-satus">대기</div>
-                                <div class="divider">|</div>
-                                <div id="coun-room">
-                                    <div>🏠</div>
-                                    <div>📑</div>
-                                </div>
-                            </div>
-                            <div class="each-row">
-                                <div id="coun-name">한소희</div>
-                                <div class="divider">|</div>
-                                <div id="coun-date">2023년 08월 02일</div>
-                                <div class="divider">|</div>
-                                <div id="cancel-date">2023년 08월 12일</div>
-                                <div class="divider">|</div>
-                                <div id="coun-satus">대기</div>
-                                <div class="divider">|</div>
-                                <div id="coun-room">
-                                    <div>🏠</div>
-                                    <div>📑</div>
-                                </div>
-                            </div>
-                            <div class="each-row">
-                                <div id="coun-name">한소희</div>
-                                <div class="divider">|</div>
-                                <div id="coun-date">2023년 08월 02일</div>
-                                <div class="divider">|</div>
-                                <div id="cancel-date">2023년 08월 12일</div>
-                                <div class="divider">|</div>
-                                <div id="coun-satus">대기</div>
-                                <div class="divider">|</div>
-                                <div id="coun-room">
-                                    <div>🏠</div>
-                                    <div>📑</div>
-                                </div>
-                            </div>
-                            <div class="each-row">
-                                <div id="coun-name">한소희</div>
-                                <div class="divider">|</div>
-                                <div id="coun-date">2023년 08월 02일</div>
-                                <div class="divider">|</div>
-                                <div id="cancel-date">2023년 08월 12일</div>
-                                <div class="divider">|</div>
-                                <div id="coun-satus">대기</div>
-                                <div class="divider">|</div>
-                                <div id="coun-room">
-                                    <div @click="enterRoom">🏠</div>
-                                    <div>📑</div>
-                                </div>
-                            </div>
-    
-    
-                        </div>
-                        <div class="paging-section">
-                            <PageButton></PageButton>
                         </div>
                     </div>
                 </div>
@@ -122,35 +70,90 @@
     </template>
     
 <script>
-import PageButton from '../../components/common/PageButton.vue';
+import { apiInstance } from '@/api/index';
+
 export default {
     components: {
-        PageButton,
-
     },
     data() {
-    return {
-        counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        ],
-        name:"user",
-        sessionId:"mydowson50b83e0b-a37e-4072-9dfb-bffcfd68c897"
-    };
+        return {
+            member: null,
+            reservationList: null,
+            noReservation: true
+        };
     },
-    methods:{
-        enterRoom(){
-            this.$router.push({
-                name:"chatview",
-                query:{
-                    name:this.name,
-                    sessionId: this.sessionId,
-                }
-            });
+    methods: {
+        getMemberInfo() {
+            const getRezInfoRequest = apiInstance();
+            getRezInfoRequest({
+                method: 'GET',
+                url: 'members/info',
+            })
+            .then((res) => {
+                console.log(res.data)
+                this.member = res.data
+                console.log(this.member)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
         },
+        getRezInfo() {
+            const getRezInfoRequest = apiInstance();
+            getRezInfoRequest({
+                method: 'GET',
+                url: `reservations/member_rez_info`,
+            })
+            .then((res) => {
+                console.log(res.data)
+                if(res.data.length !== 0) {
+                    this.reservationList = this.handleRezInfo(res.data)
+                    this.noReservation = false;
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
+        // 예약 정보 변환(영 -> 한, 시간 다듬기)
+        handleRezInfo(reservationList) {
+            const statusTable = {
+                "WAITING": "상담 전",
+                "PROCEEDING": "상담 진행",
+                "CANCEL": "상담 취소",
+                "END": "상담 종료",
+            }
+            reservationList.forEach((reservation) => {
+                reservation.reservationStatus = statusTable[reservation.reservationStatus];
+                reservation.reservationDateTime = reservation.reservationDateTime.replace("T", " ");
+            });
+            return reservationList
+        },
+        cancelReservation(reservationNo) {
+            const cancelRezRequest = apiInstance();
+            console.log("예약 취소 클릭")
+            cancelRezRequest({
+                method: 'PUT',
+                url: `reservations/cancel/${reservationNo}`,
+            })
+            .then((res) => {
+                console.log(res)
+            })
+            .catch((e) => {
+                console.log(e)
+                alert("취소가 불가능한 예약입니다")
+            })
+        },
+        getProfileImg() {
+            const ImgUrl = this.member.profileImage;
+            return ImgUrl
+        }
     },
-};
+    created() {
+        this.getRezInfo();
+        this.getMemberInfo();
+    }
+}
 </script>
 
 <style lang="scss" scoped="scss">

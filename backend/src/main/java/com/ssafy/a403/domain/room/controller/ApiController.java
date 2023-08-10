@@ -4,6 +4,7 @@ import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.room.dto.RoomRequest;
 import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
+import com.ssafy.a403.global.advice.CustomException;
 import com.ssafy.a403.global.config.security.LoginUser;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
@@ -54,6 +55,7 @@ public class ApiController {
 
         if (session == null || counselingReservation.get().getSessionId() == null) {
             log.info("방 생성 실패");
+            throw new CustomException(HttpStatus.BAD_REQUEST, "방 생성에 실패하였습니다.");
         }
 
         //sessionId를 response로 반환
@@ -66,7 +68,7 @@ public class ApiController {
 
     //방 입장하기
     @PostMapping("/api/sessions/{sessionId}/connections")
-    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
+    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException{
 
         log.info("--------------------방 접속 시작---------------------------");
@@ -75,26 +77,14 @@ public class ApiController {
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
 
-        String email = loginUser.getMember().getEmail();
-        int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx);
-
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new CustomException(HttpStatus.NOT_FOUND, "방 정보가 존재하지 않습니다.");
         }
 
         //연결과 토큰 만들기
-        ConnectionProperties properties;
-        Connection connection;
-
-        if(sessionId.startsWith(memberId)){
-            properties = new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build();
-            connection = session.createConnection(properties);
-        }else{
-            properties = new ConnectionProperties.Builder().role(OpenViduRole.SUBSCRIBER).build();
-            connection = session.createConnection(properties);
-        }
+        ConnectionProperties properties = new ConnectionProperties.Builder().role(OpenViduRole.PUBLISHER).build();
+        Connection connection = session.createConnection(properties);
 
         return new ResponseEntity<>(connection, HttpStatus.OK);
 
@@ -103,7 +93,8 @@ public class ApiController {
 
     //방 삭제하기
     @PutMapping("/api/sessions/{sessionId}")
-    public ResponseEntity<?> closeRoom(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<?> closeRoom(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
+            throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 삭제-----------------------");
 
@@ -119,7 +110,7 @@ public class ApiController {
 
         //방 생성자만 삭제할 수 있게 설정
         if(!sessionId.startsWith(memberId)){
-            throw new RuntimeException("error");
+            throw new CustomException(HttpStatus.FORBIDDEN, "상담방을 삭제할 권한이 없습니다.");
         }
 
         //녹화 종료 및 저장
@@ -132,8 +123,8 @@ public class ApiController {
         if(roomService.updateSessionIdAndRecordingUrl(reservationNo, recordingUrl)){
             log.info("수정 완료");
         }else{
-            throw new RuntimeException("error"); //수정 필요
-        };
+            throw new CustomException(HttpStatus.BAD_REQUEST, "방 삭제, 녹화 저장 실패");
+        }
 
         //Session close
         Session session = openVidu.getActiveSession(sessionId);
