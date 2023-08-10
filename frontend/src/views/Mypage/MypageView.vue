@@ -26,18 +26,14 @@
                             <div class="info-labels">
                                 <div class="each-label">이메일</div>
                                 <div class="each-label">이름</div>
-                                <div class="each-label">닉네임</div>
-                                <div class="each-label">생년월일</div>
                             </div>
                             <div class="info-fields">
-                                <div class="each-field">abc@gmail.com</div>
-                                <div class="each-field">장원영</div>
-                                <div class="each-field">원영이</div>
-                                <div class="each-field">2000.10.10</div>
+                                <div class="each-field">{{ this.email }}</div>
+                                <div class="each-field">{{ this.name }}</div>
                                 <!-- <div class="each-field"></div> -->
                             </div>
                         </div>
-                        <div class="down-info">
+                        <!-- <div class="down-info">
                             <div class="each-label">성별</div>
                             <div class="each-field" id="select-field">
                                 <label>
@@ -49,10 +45,10 @@
                                     <span>여성</span>
                                 </label>
                             </div>
-                        </div>
+                        </div> -->
                     </div>
 
-                    <SquareButton id="info-edit-btn">회원 정보 수정</SquareButton>
+                    <!-- <SquareButton id="info-edit-btn">회원 정보 수정</SquareButton> -->
 
                 </div>
                 <div class="like-part">
@@ -77,6 +73,7 @@
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
 import ReviewCard from '../../components/common/ReviewCard.vue';
+import { apiInstance } from '@/api/index';
 
 export default {
     components: {
@@ -85,13 +82,32 @@ export default {
   },
   data() {
     return {
-      counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-      ],
+        email: null,
+        name: null,
+        counselors: null,
     };
   },
+  methods: {
+    getMemberDetail() {
+        const getRezInfoRequest = apiInstance();
+        getRezInfoRequest({
+            method: 'GET',
+            url: 'members/details',
+        })
+        .then((res) => {
+            console.log(res.data)
+            this.email = res.data.email
+            this.name = res.data.name
+            this.counselors = res.data.followInfoList
+        })
+        .catch((e) => {
+            console.log(e)
+        })
+    },
+  },
+  created() {
+    this.getMemberDetail()
+  }
 }
 </script>
 
