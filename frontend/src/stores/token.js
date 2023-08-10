@@ -5,15 +5,11 @@ export const useTokenStore = defineStore("token", {
 
     state: () => ({
         accessToken: null,
-        refreshToken: null,
         loggedIn: false,
     }),
     getters: {
         getAccessToken() {
             return this.accessToken;
-        },
-        getRefreshToken() {
-            return this.refreshToken;
         },
         isLoggedIn() {
             if (isJwtTokenValid(this.accessToken)){
@@ -24,9 +20,8 @@ export const useTokenStore = defineStore("token", {
         }
     },
     actions: {
-        saveTokens(accessToken, refreshToken) {
+        saveAccessToken(accessToken) {
             this.accessToken = accessToken;
-            this.refreshToken = refreshToken;
         },
         login() {
             this.loggedIn = true;
