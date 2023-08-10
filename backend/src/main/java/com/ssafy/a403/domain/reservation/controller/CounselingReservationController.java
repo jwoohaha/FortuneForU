@@ -94,7 +94,7 @@ public class CounselingReservationController {
 
 
     // 후기 삭제
-    @DeleteMapping("/{reservationNo}")
+    @PatchMapping("/{reservationNo}")
     public ResponseEntity<String> deleteReview(@PathVariable Long reservationNo) {
         try {
             counselingReservationService.deleteReview(reservationNo);
