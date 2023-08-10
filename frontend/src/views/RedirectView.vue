@@ -26,8 +26,8 @@ export default {
 
             if (authToken) {
                 await this.api.post('/auth', authToken)
-                .then((response => this.onSuccess(response.headers))
-                .catch((error) => this.onError(error));
+                .then(response => this.onSuccess(response.headers))
+                .catch((error) => this.onError(error))
             } else {
                 window.alert("로그인에 실패하였습니다.");
                 router.push({path: '/'});
