@@ -140,7 +140,7 @@ public class CounselingReservationService {
 
     // 후기 작성
     @Transactional
-    public void postReview(Long reservationNo, Long memberId, String review, float rez_score) {
+    public void postReview(Long reservationNo, Long memberId, String review, Float rez_score) {
         CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
         if (!counselingReservation.checkEmpty()) {

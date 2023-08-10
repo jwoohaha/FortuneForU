@@ -57,8 +57,9 @@ public class CounselingReservation {
     @Column(name="rez_recorded")
     private String reservationRecorded;
 
+
     @Column(name="rez_score")
-    private float reservationScore;
+    private Float reservationScore;
 
     @Column(name="rez_type")
     private String reservationType;
@@ -67,7 +68,7 @@ public class CounselingReservation {
     @Builder
     public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
                                  String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus,
-                                 String reservationRecorded, float reservationScore, String reservationType) {
+                                 String reservationRecorded, Float reservationScore, String reservationType) {
         this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
@@ -94,7 +95,7 @@ public class CounselingReservation {
 
 
     // 리뷰 저장
-    public void saveReview(String review, float score) {
+    public void saveReview(String review, Float score) {
         if (review.length() > 200) {
             throw new IllegalArgumentException("200자를 초과하였습니다.");
         }
