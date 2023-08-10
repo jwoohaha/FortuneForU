@@ -25,11 +25,20 @@ public class CounselorController {
     private final CounselorService counselorService;
 
     /**
-     * 상담사 정보 조회
+     * 상담사 정보 조회(본인)
      */
     @GetMapping("/api/counselors/info")
     public ResponseEntity<CounselorInfoResponse> getCounselorInfo(@AuthenticationPrincipal LoginUser loginUser) {
         Counselor counselor = counselorService.findCounselor(loginUser.getMember());
+        return ResponseEntity.ok(CounselorInfoResponse.from(counselor));
+    }
+
+    /**
+     * 상담사 정보 조회
+     */
+    @GetMapping("/api/counselors/{counselorNo}")
+    public ResponseEntity<CounselorInfoResponse> getCounselorInfo(@PathVariable("counselorNo") Long counselorNo) {
+        Counselor counselor = counselorService.findById(counselorNo);
         return ResponseEntity.ok(CounselorInfoResponse.from(counselor));
     }
 
