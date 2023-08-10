@@ -1,7 +1,6 @@
 package com.ssafy.a403.domain.reservation.dto;
 
 
-
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewResponse {
 
+    private Long reservationNo;
     private Long counselorId;
     private String memberName;
     private String counselorName;
@@ -21,6 +21,7 @@ public class ReviewResponse {
 
     public ReviewResponse from(CounselingReservation counselingReservation) {
         ReviewResponse reviewResponse = new ReviewResponse();
+        reviewResponse.reservationNo = counselingReservation.getReservationNo();
         reviewResponse.counselorId = counselingReservation.getCounselor().getNo();
         reviewResponse.memberName = counselingReservation.getMember().getName();
         reviewResponse.counselorName = counselingReservation.getCounselor().getMember().getName();

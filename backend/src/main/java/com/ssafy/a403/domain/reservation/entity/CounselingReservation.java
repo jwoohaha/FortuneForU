@@ -2,6 +2,7 @@ package com.ssafy.a403.domain.reservation.entity;
 
 import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
+import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
@@ -59,11 +60,14 @@ public class CounselingReservation {
     @Column(name="rez_score")
     private float reservationScore;
 
+    @Column(name="rez_type")
+    private String reservationType;
 
 
     @Builder
     public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded, float reservationScore) {
+                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus,
+                                 String reservationRecorded, float reservationScore, String reservationType) {
         this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
@@ -75,6 +79,7 @@ public class CounselingReservation {
         this.reportStatus = reportStatus;
         this.reservationRecorded = reservationRecorded;
         this.reservationScore = reservationScore;
+        this.reservationType = reservationType;
     }
 
 
@@ -120,4 +125,7 @@ public class CounselingReservation {
     public boolean checkStatus(){
         return reservationStatus.equals(ReservationStatus.END);
     }
+
+
+
 }

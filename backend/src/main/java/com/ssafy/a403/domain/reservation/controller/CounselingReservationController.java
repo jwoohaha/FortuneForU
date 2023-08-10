@@ -29,14 +29,16 @@ public class CounselingReservationController {
 
     //예약 db에 저장
     @PostMapping("/reserve")
-    public String reserve(@RequestBody ReservationRequest reservationRequest,
+    public String reserve(@AuthenticationPrincipal LoginUser loginUser,
+                          @RequestBody ReservationRequest reservationRequest,
                           RedirectAttributes redirectAttributes){
 
-        Long memberId = reservationRequest.getMemberId();
+        Long memberId = loginUser.getMember().getNo();
         Long counselorId = reservationRequest.getCounselorId();
+        String reservationType = reservationRequest.getReservationType();
         LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
+        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationType, reservationDate);
         redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
 
         return "예약 완료!";
