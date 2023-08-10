@@ -56,14 +56,14 @@ public class CounselingReservation {
     @Column(name="rez_recorded")
     private String reservationRecorded;
 
-    @Column(name="rez_score", precision = 2, scale = 1)
-    private BigDecimal reservationScore;
+    @Column(name="rez_score")
+    private float reservationScore;
 
 
 
     @Builder
     public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded, BigDecimal reservationScore) {
+                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded, float reservationScore) {
         this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
@@ -81,7 +81,7 @@ public class CounselingReservation {
     //예약 취소
     public void cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
-            reservationStatus = ReservationStatus.Cancel;
+            reservationStatus = ReservationStatus.CANCEL;
         } else {
             throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
         }
@@ -89,11 +89,14 @@ public class CounselingReservation {
 
 
     // 리뷰 저장
-    public void saveReview(String review) {
+    public void saveReview(String review, float score) {
         if (review.length() > 200) {
             throw new IllegalArgumentException("200자를 초과하였습니다.");
         }
         reservationReview = review;
+        reservationScore = score;
+
+        counselor.updateCounselorReview(score);
     }
 
 
@@ -115,6 +118,6 @@ public class CounselingReservation {
 
     // 상담 종료 확인
     public boolean checkStatus(){
-        return reservationStatus.equals(ReservationStatus.End);
+        return reservationStatus.equals(ReservationStatus.END);
     }
 }
