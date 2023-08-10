@@ -7,7 +7,7 @@
           <div class="top-header">
             <div class="left-header">
               <div class="top-title">
-                타로 상담 예약
+                {{ typeTxt }} 상담 예약
                   <span class="top-subtitle">
                     원하는 상담사를 선택한 후 예약하세요.
                   </span>
@@ -22,7 +22,7 @@
 
           <div class="reservation-box">
             <div class="res-title">
-                안녕하세요. 타로 외길 인생 24년, {{ counselor.name }}입니다.
+                안녕하세요. {{ typeTxt }} 상담사 {{ counselor.name }}입니다.
                 <div class="hr-wrapper"></div>
             </div>
 
@@ -35,7 +35,8 @@
                     <div>성명 : {{ counselor.name }}</div>
                     <div>경력 : {{ counselor.career }}</div>
                     <div>전문분야 : {{ counselor.major }}</div>
-                    <div class="tag-info">#솔직담백 #연애전문</div>
+                    <div class="tag-info" v-if="pageType=='SAJU'" style="color: #F6B5C6;">{{ counselor.intro }}</div>
+                    <div class="tag-info" v-else>{{ counselor.intro }}</div>
                 </div>
             </div>
             
@@ -44,6 +45,8 @@
                 <div v-for="review in reviews" :key="review.id">
                     <ReviewCard :review="review"></ReviewCard>
                 </div>
+                <!-- 예외처리 -->
+                <div v-if="emptyReview" style="font-size: 20px; background-color: bisque;">후기가 없습니다.</div>
             </div>
 
             <div class="calendar-section">
@@ -51,23 +54,30 @@
                     <div class="calendar-txt">예약일</div>
                     <div class="calendar-poster">
                         <!-- <VCalendar /> -->
-                        <VDatePicker v-model="date" transparent borderless/>
+                        <VDatePicker v-model="clicked_date" transparent borderless @click="setDate(this.counselor.counselorNo, this.clicked_date)"/>
                         <div>선택된 날짜 : {{ this.formatted_date }}</div>
                     </div>
                     <div class="calendar-hr"></div>
                     <div class="calendar-txt">예약 가능 시간</div>
                     <div class="time-section">
-                      <div v-for="(resTime, idx) in availableTimes" :key="idx" style="margin: 2px 4px;">
-                        <SquareButton isTarot onClick="check">{{ resTime }}</SquareButton>
+                      <div v-for="(resTime, idx) in availableTimes" :key="idx" style="margin: 2px 4px;" >
+                        <SquareButton v-if="pageType=='SAJU'" :style="{ backgroundColor: clickedBtnIdx === idx ? '#F47F9E' : '' }" @click="clickedButton(resTime, idx)">{{ resTime }}</SquareButton>
+                        <SquareButton isTarot v-else :style="{ backgroundColor: clickedBtnIdx === idx ? '#9C7AE7' : '' }" @click="clickedButton(resTime, idx)">{{ resTime }}</SquareButton>
                       </div>
                     </div>
                 </div>
-                <SquareButton isTarot class="res-btn">예약하기</SquareButton>
+                <SquareButton class="res-btn" @click="reserve" v-if="pageType=='SAJU'">예약하기</SquareButton>
+                <SquareButton isTarot class="res-btn" @click="reserve" v-else>예약하기</SquareButton>
+                <div v-if="this.reservationMsg!=''" style="font-size: 20px; height: 100px;">{{ this.reservationMsg }}</div>
             </div>
            </div>
           </div>
         </div>
         
+        <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
+          {{ this.reservationMsg }}
+        </modal-view>
+
     </div>
     
   </template>
@@ -75,67 +85,76 @@
 <script>
 import ReviewCard from '../components/common/ReviewCard.vue';
 import { SquareButton } from '../components/styled-components/StyledButton'
+import ModalView from "@/components/common/AlertModalView.vue";
 import { apiInstance } from '@/api/index';
 
 export default {
   components: {
     ReviewCard,
-    SquareButton
+    SquareButton,
+    ModalView
 },
   data() {
     return {
+      pageType: "TARO",
+      typeTxt : "타로",
+      emptyReview: false,
       reviews: [],
       counselor: [],
-      date: new Date(),
+      clicked_date: new Date(),
       cantReservations: null,
       availableTimes: [],
-      formatted_date: null
+      formatted_date: null,
+      clickedTime:null,
+      clickedBtnIdx: null,
+      reservationMsg: "",
+      isModalVisible: false
     };
   },
   setup(){
     
   },
   methods: {
-    async getCounselorInfo(id){
+    getCounselorInfo(id){
       
     const api = apiInstance();
 
-      await api({
+      api({
         method: 'GET',
         url: `/counselors/${id}/`,
       })
       .then((result) => {
         console.log(result.data);
-        this.counselor = result.data;
-        console.log(this.counselor.counselorNo);
-        
+        this.counselor = result.data;        
         this.getReviewInfo(this.counselor.counselorNo)
-        this.setDate(this.counselor.counselorNo, this.date)
+        this.setDate(this.counselor.counselorNo, this.clicked_date)
       })
       .catch((e) => {
         console.log(e)
       })
-
-      
     },
-    async getReviewInfo(id){
+    getReviewInfo(id){
       
     const api = apiInstance();
 
-      await api({
+      api({
         method: 'GET',
         url: 'reservations/'+ id + '/co_reviews',
       })
       .then((result) => {
-        console.log(result.data);
+        //예외처리
+        if(Object.keys(result.data) == 0){
+          this.emptyReview = true;
+          return;
+        }
+
         this.reviews = result.data;
-        // console.log(this.reviews[0].review)
       })
       .catch((e) => {
         console.log(e)
       })
     },
-    async setDate(id, date){
+    setDate(id, date){
         const day = date.getDate();
         var newday = day >= 10 ? day : '0' + day;      
         const month = date.getMonth() + 1;
@@ -147,7 +166,7 @@ export default {
         this.formatted_date = `${year}-${newmonth}-${newday}`;
 
         const api = apiInstance();
-        await api({
+        api({
           method: 'GET',
           url: `reservations/availabledate/${id}/${this.formatted_date}`
         })
@@ -160,11 +179,13 @@ export default {
     makeAvailableTimes(){
       
       //값이 없을 때의 오류 처리 필요
+      if(this.counselor.startTime == null)
+        return;
 
-      var startTimeHour = Number(this.cantReservations.startTime.substr(0, 2));
-      var startTimeMin = Number(this.cantReservations.startTime.substr(3, 5));
-      var endTimeHour = Number(this.cantReservations.endTime.substr(0, 2));
-      var endTimeMin = Number(this.cantReservations.endTime.substr(3, 5));
+      var startTimeHour = Number(this.counselor.startTime.substr(0, 2));
+      var startTimeMin = Number(this.counselor.startTime.substr(3, 5));
+      var endTimeHour = Number(this.counselor.endTime.substr(0, 2));
+      var endTimeMin = Number(this.counselor.endTime.substr(3, 5));
 
       while(startTimeHour <= endTimeHour){
         
@@ -172,7 +193,9 @@ export default {
         var txtMin = startTimeMin >= 10 ? startTimeMin.toString() : '0'+startTimeMin.toString();
         this.availableTimes.push( txtHour + ":" + txtMin )
         
-        if(startTimeHour == endTimeHour && startTimeMin == endTimeMin) break;  
+        if(startTimeHour == endTimeHour && startTimeMin == endTimeMin){
+          break;
+        }  
 
         if(startTimeMin == 0){
           startTimeMin = 30;
@@ -181,21 +204,57 @@ export default {
           startTimeMin = 0;
         }
       }
-
+      if( Object.keys(this.cantReservations) == 0 ) return;
+      
       for(var i = 0; i <  this.availableTimes.length; i++){ 
         for(var j = 0; j < this.cantReservations.length; j++){
-          if ( this.availableTimes[i] === this.cantReservations[j]) { 
+
+          var retxtHour = this.cantReservations[j].hour >= 10 ? this.cantReservations[j].hour.toString() : '0'+this.cantReservations[j].hour.toString();
+          var retxtMin = this.cantReservations[j].minute >= 10 ? this.cantReservations[j].minute.toString() : '0'+this.cantReservations[j].minute.toString();
+          var cantReservation = retxtHour + ":" + retxtMin;
+          
+          if ( this.availableTimes[i] === cantReservation) { 
             this.availableTimes.splice(i, 1); 
             i--; 
           }
         }
       }
-
     },
-    
+    clickedButton(e, idx){
+      this.resTime = e;
+      this.clickedBtnIdx = idx;
+    },
+    reserve(){
+      this.reservationMsg = "예약완료";
+          this.isModalVisible = true;
+      // const api = apiInstance();
+      //   api({
+      //     method: 'POST',
+      //     url: `reservations/reserve`,
+      //     body: JSON.stringify({
+      //       counselorId: this.counselor.counselorNo,
+      //       reservationDate: this.resTime,
+      //       reservationType: this.pageType
+      //     }),
+      //   })
+      //   .then((result) => {
+      //     console.log(result);
+
+      //     //예약가능불가능처리
+      //     this.reservationMsg = result;
+      //     this.isModalVisible = true;
+
+          
+      //   }).catch((e) => console.log("ERROR:" + e))
+    }     
   },
   created(){
-    this.getCounselorInfo(this.$route.params.id)
+    this.pageType = this.$route.query.pageType;
+    if(this.pageType != "TARO"){
+      this.typeTxt = "사주";
+    }
+    
+    this.getCounselorInfo(this.$route.query.id)
   }
  };
 </script>
@@ -248,7 +307,7 @@ export default {
 }
 .reservation-box {
     width: 100%;
-    height: 900px;
+    height: 800px;
     border-radius: 10px;
     border: 2px solid #D7D7D7;  
     padding-top: 75px;
@@ -354,9 +413,9 @@ img {
 .time-section{
     height: 130px;
     overflow-y: scroll;
-    margin: 15px 30px;
+    margin: 15px 25px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: start;
     align-items: center;
     flex-wrap : wrap;
 }
