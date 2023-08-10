@@ -13,6 +13,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -164,6 +166,35 @@ public class ApiController {
             return new ResponseEntity<>(recording, HttpStatus.OK);
         } catch (OpenViduHttpException | OpenViduJavaClientException e) {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        }
+
+    }
+
+    @GetMapping(value = "/api/convert")
+    public ResponseEntity<String> converting() throws IOException {
+        System.out.println("들어옵니당");
+        try{
+            String [] command = {"ffmpeg","-i","sessionA","output.mp4"};
+            String workingDirectory = "/opt/openvidu/recordings/sessionA";
+            String currentDirectory = System.getProperty("user.dir");
+            System.out.println("여기까지 됨1");
+
+            ProcessBuilder processBuilder = new ProcessBuilder(command);
+            System.out.println("여기까지 됨2");
+            processBuilder.directory(new File(workingDirectory));
+            System.out.println("여기까지 됨3");
+            Process process = processBuilder.start();
+            System.out.println("여기까지 됨4");
+            int exitCode = process.waitFor();
+
+            if (exitCode == 0) {
+                return new ResponseEntity<>("success",HttpStatus.OK);
+            } else {
+                return new ResponseEntity<>("failed..",HttpStatus.OK);
+            }
+
+        } catch (IOException | InterruptedException e) {
+            return new ResponseEntity<>("exception",HttpStatus.OK);
         }
 
     }
