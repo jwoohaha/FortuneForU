@@ -1,8 +1,8 @@
 package com.ssafy.a403.domain.member.service;
 
+import com.ssafy.a403.domain.member.dto.FollowerInfoResponse;
 import com.ssafy.a403.domain.member.dto.MemberDetailsResponse;
 import com.ssafy.a403.domain.member.dto.MemberInfoResponse;
-import com.ssafy.a403.domain.member.entity.FollowId;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional(readOnly = true)
@@ -33,7 +34,10 @@ public class MemberService {
     public MemberDetailsResponse getMemberDetails(Member member){
 
         List<Member> followers = followService.followerList(member);
-        return MemberDetailsResponse.of(member, followers);
+        List<FollowerInfoResponse> followerInfoList = followers.stream()
+                .map(f -> FollowerInfoResponse.of(f))
+                .collect(Collectors.toList());
+        return MemberDetailsResponse.of(member, followerInfoList);
     }
 
     public Page<Member> findPaging(Pageable pageable) {
