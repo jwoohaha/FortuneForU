@@ -10,8 +10,8 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <!-- <div class="profile-img"></div> -->
-                        <div v-bind:style="{ 'background-image': 'url(' + member.email + ')' }" class="profile-img"></div>
+                        <div class="profile-img"><img :src="getProfileImg"></div>
+                        <!-- <div class="profile-img" :style="{ backgroundImage : `url(${this.member.profileImage})`}" ></div> -->
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -56,7 +56,7 @@
                                     <div v-if="reservation.reservationStatus==='상담 진행'">
                                         <a href={{reservation.sessionId}}>🏠</a>
                                     </div>
-                                    <div v-if="reservation.reservationStatus!='상담 진행'">생성 전</div>
+                                    <div v-if="reservation.reservationStatus!='상담 진행'">❌</div>
                                 </div>
                                 <div class="divider">|</div>
                                 <div id="coun-cancel" @click="cancelReservation(reservation.reservationNo)">💥</div>
@@ -143,6 +143,10 @@ export default {
                 console.log(e)
                 alert("취소가 불가능한 예약입니다")
             })
+        },
+        getProfileImg() {
+            const ImgUrl = this.member.profileImage;
+            return ImgUrl
         }
     },
     created() {
