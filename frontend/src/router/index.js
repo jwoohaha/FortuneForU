@@ -23,9 +23,10 @@ const routes = [
     component: () => import(/* webpackChunkName: "community" */ '../views/CommunityView.vue')
   },
   {
-    path: '/reservation/:id',
+    path: '/reservation',
     name: 'reservation',
-    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
+    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue'),
+    props: true
   },
   {
     path: '/redirect',

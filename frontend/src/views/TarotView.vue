@@ -47,10 +47,12 @@
               <CounselorCard :counselor="counselor" :colorType="isTarot"></CounselorCard>
             </div>
           </div>
+          <!-- 예외처리 -->
+          <div class="counselor-list" v-if="emptyPage" style="height: 600px; display: flex; justify-content: center; font-size: 30px;">상담사 정보가 없습니다.</div>
       </div>
       
       <div class="paging-section">
-        <PageButton :totalPages="totalPages" @page-changed="handlePageChange"></PageButton>
+        <PageButton :totalPages="totalPages" :pageType="TARO" @page-changed="handlePageChange"></PageButton>
       </div>
     </div>
   </div>
@@ -70,6 +72,7 @@ export default {
   },
   data() {
     return {
+      emptyPage: false,
       counselors: null,
       criteria: 'review',
       isTarot: true
@@ -88,8 +91,12 @@ export default {
       })
       .then((res) => {
         console.log(res.data)
-        this.counselors = res.data.content
-        this.totalPages = res.data.totalPages
+        //보여줄 컨텐츠(상담사 정보)가 없을 경우 예외처리
+        if(Object.keys(res.data.content) == 0){
+          this.emptyPage = true;
+        }
+        this.counselors = res.data.content;
+        this.totalPages = res.data.totalPages;
       })
       .catch((e) => {
         console.log(e)
@@ -139,7 +146,14 @@ export default {
       }
     },
     moveDetail(id){
-      this.$router.push(`/reservation/${id}`);
+      this.$router.push({
+        name: 'reservation',
+        query: {
+          id: id,
+          pageType : 'TARO'
+        }
+      }
+      );
     }
   },
 
