@@ -26,6 +26,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 public class SecurityConfig {
 
     private final AuthenticationSuccessHandler successHandler;
+   // <Member, Long> 이런 느낌이라고 생각하면 됨
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
 
@@ -66,9 +67,14 @@ public class SecurityConfig {
     }
 
     private Customizer<OAuth2LoginConfigurer<HttpSecurity>> setOAuth2Config() {
+
         return o ->
-                o.authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize"))
-                        .userInfoEndpoint(e -> e.userService(oAuth2UserService))
+                o.authorizationEndpoint(auth -> auth.baseUri("/oauth2/authorize"))  // defalut는 /oauth2/authorization
+                        .userInfoEndpoint(e -> e.userService(oAuth2UserService))    // 공급자가 제공한 사용자 정보를 로드한다 -> LoginUser와 매핑
+                        // .tokenEndpoint() // 이처럼 tokenEndpoint()를 명시해주지 않으면 default는 spring에 기본 구현한대로 동작 -> code와 token을 교환
+                        // .accessTokenResponseClient(accessTokenResponseClient());
+                        // .redirectionEndpoint()   // 이처럼 redirectionEndpoint()를 명시해주지 않으면 default는 login/oauth2/code
+                        // .baseUri("/oauth2/redirect")
                         .successHandler(successHandler);
     }
 

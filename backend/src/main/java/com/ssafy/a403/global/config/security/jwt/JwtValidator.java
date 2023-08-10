@@ -27,6 +27,7 @@ public class JwtValidator {
 
     public Authentication getAuthentication(String accessToken) throws NumberFormatException, EntityNotFoundException {
         Claims claims = getTokenClaims(accessToken);
+        // TODO: 토큰 만료 확인 로직 필요
         Member member = memberService.findById(Long.parseLong(claims.get("id", String.class)));
         LoginUser loginUser = loginUserMapper.toLoginUser(member);
 
