@@ -24,13 +24,13 @@
                         
                         <div class="review-cards-section">
                             <!-- 카드하나 -->
-                            <div class="review-card" v-for="(counselorIndex, idx) in displayedIndexes" :key="idx">
-                                <img class="card-img" src="{{ counselorIndex.profileImage }}">
+                            <div class="review-card" v-for="(reviewIndex, idx) in displayedIndexes" :key="idx">
+                                <img class="card-img" src="{{ reviewIndex.profileImage }}">
                                 <div class="coun-info">
-                                    <div>{{ counselorIndex.counselorName }} ⭐ {{ counselorIndex.reservationScore }}</div>
-                                    <div class="review-txt">{{ counselorIndex.review }}</div>
+                                    <div>{{ reviewIndex.counselorName }} ⭐ {{ reviewIndex.reservationScore }}</div>
+                                    <div class="review-txt">{{ reviewIndex.review }}</div>
                                 </div>
-                                <div @click="removeReview(counselorIndex.reservationNo)">✖</div>
+                                <div @click="removeReview(reviewIndex.reservationNo)">✖</div>
                             </div>
                         </div>
 
@@ -52,17 +52,17 @@ export default {
         return {
             currentPage : 1,
             itemsPerPage : 6,
-            counselors: [],
+            reviews: [],
         }
     },
     computed: {
         displayedIndexes() {
             const startIndex = (this.currentPage - 1) * this.itemsPerPage;
             const endIndex = startIndex + this.itemsPerPage;
-            return this.counselors.slice(startIndex, endIndex);
+            return this.reviews.slice(startIndex, endIndex);
         },
         totalPages() {
-            return Math.ceil(this.counselors.length / this.itemsPerPage);
+            return Math.ceil(this.reviews.length / this.itemsPerPage);
         }
     },
     setup(){
@@ -81,7 +81,7 @@ export default {
 
                 response.data.forEach(element => {
                     console.log(element);
-                    this.counselors.push(element);
+                    this.reviews.push(element);
                 });
 
             })
