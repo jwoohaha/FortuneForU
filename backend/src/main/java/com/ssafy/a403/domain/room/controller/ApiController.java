@@ -68,7 +68,7 @@ public class ApiController {
 
     //방 입장하기
     @PostMapping("/api/sessions/{sessionId}/connections")
-    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
+    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId)
             throws OpenViduJavaClientException, OpenViduHttpException{
 
         log.info("--------------------방 접속 시작---------------------------");
@@ -76,10 +76,6 @@ public class ApiController {
 
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
-
-        String email = loginUser.getMember().getEmail();
-        int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx);
 
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
@@ -97,7 +93,8 @@ public class ApiController {
 
     //방 삭제하기
     @PutMapping("/api/sessions/{sessionId}")
-    public ResponseEntity<?> closeRoom(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser) throws OpenViduJavaClientException, OpenViduHttpException {
+    public ResponseEntity<?> closeRoom(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
+            throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 삭제-----------------------");
 
@@ -127,7 +124,7 @@ public class ApiController {
             log.info("수정 완료");
         }else{
             throw new CustomException(HttpStatus.BAD_REQUEST, "방 삭제, 녹화 저장 실패");
-        };
+        }
 
         //Session close
         Session session = openVidu.getActiveSession(sessionId);
