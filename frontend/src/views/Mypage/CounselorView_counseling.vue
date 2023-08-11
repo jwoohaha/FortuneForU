@@ -50,12 +50,12 @@
                                     </div>
                                     <div class="list-contents">
                                         <!-- 각 row -->
-                                        <div class="list-row">
-                                            <div>A1234</div>
-                                            <div>한소희</div>
-                                            <div>17시 15분</div>
-                                            <div>타로</div>
-                                            <div>확정</div>
+                                        <div v-for="reservation, idx in reservations" :key="idx" class="list-row">
+                                            <div>{{ reservation.reservationNo }}</div>
+                                            <div>{{ reservation.memberName }}</div>
+                                            <div>{{ reservation.reservationDateTime }}</div>
+                                            <div> {{ reservation.reservationType }}</div>
+                                            <div>{{ reservation.reservationStatus }}</div>
                                         </div>
                                     </div>
                                 </div>
@@ -100,17 +100,94 @@
     
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
+import { apiInstance } from '@/api/index';
 
 export default {
     
     components: {
         SquareButton,
+
     },
     data() {
-    return {
-        name:'consultant'
-    };
+        return {
+            name:'consultant',
+            counselor: null,
+            reservations: null,
+            date: new Date(),
+            noReservation: true,
+            formatted_date: null,
+        };
     },
+    methods: {
+        getCounselorInfo(){
+            const getCounselorInfoRequest = apiInstance(); 
+            getCounselorInfoRequest({
+                method: 'GET',
+                url: `/counselors/info`,
+            })
+            .then((res) => {
+                this.counselor = res.data
+                console.log(this.counselor)
+                this.getCoRezInfo(this.date)
+                
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
+        async getCoRezInfo(date) {
+            const getCoRezInfoRequest = apiInstance();
+            const day = date.getDate();
+            var newday = day >= 10 ? day : '0' + day;      
+            const month = date.getMonth() + 1;
+            var newmonth = month >= 10 ? month : '0' + month;
+            const year = date.getFullYear();
+            
+            if(this.formatted_date == `${year}-${newmonth}-${newday}`)  return;
+
+            this.formatted_date = `${year}-${newmonth}-${newday}`;
+
+            await getCoRezInfoRequest({
+                method: 'GET',
+                url: `/reservations/counselor_rez_info/${this.formatted_date}`,
+            })
+            .then((res) => {
+                console.log(res.data)
+                if(res.data.length !== 0) {
+                    this.reservations = this.handleRezInfo(res.data)
+                  this.noReservation = false;
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
+        handleRezInfo(reservations) {
+            const statusTable = {
+                "WAITING": "상담 전",
+                "PROCEEDING": "상담 진행",
+                "CANCEL": "상담 취소",
+                "END": "상담 종료",
+            }
+            const typeTable = {
+                "SAJU": "사주",
+                "TARO": '타로'
+            }
+            reservations.forEach((reservation) => {
+                reservation.reservationStatus = statusTable[reservation.reservationStatus];
+                reservation.reservationType = typeTable[reservation.reservationType];
+                reservation.reservationDateTime = reservation.reservationDateTime.substring(11, 16);
+            });
+            return reservations
+        },
+            
+
+    },
+   
+    created() {
+    this.getCounselorInfo();
+  
+    }
 }
 </script>
     

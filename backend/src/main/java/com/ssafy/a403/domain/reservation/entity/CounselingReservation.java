@@ -2,6 +2,7 @@ package com.ssafy.a403.domain.reservation.entity;
 
 import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
+import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
@@ -56,14 +57,18 @@ public class CounselingReservation {
     @Column(name="rez_recorded")
     private String reservationRecorded;
 
-    @Column(name="rez_score")
-    private float reservationScore;
 
+    @Column(name="rez_score")
+    private Float reservationScore;
+
+    @Column(name="rez_type")
+    private String reservationType;
 
 
     @Builder
     public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded, float reservationScore) {
+                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus,
+                                 String reservationRecorded, Float reservationScore, String reservationType) {
         this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
@@ -75,6 +80,7 @@ public class CounselingReservation {
         this.reportStatus = reportStatus;
         this.reservationRecorded = reservationRecorded;
         this.reservationScore = reservationScore;
+        this.reservationType = reservationType;
     }
 
 
@@ -89,7 +95,7 @@ public class CounselingReservation {
 
 
     // 리뷰 저장
-    public void saveReview(String review, float score) {
+    public void saveReview(String review, Float score) {
         if (review.length() > 200) {
             throw new IllegalArgumentException("200자를 초과하였습니다.");
         }
@@ -120,4 +126,7 @@ public class CounselingReservation {
     public boolean checkStatus(){
         return reservationStatus.equals(ReservationStatus.END);
     }
+
+
+
 }

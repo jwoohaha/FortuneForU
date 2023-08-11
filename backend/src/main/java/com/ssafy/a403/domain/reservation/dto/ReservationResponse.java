@@ -34,6 +34,8 @@ public class ReservationResponse {
 
     private String reservationReport;
 
+    private String reservationType;
+
 
     public ReservationResponse from(CounselingReservation counselingReservation) {
         ReservationResponse reservationResponse = new ReservationResponse();
@@ -48,6 +50,7 @@ public class ReservationResponse {
         reservationResponse.sessionId = counselingReservation.getSessionId();
         reservationResponse.reservationReview = counselingReservation.getReservationReview();
         reservationResponse.reservationReport = counselingReservation.getReservationReport();
+        reservationResponse.reservationType = counselingReservation.getReservationType();
 
         return reservationResponse;
     }
