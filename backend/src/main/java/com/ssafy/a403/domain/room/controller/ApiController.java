@@ -41,14 +41,13 @@ public class ApiController {
         log.info("roomRequest reservationNo: " + roomRequest.getReservationNo());
 
         //email @ 앞부분 추출
-//        String email = loginUser.getMember().getEmail();
-//        int idx = email.indexOf("@");
-//        String memberId = email.substring(0, idx);
-//
-//        //아이디 + 랜덤 sessionId 생성
-//        String sessionId = memberId + UUID.randomUUID().toString();
-//        //session생성
-        String sessionId ="sessionA";
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
+
+        //아이디 + 랜덤 sessionId 생성
+        String sessionId = memberId + UUID.randomUUID().toString();
+        //session생성
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
                 .customSessionId(sessionId)
@@ -82,9 +81,9 @@ public class ApiController {
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
 
-//        String email = loginUser.getMember().getEmail();
-//        int idx = email.indexOf("@");
-//        String memberId = email.substring(0, idx);
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
 
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
@@ -117,14 +116,14 @@ public class ApiController {
 
         Long reservationNo = counselingReservation.getReservationNo();
 
-//        String email = loginUser.getMember().getEmail();
-//        int idx = email.indexOf("@");
-//        String memberId = email.substring(0, idx);
 
-//        if(!sessionId.startsWith(memberId)){
-//            throw new RuntimeException("error");
-//        }
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
 
+        if(!sessionId.startsWith(memberId)){
+            throw new RuntimeException("error");
+        }
         //todo openvidurole 받아와서 상담가만 방삭제 + 녹화종료 가능하게 변경, 방 퇴장 따로 생성해야하는지 체크
 
         //녹화 종료 및 저장
@@ -144,10 +143,8 @@ public class ApiController {
 
         if(session != null) {
             openVidu.getActiveSession(sessionId).close();
-//            FinalResult finalResult = FinalResult.builder()
-//                    .finalResult("success")
-//                    .build();
             log.info("방 삭제 완료");
+            converting(sessionId);
         }
 
         return ResponseEntity.ok("success");
@@ -174,28 +171,49 @@ public class ApiController {
         }
 
     }
+//    String directoryPath = "/opt/sessionA"; // 실제 경로로 변경해야 함
 
-//    @GetMapping(value = "/api/convert")
-//    public ResponseEntity<String> converting(){
-//        System.out.println("들어옵니당");
-//
-//        try {
-//            Process process = Runtime.getRuntime().exec("aws s3 ls s3://your-bucket-name/path/to/files/");
-//
-//            InputStream inputStream = process.getInputStream();
-//            byte[] buffer = new byte[1024];
-//            int bytesRead;
-//
-//            while ((bytesRead = inputStream.read(buffer)) != -1) {
-//                System.out.write(buffer, 0, bytesRead);
-//            }
-//
-//            process.waitFor();
-//        } catch (IOException | InterruptedException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//
+    public void converting(String sessionId){
+        System.out.println("들어옵니당");
+        try {
+            // 실행할 명령어 설정
+            String command = "ffmpeg -i " + sessionId+".webm " + sessionId+".mp4";
+            System.out.println(command);
+            // 원하는 작업 디렉토리 설정
+            String workingDirectory = "/opt/"+sessionId; // 실제 경로로 변경해야 함
+
+            // ProcessBuilder 생성
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("bash", "-c", command);
+            processBuilder.directory(new File(workingDirectory));
+
+            // 프로세스 실행
+            Process process = processBuilder.start();
+
+            // 프로세스의 출력 스트림 처리 (선택 사항)
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // 프로세스의 에러 스트림 처리 (선택 사항)
+            InputStream errorStream = process.getErrorStream();
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+            while ((line = errorReader.readLine()) != null) {
+                System.err.println(line);
+            }
+
+            // 프로세스 완료 대기
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code " + exitCode);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 
 }

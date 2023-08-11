@@ -1,13 +1,9 @@
 <template>
     <div id="main-container" class="container">
       <div id="session" v-if="session">
-        <div id="session-header">
-
-          
+        <div id="session-header">        
         </div>
-        <!-- <div id="main-video" class="col-md-6">
-           <user-video :stream-manager="mainStreamManager" /> 
-        </div> -->
+
         <div id="video-container" class="col-md-6" style="display: flex; flex-direction: row; justify-content: center;">
           <user-video :stream-manager="publisher" @click="updateMainVideoStreamManager(publisher)" style="margin-right: 10px; margin-left:10px;" />
           <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
@@ -180,24 +176,7 @@
         }
         
       },
-      //변환하는 WebM을 MP4로 변환하는 함수
-      /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    //   convertWebMtoMP4() {
-    //   const inputFilePath = 'path/to/your/input/file.webm';
-    //   const outputFilePath = 'path/to/your/output/file.mp4';
 
-    //   ffmpeg()
-    //     .input(inputFilePath)
-    //     .outputOptions('-c:v libx264')
-    //     .output(outputFilePath)
-    //     .on('end', () => {
-    //       console.log('변환 완료');
-    //     })
-    //     .on('error', (err) => {
-    //       console.error('오류 발생:', err);
-    //     })
-    //     .run();
-    // },
 
       async closing() {
         if(this.isRecorder){
@@ -205,7 +184,7 @@
           const response = await this.api.put('/sessions/'+this.sessionId)
           console.log(response);
           if(response.data=="success"){
-            console.log("holla");
+            this.$router.push('/');
           }
         }else{
           //사용자일 경우 그냥 나간다 => 즉 세션을 종료하면 안된다.
@@ -228,8 +207,8 @@
       },
 
   async startRecording() {
-  // const response = await axios.post('https://i9a403.p.ssafy.io/api/recording/'+this.sessionId, {
-    const response = await axios.post('https://ssafytest.shop/api/recording/'+this.sessionId, {
+   const response = await axios.post('https://i9a403.p.ssafy.io/api/recording/'+this.sessionId, {
+    // const response = await axios.post('https://ssafytest.shop/api/recording/'+this.sessionId, {
     session: this.session.sessionId,
     outputMode: this.outputMode,
     hasAudio: this.hasAudio,
