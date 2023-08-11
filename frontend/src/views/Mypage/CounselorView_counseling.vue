@@ -171,7 +171,7 @@ export default {
             }
             const typeTable = {
                 "SAJU": "사주",
-                "TAROT": '타로'
+                "TARO": '타로'
             }
             reservations.forEach((reservation) => {
                 reservation.reservationStatus = statusTable[reservation.reservationStatus];

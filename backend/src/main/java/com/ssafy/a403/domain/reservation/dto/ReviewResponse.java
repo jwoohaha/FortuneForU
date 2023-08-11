@@ -15,8 +15,8 @@ public class ReviewResponse {
     private String memberName;
     private String counselorName;
     private String profileImage;
-    private float ratingAvg;
-    private float reservationScore;
+    private Float ratingAvg;
+    private Float reservationScore;
     private String review;
 
     public ReviewResponse from(CounselingReservation counselingReservation) {
