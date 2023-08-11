@@ -68,14 +68,14 @@
                 </div>
                 <SquareButton class="res-btn" @click="reserve" v-if="pageType=='SAJU'">예약하기</SquareButton>
                 <SquareButton isTarot class="res-btn" @click="reserve" v-else>예약하기</SquareButton>
-                <div v-if="this.reservationMsg!=''" style="font-size: 20px; height: 100px;">{{ this.reservationMsg }}</div>
+                <div v-if="this.reservationStatus!=''" style="font-size: 20px; height: 100px;">{{ this.reservationStatus }}</div>
             </div>
            </div>
           </div>
         </div>
         
-        <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
-          {{ this.reservationMsg }}
+        <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :reservationStatus="reservationStatus">
+          {{ this.reservationStatus }}
         </modal-view>
 
     </div>
@@ -107,7 +107,7 @@ export default {
       formatted_date: null,
       clickedTime:null,
       clickedBtnIdx: null,
-      reservationMsg: "",
+      reservationStatus: "",
       isModalVisible: false
     };
   },
@@ -225,27 +225,30 @@ export default {
       this.clickedBtnIdx = idx;
     },
     reserve(){
-      this.reservationMsg = "예약완료";
-          this.isModalVisible = true;
-      // const api = apiInstance();
-      //   api({
-      //     method: 'POST',
-      //     url: `reservations/reserve`,
-      //     body: JSON.stringify({
-      //       counselorId: this.counselor.counselorNo,
-      //       reservationDate: this.resTime,
-      //       reservationType: this.pageType
-      //     }),
-      //   })
-      //   .then((result) => {
-      //     console.log(result);
+      const api = apiInstance();
+        api({
+          method: 'POST',
+          url: `reservations/reserve`,
+          body: JSON.stringify({
+            counselorId: this.counselor.counselorNo,
+            reservationDate: this.resTime,
+            reservationType: this.pageType
+          }),
+        })
+        .then((result) => {
+          console.log(result);
 
-      //     //예약가능불가능처리
-      //     this.reservationMsg = result;
-      //     this.isModalVisible = true;
-
+          if(reseult == "예약완료!"){
+            this.reservationStatus = "200";
+            this.isModalVisible = true;
+          }else{
+            this.reservationStatus = "현재 예약이 불가능합니다."
+          }
           
-      //   }).catch((e) => console.log("ERROR:" + e))
+        }).catch((e) => {
+          console.log("ERROR:" + e)
+          this.reservationStatus = e
+        })
     }     
   },
   created(){
