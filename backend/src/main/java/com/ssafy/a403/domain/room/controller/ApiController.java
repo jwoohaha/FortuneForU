@@ -4,9 +4,12 @@ import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.room.dto.RoomRequest;
 import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
+import com.ssafy.a403.global.advice.CustomException;
+import com.ssafy.a403.global.config.security.LoginUser;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -36,6 +39,10 @@ public class ApiController {
             throws OpenViduJavaClientException, OpenViduHttpException {
         log.info("---------------------방 만들기 시작----------------------");
 
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
+        
         //아이디 + 랜덤 sessionId 생성
         String sessionId = memberId + UUID.randomUUID().toString();
         //session생성
@@ -73,10 +80,6 @@ public class ApiController {
         //sessionId로 session 가져오기
         Session session = openVidu.getActiveSession(sessionId);
 
-        String email = loginUser.getMember().getEmail();
-        int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx);
-
         //session이 존재하지 않는다면 NOT FOUND 리턴
         if (session == null){
             throw new CustomException(HttpStatus.NOT_FOUND, "방 정보가 존재하지 않습니다.");
@@ -92,8 +95,9 @@ public class ApiController {
 
 
     //방 삭제하기
-    @DeleteMapping("/api/sessions/{sessionId}")
-    public ResponseEntity<?> deleteRoom(@PathVariable("sessionId") String sessionId) throws OpenViduJavaClientException, OpenViduHttpException {
+    @PutMapping("/api/sessions/{sessionId}")
+    public ResponseEntity<?> closeRoom(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
+            throws OpenViduJavaClientException, OpenViduHttpException {
 
         log.info("---------------------방 삭제-----------------------");
 
@@ -103,7 +107,27 @@ public class ApiController {
 
         Long reservationNo = counselingReservation.getReservationNo();
 
-       CounselingReservation updateCounselingReservation = RoomServ   ice.updateSessionId(reservationNo);
+        String email = loginUser.getMember().getEmail();
+        int idx = email.indexOf("@");
+        String memberId = email.substring(0, idx);
+
+        //방 생성자만 삭제할 수 있게 설정
+        if(!sessionId.startsWith(memberId)){
+            throw new CustomException(HttpStatus.FORBIDDEN, "상담방을 삭제할 권한이 없습니다.");
+        }
+
+        //녹화 종료 및 저장
+        Recording recording = openVidu.stopRecording(recordingId);
+
+        String recordingUrl = recording.getUrl();
+        log.info("recordingUrl : " + recordingUrl);
+
+        //sessionID null, recordingUrl update
+        if(roomService.updateSessionIdAndRecordingUrl(reservationNo, recordingUrl)){
+            log.info("수정 완료");
+        }else{
+            throw new CustomException(HttpStatus.BAD_REQUEST, "방 삭제, 녹화 저장 실패");
+        }
 
         //Session close
         Session session = openVidu.getActiveSession(sessionId);
@@ -114,10 +138,7 @@ public class ApiController {
             converting(sessionId);
         }
 
-        //녹화 종료 및 저장
-//        Recording recording = openVidu.stopRecording(recordingId);
-
-        return new ResponseEntity<>(HttpStatus.OK);
+        return ResponseEntity<>("success",HttpStatus.OK);
 
     }
 
