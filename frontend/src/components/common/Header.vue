@@ -7,6 +7,7 @@
         <router-link to="/saju">사주상담</router-link>
         <router-link to="/community">커뮤니티</router-link>
       </nav>
+      <button @click="this.test()">Test</button>
       <div v-if="tokenStore.isLoggedIn">
         <router-link to="/mypage"><button>마이페이지</button></router-link>
         <router-link to="/counselor"><button>상담사전용</button></router-link>
@@ -25,6 +26,7 @@
 import Logo from "../common/Logo.vue";
 import ModalView from "@/components/common/ModalView.vue";
 import { useTokenStore } from "@/stores/token";
+import { apiInstance } from '@/api/index'
 
 export default {
   components: {
@@ -38,14 +40,29 @@ export default {
   },
   setup() {
     const tokenStore = useTokenStore();
+    const api = apiInstance();
     return {
       tokenStore,
+      api
     }
   },
   created() {
     let uri = window.location.href.split('?');
     this.isModalVisible = uri[1]
   },
+  methods: {
+    async test() {
+      await this.api.get('/test')
+        .then(response => this.onSuccess(response))
+        .catch((error) => this.onError(error))
+    },
+    onSuccess(response) {
+      console.log(response);
+    },
+    onError(error) {
+      console.log(error);
+    }
+  }
 };
 </script>
 
