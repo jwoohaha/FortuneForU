@@ -108,7 +108,7 @@ export default {
       clickedTime:null,
       clickedBtnIdx: null,
       reservationStatus: "",
-      isModalVisible: false
+      isModalVisible: false,
     };
   },
   setup(){
@@ -173,6 +173,7 @@ export default {
         .then((result) => {
           console.log(result.data);
           this.cantReservations = result.data;
+          this.availableTimes = [];
           this.makeAvailableTimes();
         })
     },
@@ -225,24 +226,28 @@ export default {
       this.clickedBtnIdx = idx;
     },
     reserve(){
+
+      const reservationDatetime =  this.formatted_date + "T" + this.resTime + ":00" 
       const api = apiInstance();
+      
         api({
           method: 'POST',
           url: `reservations/reserve`,
-          body: JSON.stringify({
-            counselorId: this.counselor.counselorNo,
-            reservationDate: this.resTime,
-            reservationType: this.pageType
-          }),
+          data: {
+            "counselorId": this.counselor.counselorNo,
+            "reservationDate": reservationDatetime,
+            "reservationType": this.pageType
+          },
         })
         .then((result) => {
           console.log(result);
 
-          if(reseult == "예약완료!"){
+          if(result.data == "예약 성공"){
             this.reservationStatus = "200";
             this.isModalVisible = true;
           }else{
-            this.reservationStatus = "현재 예약이 불가능합니다."
+            this.reservationStatus = result.data
+            this.isModalVisible = true;
           }
           
         }).catch((e) => {
