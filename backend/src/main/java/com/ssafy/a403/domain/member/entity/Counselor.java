@@ -37,7 +37,7 @@ public class Counselor {
     private String phone;
 
     @ColumnDefault("0")
-    private int reviewCnt;
+    private Integer reviewCnt;
 
     @ColumnDefault("0.0")
     private Float ratingAvg;
