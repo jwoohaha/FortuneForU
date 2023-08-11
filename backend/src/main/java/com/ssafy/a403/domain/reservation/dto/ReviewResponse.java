@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewResponse {
 
+    private Long reservationNo;
     private Long counselorId;
     private String memberName;
     private String counselorName;
@@ -21,6 +22,7 @@ public class ReviewResponse {
 
     public ReviewResponse from(CounselingReservation counselingReservation) {
         ReviewResponse reviewResponse = new ReviewResponse();
+        reviewResponse.reservationNo = counselingReservation.getReservationNo();
         reviewResponse.counselorId = counselingReservation.getCounselor().getNo();
         reviewResponse.memberName = counselingReservation.getMember().getName();
         reviewResponse.counselorName = counselingReservation.getCounselor().getMember().getName();
