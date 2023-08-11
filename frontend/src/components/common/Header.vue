@@ -38,11 +38,14 @@ export default {
   },
   setup() {
     const tokenStore = useTokenStore();
-
     return {
       tokenStore,
     }
-  }
+  },
+  created() {
+    let uri = window.location.href.split('?');
+    this.isModalVisible = uri[1]
+  },
 };
 </script>
 
