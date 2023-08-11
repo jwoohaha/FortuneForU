@@ -29,9 +29,10 @@ public class GlobalControllerAdvice {
 
     @ExceptionHandler(ExpiredJwtException.class)
     public void expiredJwtExceptionHandler(Exception e, HttpServletResponse response) throws IOException {
+
         log.info("ExpiredJwtException: {}", e.getMessage());
-        response.sendRedirect(clientUrl + "/login");
-//        return ResponseEntity.badRequest().body(e.getMessage());
+
+        response.sendRedirect(clientUrl + "/refresh");
     }
 
     @ExceptionHandler(RuntimeException.class)
@@ -48,7 +49,4 @@ public class GlobalControllerAdvice {
         log.info("Exception: {}", e.getMessage());
         return ResponseEntity.badRequest().body(e.getMessage());
     }
-
-
-
 }

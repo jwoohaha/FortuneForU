@@ -1,7 +1,6 @@
 package com.ssafy.a403.global.config.security.jwt;
 
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Value;
@@ -15,7 +14,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
@@ -42,7 +40,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         token.ifPresent(
                 t -> {
                 	log.info("AccessToken: {}", t);
-                	Authentication authentication = jwtValidator.getAuthentication(t);
+                    // 만약 여기서 오류가 난다면 - access 토큰이 invalid
+                    // refresh token을 통한 재발급을 시도한다.
+                    Authentication authentication = jwtValidator.getAuthentication(t);
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 });
         filterChain.doFilter(request, response);
@@ -50,20 +50,5 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     
     private String getTokensFromHeader(HttpServletRequest request) {
     	return request.getHeader(accessTokenHeaderTag);
-    }
-
-    private String getTokensFromCookies(Cookie[] cookies) {
-        if (cookies == null) {
-            return null;
-        }
-
-        Optional<Cookie> accessCookie = getAccessToken(cookies);
-        return accessCookie.map(Cookie::getValue).orElse(null);
-    }
-
-    private Optional<Cookie> getAccessToken(Cookie[] cookies) {
-        return Arrays.stream(cookies)
-                .filter(cookie -> cookie.getName().equals(accessTokenHeaderTag))
-                .findFirst();
     }
 }
