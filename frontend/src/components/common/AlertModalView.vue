@@ -1,6 +1,6 @@
 <template>
   <div class="modal">
-    <div class="modal-overlay" @click="$emit('close-modal')"></div>
+    <div class="modal-overlay"></div>
     <modal-content modalWidth="3" modalHeight="1.2">
       <div class="modal-box">
           <div class="modal-title">
@@ -9,7 +9,7 @@
           </div>
           <div class="modal-content">{{ this.content }}</div>
           <div class="modal-buttons">
-            <div class="btn" id="left" @click="movePage('reservation')">이전으로</div>
+            <div class="btn" id="left" @click="movePage(this.pagePath[this.prePage])">이전으로</div>
             <div class="btn" id="right" @click="movePage('mypage')" v-if="rightBtn">마이페이지</div>
           </div>
       </div>
@@ -30,6 +30,10 @@ export default {
       type: String,
       required: true,
     },
+    prePage:{
+      type: String,
+      required: true
+    }
   },
   data(){
     return {
@@ -37,6 +41,7 @@ export default {
       content: "예약이 불가능합니다.\n예약일을 다시 확인해주세요.",
       imgPath: "",
       rightBtn: true,
+      pagePath: {'SAJU': 'saju', 'TARO': 'tarot'}
     }
   },
   created(){

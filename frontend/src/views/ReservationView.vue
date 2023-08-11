@@ -68,13 +68,13 @@
                 </div>
                 <SquareButton class="res-btn" @click="reserve" v-if="pageType=='SAJU'">예약하기</SquareButton>
                 <SquareButton isTarot class="res-btn" @click="reserve" v-else>예약하기</SquareButton>
-                <div v-if="this.reservationStatus!=''" style="font-size: 20px; height: 100px;">{{ this.reservationStatus }}</div>
+                <!-- <div v-if="this.reservationStatus!=''" style="font-size: 20px; height: 100px;">{{ this.reservationStatus }}</div> -->
             </div>
            </div>
           </div>
         </div>
         
-        <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :reservationStatus="reservationStatus">
+        <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :reservationStatus="reservationStatus" :prePage="this.pageType">
           {{ this.reservationStatus }}
         </modal-view>
 
