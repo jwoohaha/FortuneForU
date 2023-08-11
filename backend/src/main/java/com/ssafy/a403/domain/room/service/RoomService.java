@@ -19,7 +19,7 @@ public class RoomService {
     @Transactional
     public Optional<CounselingReservation> saveRoom(RoomRequest roomRequest, String sessionId){
 
-        counselingReservationRepository.saveRoom(sessionId, ReservationStatus.Proceeding, roomRequest.getReservationNo());
+        counselingReservationRepository.saveRoom(sessionId, ReservationStatus.PROCEEDING, roomRequest.getReservationNo());
 
         return counselingReservationRepository.findById(roomRequest.getReservationNo());
 
@@ -36,7 +36,13 @@ public class RoomService {
     @Transactional
     public boolean updateSessionIdAndRecordingUrl(Long reservationNo, String recordingUrl) {
 
-        counselingReservationRepository.saveCloseRoom(ReservationStatus.End, recordingUrl, reservationNo);
+        counselingReservationRepository.saveCloseRoom(ReservationStatus.END, recordingUrl, reservationNo);
+
+        Optional<CounselingReservation> counselingReservation = counselingReservationRepository.findById(reservationNo);
+
+        if(counselingReservation.get().getReservationRecorded() == null || counselingReservation.get().getSessionId() != null){
+            return false;
+        }
 
         return true;
 
