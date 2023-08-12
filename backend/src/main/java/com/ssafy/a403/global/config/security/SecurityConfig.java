@@ -1,5 +1,6 @@
 package com.ssafy.a403.global.config.security;
 
+import com.ssafy.a403.global.config.security.exception.ExceptionHandlerFilter;
 import com.ssafy.a403.global.config.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,11 +15,13 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 @Configuration
 @EnableWebSecurity
@@ -29,6 +32,7 @@ public class SecurityConfig {
    // <Member, Long> 이런 느낌이라고 생각하면 됨
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
+    private final ExceptionHandlerFilter exceptionHandlerFilter;
 
     @Value("${client.url}")
     private String clientUrl;
@@ -38,6 +42,9 @@ public class SecurityConfig {
         return http
                 .httpBasic().disable()
                 .headers().frameOptions().disable()
+                .and()
+                .cors()
+                .configurationSource(corsConfigurationSource())
                 .and()
                 .authorizeHttpRequests(
                         requests ->
@@ -58,11 +65,9 @@ public class SecurityConfig {
                                         .anyRequest().authenticated())
                 .oauth2Login(setOAuth2Config())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)   // why?
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(exceptionHandlerFilter, JwtAuthenticationFilter.class)
                 .csrf().disable()
-                .cors()
-                .configurationSource(corsConfigurationSource())
-                .and()
                 .build();
     }
 

@@ -2,12 +2,17 @@ package com.ssafy.a403.global.config.security.exception;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.ssafy.a403.global.config.security.jwt.JwtValidator;;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.web.AuthenticationEntryPoint;
+import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.savedrequest.RequestCache;
+import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
@@ -20,8 +25,12 @@ import java.util.Arrays;
 import java.util.Optional;
 
 @Slf4j
+@Component
 @RequiredArgsConstructor
-public class ExceptionHandlerFilter extends OncePerRequestFilter {
+public class ExceptionHandlerFilter extends OncePerRequestFilter{
+
+    @Value("${jwt.access-header}")
+    private String accessTokenHeaderTag;
 
     @Value("${jwt.refresh-header}")
     private String refreshTokenHeaderTag;
@@ -39,19 +48,28 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter {
 
         try {
             filterChain.doFilter(request, response);
-        } catch (JwtException e){
-            String refreshToken = getRefreshTokenFromCookies(request.getCookies());
-            // 유효한 refresh token이라면
-            if (isValidRefreshToken(refreshToken)){
-                setRedirectTokenResponse(response, refreshToken);
-                return; // return이 없다면 filterChain 계속 진행?
-            }
-            log.info("Refresh Token 재발급이 필요합니다.");
-            setRedirectResponse(response, "/?login=true");
-        } catch (Exception e) {
+        } catch (ExpiredJwtException e){
+            log.debug("Access Token이 만료되었습니다.");
+            validateRefreshToken(request, response);
+        } catch (JwtException e) {
+            log.debug("Access Token의 형식이 유효하지 않습니다.");
+            validateRefreshToken(request, response);
             log.error("Filter Exception: {}", e.getMessage());
             setErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR, response, e);
         }
+    }
+
+    private void validateRefreshToken(HttpServletRequest request, HttpServletResponse response) {
+
+        String refreshToken = getRefreshTokenFromCookies(request.getCookies());
+
+        // 유효한 refresh token이라면
+        if (refreshToken != null && isValidRefreshToken(refreshToken)){
+            setRedirectTokenResponse(response, refreshToken);
+            return; // return이 없다면 filterChain 계속 진행?
+        }
+        log.info("Refresh Token 재발급이 필요합니다.");
+        setRedirectResponse(response, "/?login=true");
     }
 
     private boolean isValidRefreshToken(String token) {
