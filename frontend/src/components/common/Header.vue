@@ -48,11 +48,12 @@ export default {
   },
   created() {
     let uri = window.location.href.split('?');
-    this.isModalVisible = uri[1]
+    console.log(uri[1]);
+    this.isModalVisible = uri[1];
   },
   methods: {
     async test() {
-      await this.api.get('/test')
+      await this.api.get('/auth/test')
         .then(response => this.onSuccess(response))
         .catch((error) => this.onError(error))
     },
