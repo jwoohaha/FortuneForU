@@ -79,6 +79,7 @@ client:
 #  host: localhost
 #  url: http://localhost:8080
   endpoint: /redirect
+  reissue-endpoint: /reissue
 
 # Logging level
 logging:

@@ -33,6 +33,11 @@ const routes = [
     component: () => import('../views/RedirectView.vue')
   },
   {
+    path: '/reissue',
+    name: 'reissue',
+    component: () => import('../views/ReissueView.vue')
+  },
+  {
     path: '/mypage',
     name: 'mypage',
     component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage/MypageView.vue'),

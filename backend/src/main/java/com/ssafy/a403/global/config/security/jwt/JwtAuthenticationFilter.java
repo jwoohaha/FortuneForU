@@ -37,13 +37,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         Optional<String> token = Optional.ofNullable(getTokensFromHeader(request));
         log.trace("Token: {}", token);
+        log.trace("Request URI: {}", request.getRequestURI());
         token.ifPresent(
                 t -> {
-                	log.info("AccessToken: {}", t);
-                    // 만약 여기서 오류가 난다면 - access 토큰이 invalid
-                    // refresh token을 통한 재발급을 시도한다.
-                    Authentication authentication = jwtValidator.getAuthentication(t);
-                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                    // Token 재발급 요청이 아니라면 -> Authentication 실행
+                    if (!request.getRequestURI().equals("/api/auth/reissue")){
+                        log.info("AccessToken: {}", t);
+                        // 만약 여기서 오류가 난다면 - access 토큰이 invalid
+                        // refresh token을 통한 재발급을 시도한다.
+                        Authentication authentication = jwtValidator.getAuthentication(t);
+                        SecurityContextHolder.getContext().setAuthentication(authentication);
+                    }
                 });
         filterChain.doFilter(request, response);
     }

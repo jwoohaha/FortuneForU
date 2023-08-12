@@ -30,11 +30,15 @@ public class AuthController {
     public ResponseEntity<AuthResponse> authToken(@RequestBody @Validated AuthRequest authRequest) {
         log.trace("Auth Token: {}", authRequest.getAuthToken());
 
-        AuthResponse authResponse = jwtSetupService.createJwtTokenByAuthToken(authRequest.getAuthToken());
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, authResponse.getAccessToken());
-        headers.add(HttpHeaders.SET_COOKIE, authResponse.getRefreshToken());
-        log.trace(authResponse.getRefreshToken());
+        HttpHeaders headers = makeAuthorizationHeader(authRequest);
+        return ResponseEntity.ok().headers(headers).build();
+    }
+
+    @PostMapping("/reissue")
+    public ResponseEntity<AuthResponse> reissue(@RequestBody @Validated AuthRequest authRequest) {
+        log.trace("Refresh Token: {}", authRequest.getAuthToken());
+
+        HttpHeaders headers = makeAuthorizationHeader(authRequest);
         return ResponseEntity.ok().headers(headers).build();
     }
 
@@ -50,5 +54,14 @@ public class AuthController {
         });
 
         return ResponseEntity.ok().build();
+    }
+
+    private HttpHeaders makeAuthorizationHeader(AuthRequest authRequest) {
+        AuthResponse authResponse = jwtSetupService.createJwtTokenByAuthToken(authRequest.getAuthToken());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.AUTHORIZATION, authResponse.getAccessToken());
+        headers.add(HttpHeaders.SET_COOKIE, authResponse.getRefreshToken());
+        log.trace(authResponse.getRefreshToken());
+        return headers;
     }
 }

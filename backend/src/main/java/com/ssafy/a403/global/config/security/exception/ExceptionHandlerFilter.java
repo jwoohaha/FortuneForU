@@ -38,8 +38,8 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
     @Value("${client.url}")
     private String clientUrl;
 
-    @Value("${client.endpoint}")
-    private String tokenRedirectEndPoint;
+    @Value("${client.reissue-endpoint}")
+    private String tokenReissueEndPoint;
 
     private final JwtValidator jwtValidator;
 
@@ -79,9 +79,9 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
     // 토큰 만료 시, refresh token을 통해 access token 발급
     private void setRedirectTokenResponse(HttpServletResponse response, String authToken) {
         try {
-            response.sendRedirect(clientUrl + tokenRedirectEndPoint + "?token=" + authToken);
+            response.sendRedirect(clientUrl + tokenReissueEndPoint + "?token=" + authToken);
         } catch(IOException e) {
-            e.printStackTrace();
+            log.error("{}", e.getMessage());
         }
     }
 
@@ -89,7 +89,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
         try {
             response.sendRedirect(clientUrl + redirectEndPoint);
         } catch(IOException e) {
-            e.printStackTrace();
+            log.error("{}", e.getMessage());
         }
     }
 
@@ -101,7 +101,7 @@ public class ExceptionHandlerFilter extends OncePerRequestFilter{
         try {
             response.getWriter().write(objectMapper.writeValueAsString(errorResponse));
         } catch (IOException e) {
-            e.printStackTrace();
+            log.error("{}", e.getMessage());
         }
     }
 
