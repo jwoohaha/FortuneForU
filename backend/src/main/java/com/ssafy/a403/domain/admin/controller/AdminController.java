@@ -40,18 +40,4 @@ public class AdminController {
 
         return new ResponseEntity<>(formResponseList, HttpStatus.OK);
     }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> testMethod(HttpServletRequest request) {
-        log.trace("====== TEST ======");
-        log.trace("access-token: {}", request.getHeader("Authorization"));
-        String refreshToken = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("Refresh"))
-                .findFirst()
-                .map(Cookie::getValue)
-                .orElse(null);
-        log.trace("refresh-token: {}", refreshToken);
-
-        return ResponseEntity.ok().build();
-    }
 }

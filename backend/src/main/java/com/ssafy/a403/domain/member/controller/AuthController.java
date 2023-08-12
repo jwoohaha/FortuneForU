@@ -11,10 +11,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -34,5 +36,19 @@ public class AuthController {
         headers.add(HttpHeaders.SET_COOKIE, authResponse.getRefreshToken());
         log.trace(authResponse.getRefreshToken());
         return ResponseEntity.ok().headers(headers).build();
+    }
+
+    @GetMapping("/test")
+    public ResponseEntity<?> testMethod(HttpServletRequest request) {
+        log.trace("====== TEST ======");
+        log.trace("access-token: {}", request.getHeader("Authorization"));
+        Optional<Cookie> refreshCookie = Arrays.stream(request.getCookies())
+                .filter(cookie -> cookie.getName().equals("Refresh"))
+                .findFirst();
+        refreshCookie.ifPresent(cookie -> {
+            log.trace("refresh-token: {}", refreshCookie.map(Cookie::getValue));
+        });
+
+        return ResponseEntity.ok().build();
     }
 }
