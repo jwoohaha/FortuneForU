@@ -61,7 +61,7 @@
                         <i class="bi bi-chevron-compact-left"></i>
                         <div class="like-list">
                             <div v-for="counselor in counselors" :key="counselor.id">
-                                <ReviewCard :counselor="counselor" id="reviewcard"></ReviewCard>
+                                <ReviewCard :review="counselor" id="reviewcard"></ReviewCard>
                             </div>
                         </div>
 

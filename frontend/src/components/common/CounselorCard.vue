@@ -5,13 +5,14 @@
             <div class="card-info">
                 <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.ratingAvg }}</span> </p>
                 <p id="review-cnt"><span>{{ counselor.reviewCnt }}</span>개의 후기</p>
-                <p>{{ counselor.career }}</p>
+                <p id="career">경력 : {{ counselor.career }}</p>
             </div>
         </div>
         <hr>
         <p class="card-txt">{{ counselor.intro }}</p>
         <div class="btn">
-            <RoundButton isTarot>예약</RoundButton>
+            <RoundButton isTarot v-if="colorType">예약</RoundButton>
+            <RoundButton  v-else style="background-color: '#F6B5C6';">예약</RoundButton>
         </div>
     </div>
 </template>
@@ -28,26 +29,33 @@ export default {
       type: Object,
       required: true,
     },
+    colorType: {
+        type: Boolean,
+        required: true
+    } 
   },
 };
 </script>
 
 <style lang="scss" scoped>
 .counselor-card {
-    width: 375px;
-    height: 428px;
+    width: 350px;
+    height: 410px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
     border-radius: 10px;
     border: 2px solid #D7D7D7;
     background: #FFF;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-    //margin: 39px 36px 39px 37px;
     margin-bottom: 20px;
-    justify-content: space-between;
-    padding: 39px 37px;
+    padding: 10px 30px;
     box-sizing: border-box;
 }
 .upper-content {
     display: flex;
+    width: 100%;
 }
 .card-img {
     width: 70px;
@@ -66,8 +74,8 @@ hr {
     border: 0px;
 }
 .card-txt {
-    width: 302px;
-    height: 138px;
+    height: 120px;
+    width: 95%;
     overflow: hidden;
     color: #333;
     text-overflow: ellipsis;
@@ -95,6 +103,7 @@ hr {
     font-weight: 400;
     line-height: normal;
     text-align: center;
+    margin-left: 5px;
 }
 #review-cnt{
     color: #333;
@@ -111,7 +120,7 @@ hr {
     color: #9C7AE7;
     text-decoration: underline;
 }
-#possible-time {
+#career {
     color:  #666;
     font-size: 12px;
     font-style: normal;
