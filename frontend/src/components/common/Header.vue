@@ -7,7 +7,6 @@
         <router-link to="/saju">사주상담</router-link>
         <router-link to="/community">커뮤니티</router-link>
       </nav>
-      <button @click="this.test()">Test</button>
       <div v-if="tokenStore.isLoggedIn">
         <router-link to="/mypage"><button>마이페이지</button></router-link>
         <router-link to="/counselor"><button>상담사전용</button></router-link>
@@ -47,21 +46,15 @@ export default {
     }
   },
   created() {
-    let uri = window.location.href.split('?');
-    console.log(uri[1]);
-    this.isModalVisible = uri[1];
+    // TOOD: url의 쿼리 스트링이 refresh라면, access token으로 인증 시도하여 로그인 상태 유지
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.unLoadEvent)
   },
   methods: {
-    async test() {
-      await this.api.get('/auth/test')
-        .then(response => this.onSuccess(response))
-        .catch((error) => this.onError(error))
-    },
-    onSuccess(response) {
-      console.log(response);
-    },
-    onError(error) {
-      console.log(error);
+    unLoadEvent: function(event){
+      // TODO: 새로고침을 한다면 해당 url의 쿼리스트링에 refresh를 포함한다.
+      console.log(event);
     }
   }
 };
