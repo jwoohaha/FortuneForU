@@ -29,17 +29,21 @@ public class CounselingReservationController {
 
     //예약 db에 저장
     @PostMapping("/reserve")
-    public String reserve(@RequestBody ReservationRequest reservationRequest,
-                          RedirectAttributes redirectAttributes){
+    public ResponseEntity<String> reserve(@AuthenticationPrincipal LoginUser loginUser,
+                          @RequestBody ReservationRequest reservationRequest){
 
-        Long memberId = reservationRequest.getMemberId();
-        Long counselorId = reservationRequest.getCounselorId();
-        LocalDateTime reservationDate = reservationRequest.getReservationDate();
+        try {
+            Long memberId = loginUser.getMember().getNo();
+            Long counselorId = reservationRequest.getCounselorId();
+            String reservationType = reservationRequest.getReservationType();
+            LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
-        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
+            Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationType, reservationDate);
+            return ResponseEntity.ok("예약 성공");
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
-        return "예약 완료!";
     }
 
 
@@ -92,7 +96,7 @@ public class CounselingReservationController {
 
 
     // 후기 삭제
-    @DeleteMapping("/{reservationNo}")
+    @PatchMapping("/{reservationNo}")
     public ResponseEntity<String> deleteReview(@PathVariable Long reservationNo) {
         try {
             counselingReservationService.deleteReview(reservationNo);

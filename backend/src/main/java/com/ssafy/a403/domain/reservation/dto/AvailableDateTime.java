@@ -14,9 +14,9 @@ import java.util.List;
 @NoArgsConstructor
 public class AvailableDateTime {
 
-    private int Hour;
+    private Integer Hour;
 
-    private int Minute;
+    private Integer Minute;
 
     public AvailableDateTime from(ReservationResponse reservation){
         AvailableDateTime availableDateTime = new AvailableDateTime();
