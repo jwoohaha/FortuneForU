@@ -3,8 +3,8 @@
         <div class="upper-content">
             <img class="card-img" src="https://a-static.besthdwallpaper.com/huh-yunjin-le-sserafim-kpop-girls-group-wallpaper-2048x1536-99987_26.jpg">
             <div class="card-info">
-                <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.rating }}</span> </p>
-                <p class="card-txt">Unforgiven, I'm a villain, I'm a-Unforgiven, 난 그 길을 걸어 Unforgiven, I'm a villain</p>
+                <p id="card-name">{{ review.memberName }} <span id="card-score">⭐ {{ review.reservationScore }}</span> </p>
+                <p class="card-txt">{{ review.review }}</p>
             </div>
         </div>
     </div>
@@ -14,7 +14,7 @@
 
 export default {
   props: {
-    counselor: {
+    review: {
       type: Object,
       required: true,
     },

@@ -37,10 +37,10 @@ public class Counselor {
     private String phone;
 
     @ColumnDefault("0")
-    private int reviewCnt;
+    private Integer reviewCnt;
 
     @ColumnDefault("0.0")
-    private float ratingAvg;
+    private Float ratingAvg;
 
     private String startTime;
 
@@ -75,7 +75,7 @@ public class Counselor {
         this.endTime = request.getEndTime();
     }
 
-    public void updateCounselorReview(float rating) {
+    public void updateCounselorReview(Float rating) {
         this.ratingAvg = (this.ratingAvg * this.reviewCnt + rating) / (reviewCnt + 1);
         this.reviewCnt += 1;
     }
