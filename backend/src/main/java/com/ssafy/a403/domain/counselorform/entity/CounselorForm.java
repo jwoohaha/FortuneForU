@@ -1,5 +1,6 @@
-package com.ssafy.a403.domain.member.entity;
+package com.ssafy.a403.domain.counselorform.entity;
 
+import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.PassState;
 import com.ssafy.a403.global.audit.BaseTime;

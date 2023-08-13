@@ -1,29 +1,41 @@
-package com.ssafy.a403.domain.member.dto;
+package com.ssafy.a403.domain.counselorform.dto;
 
+import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
+import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.PassState;
+import com.ssafy.a403.global.config.security.LoginUser;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@AllArgsConstructor
 public class CounselorFormRequest {
 
-    private final Long no;
+    private final CounselorType counselorType;
 
-    private final String name;
+    private final String major;
 
-    private final LocalDateTime created;
+    private final String career;
 
-    private final PassState status;
+    private final String address;
 
-    public CounselorFormRequest(Long no, String name, LocalDateTime created, PassState status) {
-        this.no = no;
-        this.name = name;
-        this.created = created;
-        this.status = status;
-    }
+    private final String phone;
 
-    public static CounselorFormRequest of(Long no, String name, LocalDateTime created, PassState status){
-        return new CounselorFormRequest(no, name, created, status);
+    private final String intro;
+
+    public CounselorForm toCounselorForm(LoginUser loginUser){
+
+        return CounselorForm.builder()
+                .counselorType(counselorType)
+                .major(major)
+                .career(career)
+                .address(address)
+                .phone(phone)
+                .intro(intro)
+                .member(loginUser.getMember())
+                .passState(PassState.WAITING)
+                .build();
     }
 }

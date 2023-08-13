@@ -1,7 +1,6 @@
-package com.ssafy.a403.domain.member.dto;
+package com.ssafy.a403.domain.counselorform.dto;
 
-import com.ssafy.a403.domain.member.entity.Member;
-import com.ssafy.a403.domain.model.CounselorType;
+import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
 import com.ssafy.a403.domain.model.PassState;
 import lombok.*;
 
@@ -25,7 +24,10 @@ public class CounselorFormResponse {
         this.status = status;
     }
 
-    public static CounselorFormResponse of(Long no, String name, LocalDateTime created, PassState status){
-        return new CounselorFormResponse(no, name, created, status);
+    public static CounselorFormResponse from(CounselorForm counselorForm) {
+        return new CounselorFormResponse(
+                counselorForm.getNo(), counselorForm.getMember().getName(),
+                counselorForm.getCreated(), counselorForm.getPassState()
+        );
     }
 }
