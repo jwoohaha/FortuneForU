@@ -1,36 +1,25 @@
 package com.ssafy.a403.domain.admin.service;
 
-import com.ssafy.a403.domain.member.dto.FormResponse;
-import com.ssafy.a403.domain.member.entity.CounselorForm;
-import com.ssafy.a403.domain.member.repository.CounselorFormRepository;
+import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
+import com.ssafy.a403.domain.counselorform.service.CounselorFormService;
+import com.ssafy.a403.domain.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
-public class AdminServiceImpl implements AdminService{
+public class AdminService{
 
-    private final CounselorFormRepository counselorFormRepository;
+    private final CounselorFormService counselorFormService;
+    private final MemberService memberService;
 
-    @Override
-    public List<FormResponse> getAllForms(){
+    @Transactional
+    public Page<CounselorForm> counselorFormList(String filter, Pageable pageable){
 
-        List<CounselorForm> forms = counselorFormRepository.findAll();
-        List<FormResponse> formResponseList = new ArrayList<>();
-
-        for(CounselorForm form : forms){
-            FormResponse response = FormResponse.builder()
-                    .applicationNo(form.getApplicationNo())
-                    .submitTime(form.getSubmitTime())
-                    .counselorType(form.getCounselorType())
-                    .build();
-
-            formResponseList.add(response);
-        }
-
-        return formResponseList;
+        return counselorFormService.getAllCounselorForms(filter, pageable);
     }
 }
