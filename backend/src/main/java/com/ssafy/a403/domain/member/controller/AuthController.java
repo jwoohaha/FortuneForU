@@ -3,11 +3,10 @@ package com.ssafy.a403.domain.member.controller;
 import com.ssafy.a403.domain.member.dto.AuthRequest;
 import com.ssafy.a403.domain.member.dto.AuthResponse;
 import com.ssafy.a403.global.config.security.jwt.JwtSetupService;
-import com.ssafy.a403.global.config.security.jwt.JwtToken;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -30,38 +29,19 @@ public class AuthController {
     public ResponseEntity<AuthResponse> authToken(@RequestBody @Validated AuthRequest authRequest) {
         log.trace("Auth Token: {}", authRequest.getAuthToken());
 
-        HttpHeaders headers = makeAuthorizationHeader(authRequest);
+        HttpHeaders headers = jwtSetupService.makeAuthorizationHeader(authRequest.getAuthToken());
         return ResponseEntity.ok().headers(headers).build();
     }
 
-    @PostMapping("/reissue")
-    public ResponseEntity<AuthResponse> reissue(@RequestBody @Validated AuthRequest authRequest) {
-        log.trace("Refresh Token: {}", authRequest.getAuthToken());
-
-        HttpHeaders headers = makeAuthorizationHeader(authRequest);
+    @GetMapping("/reissue")
+    public ResponseEntity<?> reissue(@CookieValue(name = "Refresh", required = false) Cookie refreshCookie) {
+        log.trace("Refresh Token을 이용하여 Access Token 재발급 시도...");
+        if (refreshCookie == null) {
+            log.trace("Refresh Token이 만료되었습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+        String refreshToken = refreshCookie.getValue();
+        HttpHeaders headers = jwtSetupService.makeAuthorizationHeader(refreshToken);
         return ResponseEntity.ok().headers(headers).build();
-    }
-
-    @GetMapping("/test")
-    public ResponseEntity<?> testMethod(HttpServletRequest request) {
-        log.trace("====== TEST ======");
-        log.trace("access-token: {}", request.getHeader("Authorization"));
-        Optional<Cookie> refreshCookie = Arrays.stream(request.getCookies())
-                .filter(cookie -> cookie.getName().equals("Refresh"))
-                .findFirst();
-        refreshCookie.ifPresent(cookie -> {
-            log.trace("refresh-token: {}", refreshCookie.map(Cookie::getValue));
-        });
-
-        return ResponseEntity.ok().build();
-    }
-
-    private HttpHeaders makeAuthorizationHeader(AuthRequest authRequest) {
-        AuthResponse authResponse = jwtSetupService.createJwtTokenByAuthToken(authRequest.getAuthToken());
-        HttpHeaders headers = new HttpHeaders();
-        headers.add(HttpHeaders.AUTHORIZATION, authResponse.getAccessToken());
-        headers.add(HttpHeaders.SET_COOKIE, authResponse.getRefreshToken());
-        log.trace(authResponse.getRefreshToken());
-        return headers;
     }
 }
