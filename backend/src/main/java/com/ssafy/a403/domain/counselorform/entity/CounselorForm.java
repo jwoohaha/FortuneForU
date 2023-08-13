@@ -2,6 +2,7 @@ package com.ssafy.a403.domain.member.entity;
 
 import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.PassState;
+import com.ssafy.a403.global.audit.BaseTime;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,18 +13,23 @@ import java.time.LocalDateTime;
 @Entity
 @Getter
 @NoArgsConstructor
-public class CounselorForm {
+public class CounselorForm extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long applicationNo;
+    @Column(name = "conselor_form_no")
+    private Long no;
 
-    private int userNo;
+    @ManyToOne
+    @JoinColumn(name = "member_no")
+    private Member member;
 
     @Enumerated(EnumType.STRING)
     private CounselorType counselorType;
 
     private String major;
+
+    private String career;
 
     private String intro;
 
@@ -34,20 +40,18 @@ public class CounselorForm {
     @Enumerated(EnumType.STRING)
     private PassState passState;
 
-    private LocalDateTime submitTime;
-
     private String reason;
 
     @Builder
-    public CounselorForm(int userNo, CounselorType counselorType, String major, String intro, String address, String phone, PassState passState, LocalDateTime submitTime, String reason) {
-        this.userNo = userNo;
+    public CounselorForm(Member member, CounselorType counselorType, String major, String career, String intro, String address, String phone, PassState passState, LocalDateTime submitTime, String reason) {
+        this.member = member;
         this.counselorType = counselorType;
         this.major = major;
+        this.career = career;
         this.intro = intro;
         this.address = address;
         this.phone = phone;
         this.passState = passState;
-        this.submitTime = submitTime;
         this.reason = reason;
     }
 }
