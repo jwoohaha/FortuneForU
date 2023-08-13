@@ -25,6 +25,7 @@
 import Logo from "../common/Logo.vue";
 import ModalView from "@/components/common/ModalView.vue";
 import { useTokenStore } from "@/stores/token";
+import { apiInstance } from '@/api/index'
 
 export default {
   components: {
@@ -38,9 +39,22 @@ export default {
   },
   setup() {
     const tokenStore = useTokenStore();
-
+    const api = apiInstance();
     return {
       tokenStore,
+      api
+    }
+  },
+  created() {
+    // TOOD: url의 쿼리 스트링이 refresh라면, access token으로 인증 시도하여 로그인 상태 유지
+  },
+  mounted() {
+    window.addEventListener('beforeunload', this.unLoadEvent)
+  },
+  methods: {
+    unLoadEvent: function(event){
+      // TODO: 새로고침을 한다면 해당 url의 쿼리스트링에 refresh를 포함한다.
+      console.log(event);
     }
   }
 };

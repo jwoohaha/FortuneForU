@@ -9,6 +9,9 @@ import router from './router';
 import VCalendar from 'v-calendar';
 import 'v-calendar/style.css';
 
+//EventBus 쓰기 위해
+
+
 const app = createApp(App)
 app.use(router)
 app.use(VCalendar, {})

@@ -12,8 +12,9 @@ export default {
   },
   methods: {
     socialLogin() {
-      const url = 'http://localhost:5000/oauth2/authroize/google';
-
+      const url = 'https://i9a403.p.ssafy.io/oauth2/authroize/google';
+      // const url = 'http://localhost:5000/oauth2/authorize/google';
+      //local 에서는 ssafytest.shop 안됨
       location.href = url;
     }
   }
