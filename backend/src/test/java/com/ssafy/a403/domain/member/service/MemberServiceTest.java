@@ -15,6 +15,7 @@ import java.util.List;
 
 import static org.assertj.core.api.Assertions.*;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
 public class MemberServiceTest {
 
@@ -25,27 +26,31 @@ public class MemberServiceTest {
     @Autowired
     private MemberRepository memberRepository;
 
-    @BeforeEach
-    void beforeEach() {
-        List<String> names = List.of("김김김", "최최최", "박박박");
-        names.forEach(name -> memberRepository.save(Member.builder().name(name).build()));
-    }
+    @BeforeAll
+    void beforeAll() {
 
-    @AfterEach
-    void afterEach() {
-        memberRepository.deleteAll();
+        List<Member> members = List.of(
+                Member.builder().email("abc123@gmail.com").name("김김김").profileImage("image1.png").build(),
+                Member.builder().email("abc456gmail.com").name("박박박").profileImage("image2.png").build(),
+                Member.builder().email("abc789@gmail.com").name("최최최").profileImage("image3.png").build()
+        );
+        memberRepository.saveAll(members);
     }
 
     @Test
-    @DisplayName("회원 조회 성공")
-    void memberFind() {
+    @DisplayName("회원 ID 조회 성공")
+    void memberFindById() {
         Member member = memberService.findById(1L);
+
         assertThat(member.getNo()).isEqualTo(1L);
+        assertThat(member.getEmail()).isEqualTo("abc123@gmail.com");
+        assertThat(member.getName()).isEqualTo("김김김");
+        assertThat(member.getProfileImage()).isEqualTo("image1.png");
     }
 
     @Test
-    @DisplayName("회원 조회 실패")
-    void memberFindError() {
-        assertThatThrownBy(() -> memberService.findById(100L)).isInstanceOf(EntityNotFoundException.class);
+    @DisplayName("회원 ID 조회 실패")
+    void memberFindByIdFail() {
+        assertThatThrownBy(() -> memberService.findById(4L)).isInstanceOf(EntityNotFoundException.class);
     }
 }

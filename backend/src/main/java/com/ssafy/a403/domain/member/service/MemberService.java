@@ -54,9 +54,9 @@ public class MemberService {
     }
 
     @Transactional
-    public void submitCounselorForm(CounselorFormRequest counselorFormRequest, LoginUser loginUser) {
+    public void submitCounselorForm(CounselorFormRequest counselorFormRequest, Member member) {
 
-        counselorFormService.submitForm(counselorFormRequest, loginUser);
+        counselorFormService.submitForm(counselorFormRequest, member);
     }
 
     public Page<Member> findPaging(Pageable pageable) {

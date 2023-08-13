@@ -70,7 +70,7 @@ public class MemberController {
             @RequestBody CounselorFormRequest counselorFormRequest,
             @AuthenticationPrincipal LoginUser loginUser){
 
-        memberService.submitCounselorForm(counselorFormRequest, loginUser);
+        memberService.submitCounselorForm(counselorFormRequest, loginUser.getMember());
         return HttpStatus.NO_CONTENT;
     }
 }
