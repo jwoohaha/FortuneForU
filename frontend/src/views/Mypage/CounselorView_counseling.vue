@@ -94,7 +94,7 @@
                                 
                             </div>
                             <div class="res-cell" id="cell-btns" v-if="clickedReservation.reservationStatus === '상담 종료'">
-                                <SquareButton isTarot id="cancel-btn" @click="cancelReservation">결과보기</SquareButton>
+                                <SquareButton isTarot id="cancel-btn" @click="checkResult">결과보기</SquareButton>
                             </div>
 
 
@@ -149,6 +149,7 @@ export default {
             })
         },
         getCoRezInfo(date) {
+
             const day = date.getDate();
             var newday = day >= 10 ? day : '0' + day;      
             const month = date.getMonth() + 1;
@@ -207,21 +208,27 @@ export default {
         },
 
         cancelReservation() {
-        
-            const cancelRequest = apiInstance();
-            cancelRequest({
-                method: 'PATCH',
-                url: `reservations/cancel/${this.clickedReservationNo}`,
-            })
-            .then((res) => {
-                console.log(res.data)
+            const confirmCancel = window.confirm("예약을 취소하시겠습니까?");
 
-            })
-            .catch((e) => {
-                console.log(e)
-            })
-        },
-            
+            if (confirmCancel) {
+               
+                const cancelRequest = apiInstance();
+                cancelRequest({
+                    method: 'PATCH',
+                    url: `reservations/cancel/${this.clickedReservationNo}`,
+                })
+                .then((res) => {
+                    alert(res.data)
+                    console.log(res.data);
+                    location.reload();
+
+                })
+                .catch((e) => {
+                    console.log(e);
+                    
+                })
+            }            
+        },     
 
     },
    

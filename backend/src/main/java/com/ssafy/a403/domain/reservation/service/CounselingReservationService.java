@@ -129,11 +129,10 @@ public class CounselingReservationService {
 
     //예약 취소
     @Transactional
-    public void cancelReservation(Long reservationNo) {
+    public String cancelReservation(Long reservationNo) {
        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
-       counselingReservation.cancel();
-
+       return counselingReservation.cancel();
     }
 
 
@@ -141,7 +140,7 @@ public class CounselingReservationService {
 
     // 후기 작성
     @Transactional
-    public void postReview(Long reservationNo, Long memberId, String review, Float rez_score) {
+    public String postReview(Long reservationNo, Long memberId, String review, Float rez_score) {
         CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
         if (!counselingReservation.checkEmpty()) {
@@ -154,8 +153,8 @@ public class CounselingReservationService {
             throw new IllegalArgumentException("Counseling is not finished");
         }
 
-        counselingReservation.saveReview(review, rez_score);
-        counselingReservationRepository.save(counselingReservation);
+        return counselingReservation.saveReview(review, rez_score);
+
     }
 
 
