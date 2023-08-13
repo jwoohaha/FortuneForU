@@ -27,52 +27,20 @@
         <div id="part2-txt1">지금 이 순간, 가장 <span id="part-txt-purple">HOT</span>한 타로 상담가</div>
         <div class="card-section">
           <ul>
-            <li>
+            <!-- v-for -->
+            <li v-for="(selectedTaroCounselor, idx) in selectedTaroCounselors" :key="idx">
               <div class="card">
                 <div class="upper-content">
                   <img class="card-img" src="../assets/dummy_counselor_img.jpg">
                   <div class="card-info">
-                    <p id="card-name">용용선생</p>
-                    <p id="card-score">⭐ 4.3</p>
+                    <p id="card-name">{{ selectedTaroCounselor.name }}</p>
+                    <p id="card-score">⭐ {{ selectedTaroCounselor.ratingAvg }}</p>
                   </div>
                 </div>
                 <hr>
-                <p class="card-txt">안녕하세요 저는 용용선생입니다. 저를 믿으세요</p>
+                <p class="card-txt">{{ selectedTaroCounselor.intro }}</p>
               </div>
             </li>
-            <div class="card">
-                <div class="upper-content">
-                  <img class="card-img" src="../assets/dummy_counselor_img.jpg">
-                  <div class="card-info">
-                    <p id="card-name">다아라</p>
-                    <p id="card-score">⭐ 4.3</p>
-                  </div>
-                </div>
-                <hr>
-                <p class="card-txt">제가 모른 건 없어요. 너의 고민 다 나에게 말해봐 난 다 알아</p>
-              </div>
-              <div class="card">
-                <div class="upper-content">
-                  <img class="card-img" src="../assets/dummy_counselor_img.jpg">
-                  <div class="card-info">
-                    <p id="card-name">잭슨킴</p>
-                    <p id="card-score">⭐ 4.3</p>
-                  </div>
-                </div>
-                <hr>
-                <p class="card-txt">사랑.. 사랑....사랑 그 몹쓸 병...</p>
-              </div>
-              <div class="card">
-                <div class="upper-content">
-                  <img class="card-img" src="../assets/dummy_counselor_img.jpg">
-                  <div class="card-info">
-                    <p id="card-name">이쟁점</p>
-                    <p id="card-score">⭐ 4.3</p>
-                  </div>
-                </div>
-                <hr>
-                <p class="card-txt">신내림 받았다가 타로 상담가로 전향한 썰 푼다.</p>
-              </div>
           </ul>
         </div>
       </div>
@@ -80,52 +48,19 @@
         <div id="part2-txt1">지금 이 순간, 가장 <span id="part-txt-pink">HOT</span>한 사주 상담가</div>
         <div class="card-section">
           <ul>
-            <li>
+            <li v-for="(selectedSajuCounselor, idx) in selectedSajuCounselors" :key="idx">
               <div class="card">
                 <div class="upper-content">
                   <img class="card-img" src="../assets/dummy_counselor_img.jpg">
                   <div class="card-info">
-                    <p id="card-name">용용선생</p>
-                    <p id="card-score">⭐ 4.3</p>
+                    <p id="card-name">{{ selectedSajuCounselor.name }}</p>
+                    <p id="card-score">⭐ {{ selectedSajuCounselor.ratingAvg }}</p>
                   </div>
                 </div>
                 <hr>
-                <p class="card-txt">안녕하세요 저는 용용선생입니다. 저를 믿으세요</p>
+                <p class="card-txt">{{ selectedSajuCounselor.intro }}</p>
               </div>
             </li>
-            <div class="card">
-                <div class="upper-content">
-                  <img class="card-img" src="../assets/dummy_counselor_img.jpg">
-                  <div class="card-info">
-                    <p id="card-name">다아라</p>
-                    <p id="card-score">⭐ 4.3</p>
-                  </div>
-                </div>
-                <hr>
-                <p class="card-txt">제가 모른 건 없어요. 너의 고민 다 나에게 말해봐 난 다 알아</p>
-              </div>
-              <div class="card">
-                <div class="upper-content">
-                  <img class="card-img" src="../assets/dummy_counselor_img.jpg">
-                  <div class="card-info">
-                    <p id="card-name">잭슨킴</p>
-                    <p id="card-score">⭐ 4.3</p>
-                  </div>
-                </div>
-                <hr>
-                <p class="card-txt">사랑.. 사랑....사랑 그 몹쓸 병...</p>
-              </div>
-              <div class="card">
-                <div class="upper-content">
-                  <img class="card-img" src="../assets/dummy_counselor_img.jpg">
-                  <div class="card-info">
-                    <p id="card-name">이쟁점</p>
-                    <p id="card-score">⭐ 4.3</p>
-                  </div>
-                </div>
-                <hr>
-                <p class="card-txt">신내림 받았다가 타로 상담가로 전향한 썰 푼다.</p>
-              </div>
           </ul>
         </div>
       </div>
@@ -144,14 +79,69 @@
 </template>
 
 <script>
+import { apiInstance } from '@/api';
+
 export default {
   name: 'MainView',
   components: {
   },
   data() {
     return {
+      sajuCounselors:[],
+      taroCounselors:[],
+      
+      selectedSajuCounselors:[],
+      selectedTaroCounselors:[],
     }
+  },
+  setup(){
+    const api = apiInstance();
+
+    return {
+      api
+    }
+  },
+  methods:{
+    getTaroCounselorsByRatings(){
+      this.api.get('/counselors/by_ratings?counselorType=TARO')
+      .then((response) => {
+        console.log(response.data)
+        this.taroCounselors = response.data.content
+        this.selectRandomTaroCounselors();
+      })
+      .catch((error) =>[
+        console.log(error)
+      ])
+    },
+
+    getSajuCounselorsByRatings(){
+      this.api.get('/counselors/by_reviews?counselorType=SAJU')
+      .then((response) => {
+        console.log(response)
+        this.sajuCounselors = response.data.content
+        this.selectRandomSajuCounselors();
+      })
+      .catch((error) => {
+        console.log(error)
+      })
+    },
+
+    selectRandomTaroCounselors(){
+      const shuffledTaroCounselors = [...this.taroCounselors].sort(() => 0.5 - Math.random());
+      this.selectedTaroCounselors = shuffledTaroCounselors.slice(0, 4);
+    },
+
+    selectRandomSajuCounselors(){
+      const shuffledSajuCounselors = [...this.sajuCounselors].sort(() => 0.5 - Math.random());
+      this.selectedSajuCounselors = shuffledSajuCounselors.slice(0, 4);
+    }
+
+  },
+  created(){
+    this.getTaroCounselorsByRatings();
+    this.getSajuCounselorsByRatings();
   }
+
 }
 </script>
 
