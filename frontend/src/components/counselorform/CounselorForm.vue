@@ -3,30 +3,38 @@
     <form id="counselor-form-content">
       <table id="counselor-form-table">
         <table-row :headerText="'상담분야*'">
-          <drop-down :label="'상담분야'" :options="counselorTypeOptions" :value="counselorType" @change-event="counselorTypeChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'상담분야'" :options="counselorForm.counselorTypeOptions" :value="counselorForm.counselorType" @change-event="counselorTypeChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'전문영역1*'">
-          <drop-down :label="'전문영역1'" :options="majorOptions" :index="0" :value="major[0]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'전문영역1'" :options="counselorForm.majorOptions" :index="0" :value="counselorForm.major[0]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'전문영역2'">
-          <drop-down :label="'전문영역2'" :options="majorOptions" :index="1" :value="major[1]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'전문영역2'" :options="counselorForm.majorOptions" :index="1" :value="counselorForm.major[1]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'전문영역3'">
-          <drop-down :label="'전문영역3'" :options="majorOptions" :index="2" :value="major[2]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'전문영역3'" :options="counselorForm.majorOptions" :index="2" :value="counselorForm.major[2]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'경력*'">
-          <text-field :placeholder="'어떤 내용이 들어갈까요?\n\n'" :value="career" @input-event="careerInput" :isReadonly="isReadonly"></text-field>
+          <text-field :placeholder="'학력, 자격증, 경력 등을 기재해주세요'" :value="counselorForm.career" @input-event="careerInput" :isReadonly="isReadonly"></text-field>
         </table-row>
         <table-row :headerText="'주소지*'">
-          <input-field :placeholder="'어떤 내용이 들어갈까요?\n\n'" :value="address" @input-event="addressInput" :isReadonly="isReadonly"></input-field>
+          <input-field :placeholder="'주소를 기재해주세요'" :value="counselorForm.address" @input-event="addressInput" :isReadonly="isReadonly"></input-field>
         </table-row>
         <table-row :headerText="'전화번호*'">
-          <input-field :placeholder="'어떤 내용이 들어갈까요?\n\n'" :value="phone" @input-event="phoneInput" :isReadonly="isReadonly"></input-field>
+          <input-field :placeholder="'연락이 가능한 전화번호를 기재해주세요'" :value="counselorForm.phone" @input-event="phoneInput" :isReadonly="isReadonly"></input-field>
         </table-row>
         <table-row :headerText="'한줄소개*'">
-          <input-field :placeholder="'어떤 내용이 들어갈까요?\n\n'" :value="introduce" @input-event="introduceInput" :isReadonly="isReadonly"></input-field>
+          <input-field :placeholder="'본인을 나타낼 수 있는 문구를 기재해주세요'" :value="counselorForm.intro" @input-event="introduceInput" :isReadonly="isReadonly"></input-field>
         </table-row>
       </table>
+      <div class="button-container" v-if="isReadonly">
+        <button class="button-content confirm" type="button">승인</button>
+        <button class="button-content reject" type="button">반려</button>
+      </div>
+      <div class="button-container" v-else>
+        <button class="button-content confirm" type="button" @click="this.submit">제출</button>
+        <button class="button-content reject" type="button">취소</button>
+      </div>
     </form>
   </div>
 </template>
@@ -36,46 +44,74 @@ import TableRow from '@/components/common/TableRow.vue'
 import InputField from '@/components/common/InputField.vue';
 import TextField from '@/components/common/TextField.vue';
 import DropDown from '@/components/common/DropDown.vue';
+import { apiInstance } from '@/api';
+import router from '@/router';
+
 
 export default {
   components: { TableRow, InputField, TextField, DropDown },
   props: {
     isReadonly: Boolean
   },
+  setup() {
+    const api = apiInstance();
+    return {
+      api
+    }
+  },
   data() {
     return {
-      counselorType: 'none',
-      major: ['none', 'none', 'none'],
-      career: '',
-      address: '',
-      phone: '',
-      introduce : '',
-      counselorTypeOptions: [
-        'none', '사주', '타로', '사주/타로'
-      ],
-      majorOptions: [
-        'none', '가족/건강', '직장/진로', '시험/진학', '연애/결혼', '사업/재물', '사주/신수', '작명/개명', '미래/해몽', '이사/풍수'
-      ]
+      counselorForm: {
+        counselorType: 'none',
+        major: ['none', 'none', 'none'],
+        career: '',
+        address: '',
+        phone: '',
+        intro : '',
+        counselorTypeOptions: [
+          'none', '사주', '타로', '사주/타로'
+        ],
+        majorOptions: [
+          'none', '가족/건강', '직장/진로', '시험/진학', '연애/결혼', '사업/재물', '사주/신수', '작명/개명', '미래/해몽', '이사/풍수'
+        ]
+      },
+      counselorTypeToEnum: {
+          'none': 'NONE',
+          '사주': 'SAJU',
+          '타로': 'TARO',
+          '사주/타로': 'BOTH',
+        },
     }
   },
   methods: {
     counselorTypeChange(value) {
-      this.counselorType = value;
+      this.counselorForm.counselorType = value;
     },
     majorChange(value, index) {
-      this.major[index] = value;
+      this.counselorForm.major[index] = value;
     },
     careerInput(value) {
-      this.career = value;
+      this.counselorForm.career = value;
     },
     addressInput(value) {
-      this.address = value;
+      this.counselorForm.address = value;
     },
     phoneInput(value) {
-      this.phone = value;
+      this.counselorForm.phone = value;
     },
     introduceInput(value) {
-      this.introduce = value;
+      this.counselorForm.intro = value;
+    },
+    submit() {
+      this.counselorForm.counselorType = this.counselorTypeToEnum[this.counselorForm.counselorType];
+      this.counselorForm.major = (this.counselorForm.major[0] + ' ' + 
+                                  (this.counselorForm.major[1] == 'none' ? '' : this.counselorForm.major[1]) + ' ' + 
+                                  (this.counselorForm.major[2] == 'none' ? '' : this.counselorForm.major[2])).trim();
+      console.log(this.counselorForm.counselorType);
+      console.log(this.counselorForm.major);
+      this.api.post("/members/submit", this.counselorForm)
+              .then(router.push('/'))
+              .catch(error => console.log(error));
     }
   } 
 }
@@ -96,7 +132,7 @@ export default {
   margin-right: auto;
   border: solid 2px #E5E9E9;
   border-radius: 10px;
-  padding: 40px 20px;
+  padding: 60px 20px;
   margin-bottom: 100px;
 }
 
@@ -105,5 +141,32 @@ export default {
   height: 60px;
 }
 
+.button-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.button-content {
+  border: none;
+  border-radius: 5px;
+  margin-top: 40px;
+  margin-left: 30px;
+  margin-right: 30px;
+  padding: 13px 30px;
+  font-family: Noto Sans KR;
+  font-size: 20px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+  color: white;
+}
+
+.confirm {
+    background-color: #00CA45;
+  }
+  .reject {
+    background-color: #FF008A;
+  }
 
 </style>
