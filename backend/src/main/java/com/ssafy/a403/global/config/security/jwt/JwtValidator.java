@@ -39,22 +39,6 @@ public class JwtValidator {
         return loginUserMapper.toLoginUser(member);
     }
 
-    public boolean isValidToken(String token) {
-        try {
-            Claims claims = getTokenClaims(token);
-            return claims.getExpiration().after(new Date());
-        } catch (SecurityException | MalformedJwtException e) {
-            log.info("Invalid JWT Token", e);
-        } catch (ExpiredJwtException e) {
-            log.info("Expired JWT Token", e);
-        } catch (UnsupportedJwtException e) {
-            log.info("Unsupported JWT Token", e);
-        } catch (IllegalArgumentException e) {
-            log.info("JWT claims string is empty.", e);
-        }
-        return false;
-    }
-
 
     // Token을 파싱하다가 만료된 token이라면 ExpiredJwtException 발생
     private Claims getTokenClaims(String token) {
