@@ -9,10 +9,10 @@
     </div>
     <div class="hr-wrapper"></div>
     <div style="display: flex;">
-      <button class="counselor-form-paging" value="전체">전체</button>
-      <button class="counselor-form-paging" value="사주">사주</button>
-      <button class="counselor-form-paging" value="타로">타로</button>
-      <button class="counselor-form-paging" value="사주/타로">사주/타로</button>
+      <button :style="{color: buttonTextColor['']}" class="counselor-form-paging" value="전체" @click="onFilteringButtonClick('')">전체</button>
+      <button :style="{color: buttonTextColor['WAITING']}" class="counselor-form-paging" value="대기중" @click="onFilteringButtonClick('WAITING')">대기중</button>
+      <button :style="{color: buttonTextColor['PASS']}" class="counselor-form-paging" value="승인" @click="onFilteringButtonClick('PASS')">승인</button>
+      <button :style="{color: buttonTextColor['REJECT']}" class="counselor-form-paging" value="반려" @click="onFilteringButtonClick('REJECT')">반려</button>
     </div>
     <div class="hr-wrapper"></div>
   </div>
@@ -36,36 +36,82 @@
           </td>
       </tr>
     </table>
+    <div style="display:flex; align-items: center; justify-content: center; margin-top: 30px;">
+      <page-button :totalPages="this.totalPages" @page-changed="onPageChange"></page-button>
+    </div>
   </div>
 </template>
 
 <script>
-import StatusBox from '@/components/admin/StatusBox.vue'
+import StatusBox from '@/components/admin/StatusBox.vue';
+import { apiInstance } from '@/api/index.js';
+import PageButton from '@/components/common/PageButton.vue';
 
 export default {
   components: {
-    StatusBox
+    StatusBox,
+    PageButton
+},
+  setup() {
+    const api = apiInstance();
+
+    return {
+      api,
+    }
   },
   data() {
     return {
-      counselorForms: [
-          { id: 1, name: '김철수', created: '2023.07.19 16:00', status: 'WAITING'},
-          { id: 2, name: '김철수', created: '2023.07.19 16:00', status: 'PASS'},
-          { id: 3, name: '김철수', created: '2023.07.19 16:00', status: 'REJECT'},
-      ],
+      counselorForms: [],
       statusCode: {
         WAITING: { label: '대기중', color: '#FFC700'},
         PASS: { label: '승인', color: '#00CA45'},
         REJECT: { label: '반려', color: '#FF008A'},
       },
-      buttonTextColor: "#333333"
+      buttonTextColor: {
+        "" : "#9C7AE7",
+        "WAITING" : "#333333",
+        "PASS" : "#333333",
+        "REJECT" : "#333333"
+      },
+      totalPages: 0,
+      filter: "",
+      pageNum: 0,
+      pageSize: 6
     }
+  },
+  created() {
+    this.getCounselorForms(this.filter, this.pageNo, this.pageSize);
   },
   methods: {
     viewCounselorForm() {
+
       this.$router.push({
         name: 'counselor-form-view'
       })
+    },
+    async getCounselorForms(filter, pageNum, pageSize) {
+      
+      await this.api.get(`/admin/counselor-forms?filter=${filter}&page=${pageNum}&size=${pageSize}`)
+        .then((response) => {
+            this.counselorForms = response.data.content;
+            this.totalPages = response.data.totalElements / pageSize;
+            console.log(response.data);
+        })
+        .catch((error) => {
+          console.log('상담사 목록을 불러오지 못했습니다.\n' + error);
+        })
+    },
+    onPageChange(value) {
+      this.pageNum = value;
+      this.getCounselorForms(this.filter, this.pageNum, this.pageSize);
+    },
+    onFilteringButtonClick(filter) {
+      this.buttonTextColor[''] = "#333333";
+      this.buttonTextColor['WAITING'] = "#333333";
+      this.buttonTextColor['PASS'] = "#333333";
+      this.buttonTextColor['REJECT'] = "#333333";
+      this.buttonTextColor[filter] = "#9C7AE7";
+      this.getCounselorForms(filter, this.pageNum, this.pageSize);
     }
   }
 }
@@ -150,5 +196,6 @@ export default {
   font-style: normal;
   font-weight: 500;
   line-height: normal;
+  cursor: pointer;
 }
 </style>
