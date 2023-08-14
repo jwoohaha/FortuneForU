@@ -90,10 +90,21 @@ const routes = [
     component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormDetailView')
   },
   {
-    path: '/chatview',
-    name: 'chatview',
-    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue')
-  }
+    path: '/chatview/:reservationNo',
+    name: 'chatviewforconsultant',
+    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue'),
+    props:route=>({
+      reservationNo: route.params.reservationNo
+    })
+  },
+  {
+    path: '/chatview/:IdforSession',
+    name: 'chatviewforuser',
+    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue'),
+    props:route=>({
+      IdforSession: route.params.IdforSession
+    })
+  },
 ]
 
 const router = createRouter({

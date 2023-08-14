@@ -23,7 +23,6 @@
                   <i class="bi bi-search"></i>
                 </div>
                 <RoundButton>검색</RoundButton>
-                <RoundButton isTarot @click="convert">convert</RoundButton>
               </div>
             
             </div>

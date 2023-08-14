@@ -25,7 +25,10 @@
   import { RoundButton } from "../../components/styled-components/StyledButton";
 
   export default {
-    
+    props:{
+      reservationNo: Number,
+      IdforSession:String,
+    },
     name:'chatview',
   
     components: {
@@ -33,13 +36,17 @@
       RoundButton
     },
 
-  setup(){
+  setup(props){
     const api = apiInstance();
     const username = useRoute().query.name;
-    const sessionId= useRoute().query.sessionId;
+    
+    const roomRequest = {
+      reservationNo: props.reservationNo, // props에서 reservationNo를 받아옴
+      // other properties...
+    };
 
     return {
-      api,username,sessionId
+      api,username,roomRequest
     }
     },
 
@@ -52,8 +59,8 @@
       publisher: undefined,
       subscribers: [],
       isRecorder: false,
+      sessionId:this.IdforSession,
       // Join form
-
       myUserName: "Participant",
       outputMode:'INDIVIDUAL',
       hasAudio:'true',
@@ -61,9 +68,6 @@
       forceRecordingId: "",
       res:{},
       mp4Url:'',
-      roomRequest : {
-        reservationNo : 1,
-      },
 
     };
   },
@@ -163,7 +167,7 @@
           });
       });
 
-      window.addEventListener("beforeunload", this.leaveSession);
+      window.addEventListener("beforeunload", this.closing);
     },
 
     async convert() {
@@ -188,6 +192,9 @@
         }
       }else{
         //사용자일 경우 그냥 나간다 => 즉 세션을 종료하면 안된다.
+        if(this.session){
+          this.session.disconnect();
+        }
         this.session = undefined;
         this.mainStreamManager = undefined;
         this.publisher = undefined;
@@ -198,7 +205,7 @@
       // this.sessionId= response.data.sessionId;
       // return response.data.sessionId; // The sessionId
       // Remove beforeunload listener
-      window.removeEventListener("beforeunload", this.leaveSession);
+      window.removeEventListener("beforeunload", this.closing);
     },
 
     updateMainVideoStreamManager(stream) {
@@ -227,6 +234,7 @@ return responseData; // The sessionId
       if(this.sessionId==null){
         //상담가일 떄
         this.isRecorder=true;
+        console.log("나는 상담가이다!");
         console.log("1. getToken 함수 정상 실행");
         const sessionId = await this.createSession();
         console.log("createSession에서 값 받아오기 성공");
@@ -234,6 +242,7 @@ return responseData; // The sessionId
       }else{
         //유저일 때
         this.isRecorder=false;
+        console.log("나는 유저이다!!");
         return await this.createToken(this.sessionId);
       }      
     },
@@ -243,6 +252,7 @@ return responseData; // The sessionId
       const response = await this.api.post('/roomsession', this.roomRequest)
       console.log("2. createsession 함수 정상실행");
       console.log("받아온 sessionId"+response.data.sessionId);
+      console.log(this.roomRequest.reservationNo);
       this.sessionId= response.data.sessionId;
       return response.data.sessionId; // The sessionId
     },
