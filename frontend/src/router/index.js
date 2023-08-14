@@ -25,7 +25,8 @@ const routes = [
   {
     path: '/reservation',
     name: 'reservation',
-    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
+    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue'),
+    props: true
   },
   {
     path: '/redirect',
@@ -72,6 +73,11 @@ const routes = [
     path: '/counselor/counreview',
     name: 'counreview',
     component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
+  },
+  {
+    path: '/chatview',
+    name: 'chatview',
+    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue')
   }
 ]
 

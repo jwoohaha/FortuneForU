@@ -67,6 +67,23 @@
                             <div class="info-edit" v-if="!isEditable">{{ counselor.intro }}</div>
                             <input class="info-edit" v-else :value="introtxt">
                         </div>
+                        <div class="each-row">
+                            <h3 class="info-label">상담 가능 시간</h3>
+                            <div class="time-setting">
+                                <div>시작</div>
+                                <select class="time-control" v-model="startTime">
+                                    <option :key="i" :value="`${time.h}:${time.m}`" v-for="(time, i) in options">{{ time.h }}:{{ time.m }}</option>
+                                </select>
+                                <div>마감</div>
+                                <select class="time-control" v-model="endTime">
+                                    <option :key="i" :value="`${time.h}:${time.m}`" v-for="(time, i) in options">{{ time.h }}:{{ time.m }}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="each-row">
+                            <div>{{ this.startTime }}</div>
+                            <div>{{ this.endTime }}</div>
+                        </div>
                     </div>
                     <div class="right-part">
                         <h3 class="info-label">경력 사항</h3>
@@ -86,14 +103,22 @@
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
 import { apiInstance } from '@/api/index'
+// import VueTimepicker from 'vue3-timepicker'
+// import VueDatepicker from 'vue3-datepicker'
+// import Timeselector from 'vue-timeselector';
+
 
 export default {
     components: {
         SquareButton,
+        // VueTimepicker
+        // VueDatepicker
+        // Timeselector
     },
     data() {
         return {
             isEditable : false,
+            counselorNo: null,
             counselor:{},
             radioval: "",
             majortxt: "",
@@ -101,13 +126,31 @@ export default {
             introtxt: "",
             phonetxt: "",
             careertxt: "",
+            startTime: "0:00",
+            endTime: "18:00",
+            options: [
+                { h: "00", m: "00" },{ h: "00", m: "30" },{ h: "01", m: "00" },{ h: "01", m: "30" },{ h: "02", m: "00" },{ h: "02", m: "30" },{ h: "03", m: "00" },{ h: "03", m: "30" },
+                { h: "04", m: "00" },{ h: "04", m: "30" },{ h: "05", m: "00" },{ h: "05", m: "30" },{ h: "06", m: "00" },{ h: "06", m: "30" },{ h: "07", m: "00" },{ h: "07", m: "30" },
+                { h: "08", m: "00" },{ h: "08", m: "30" },{ h: "09", m: "00" },{ h: "09", m: "30" },{ h: "10", m: "00" },{ h: "10", m: "30" },{ h: "11", m: "00" },{ h: "11", m: "30" },
+                { h: "12", m: "00" },{ h: "12", m: "30" },{ h: "13", m: "00" },{ h: "13", m: "30" },{ h: "14", m: "00" },{ h: "14", m: "30" },{ h: "15", m: "00" },{ h: "15", m: "30" },
+                { h: "16", m: "00" },{ h: "16", m: "30" },{ h: "17", m: "00" },{ h: "17", m: "30" },{ h: "18", m: "00" },{ h: "18", m: "30" },{ h: "19", m: "00" },{ h: "19", m: "30" },
+                { h: "20", m: "00" },{ h: "20", m: "30" },{ h: "21", m: "00" },{ h: "21", m: "30" },{ h: "22", m: "00" },{ h: "22", m: "30" },{ h: "23", m: "00" },{ h: "23", m: "30" },   
+            ],
+        };
+    },
+    setup(){
+        
+        const api = apiInstance();
+
+        return {
+            api
         };
     },
     methods: {
     async getUserInfo(){
 
         var result = "";
-        await this.api.get('/counselor/1')
+        await this.api.get(`/counselor/${this.counselorNo}`)
             .then((re) => result = re.data)
             .catch((error) => console.log(error));
             
@@ -119,6 +162,8 @@ export default {
         this.introtxt = this.counselor.intro;
         this.phonetxt = this.counselor.phone;
         this.careertxt = this.counselor.career;
+        this.startTime = this.counselor.startTime;
+        this.endTime = this.counselor.endTime;
         
     }, 
 
@@ -133,23 +178,30 @@ export default {
     },
 
     async editUserInfo(){
-        await this.api.put('/counselors/update/2', {counselorNo: this.counselor.counselorNo, major: this.majortxt, intro: this.introtxt, address: this.addresstxt, phone: this.counselor.phone, counselorType: this.radioval })
+        await this.api.patch(`/counselors/update/${this.counselorNo}`, 
+            {
+                data:{
+                    address: this.addresstxt,
+                    career: this.careertxt,
+                    counselorType: this.counselor.counselorType,
+                    endTime: this.endTime,
+                    intro: this.introtxt,
+                    major: this.majortxt,
+                    phone: this.phonetxt,
+                    startTime: this.startTime
+                }
+            })
         .then((re) => {
             console.log(re.data);
+        }).catch((e) => {
+            alert("변경 실패")
+            console.log(e)
         })
     }
 
   },
   created(){
     this.getUserInfo();
-  },
-  setup(){
-    
-    const api = apiInstance();
-
-    return {
-        api
-    };
   },
   
 }
@@ -251,7 +303,6 @@ export default {
     flex-direction: column;
     justify-content: space-around;
     padding-top: 20px;
-    padding-bottom: 100px;
 } 
 .info-label {
     color: #000;
@@ -276,6 +327,11 @@ export default {
     margin-left: 10px;
     margin-right: 10px;
 }
+.time-setting{
+    display: flex;
+    width: 320px;
+    justify-content: space-around;
+}
 .info-edit {
     width: 320px;
     height: 50px;
@@ -289,8 +345,12 @@ export default {
     padding: 10px 33px;
     box-sizing: border-box;
 }
-.info-edit>input:focus {
-    outline:none;
+.each-row input{
+    border: none;
+}
+textarea {
+    border: none;
+    resize: none;
 }
 .right-part {
     width: 465px;

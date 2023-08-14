@@ -35,21 +35,24 @@
           <div class="filter">
             <div>
               <ul class="filter-list">
-                <li>이름순</li>
-                <li>후기순</li>
-                <li>별점순</li>
+                <li @click="orderByReview()" v-if="criteria=='review'" style="color: #A38BD9">후기순</li>
+                <li @click="orderByReview()" v-else style="color: #333">후기순</li>
+                <li @click="orderByRating()" v-if="criteria!='review'" style="color: #A38BD9">별점순</li>
+                <li @click="orderByRating()" v-else style="color: #333">별점순</li>
               </ul>
             </div>
           </div>
           <div class="counselor-list">
-            <div v-for="counselor in counselors" :key="counselor.id">
-              <router-link to="/reservation"><CounselorCard :counselor="counselor"></CounselorCard></router-link> 
+            <div v-for="(counselor, idx) in counselors" :key="idx" @click="moveDetail(counselor.counselorNo)">
+              <CounselorCard :counselor="counselor" :colorType="isTarot"></CounselorCard>
             </div>
           </div>
+          <!-- 예외처리 -->
+          <div class="counselor-list" v-if="emptyPage" style="height: 600px; display: flex; justify-content: center; font-size: 30px;">상담사 정보가 없습니다.</div>
       </div>
       
       <div class="paging-section">
-        <PageButton></PageButton>
+        <PageButton :totalPages="totalPages" :pageType="TARO" @page-changed="handlePageChange"></PageButton>
       </div>
     </div>
   </div>
@@ -59,6 +62,7 @@
 import CounselorCard from '../components/common/CounselorCard.vue';
 import PageButton from '../components/common/PageButton.vue';
 import { RoundButton } from "../components/styled-components/StyledButton";
+import { apiInstance } from '@/api/index';
 
 export default {
   components: {
@@ -68,16 +72,94 @@ export default {
   },
   data() {
     return {
-      counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-      ],
+      emptyPage: false,
+      counselors: null,
+      criteria: 'review',
+      isTarot: true
     };
   },
+  methods: {
+    getCounselorsByRatings(pageNum) {
+      const getCounselorsRequest = apiInstance();
+      getCounselorsRequest({
+        method: 'GET',
+        url: '/counselors/by_ratings/',
+        params: {
+          counselorType: 'TARO',
+          page: pageNum
+        }
+      })
+      .then((res) => {
+        console.log(res.data)
+        //보여줄 컨텐츠(상담사 정보)가 없을 경우 예외처리
+        if(Object.keys(res.data.content) == 0){
+          this.emptyPage = true;
+        }
+        this.counselors = res.data.content;
+        this.totalPages = res.data.totalPages;
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    getCounselorsByReviews(pageNum) {
+      const getCounselorsRequest = apiInstance();
+      getCounselorsRequest({
+        method: 'GET',
+        url: '/counselors/by_reviews/',
+        params: {
+          counselorType: 'TARO',
+          page: pageNum
+        }
+      })
+      .then((res) => {
+        console.log(res.data.content)
+        this.counselors = res.data.content
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    // 페이지 버튼을 눌렀을 때 후기 순, 별점 순에 맞게 해당 페이지 조회
+    handlePageChange(pageNum) {
+      if(this.criteria == "review") {
+        this.getCounselorsByReviews(pageNum)
+      } else {
+        this.getCounselorsByRatings(pageNum)
+      }
+    },
+    // 버튼 클릭 -> 정렬 순서 변경 처리
+    orderByRating() {
+      if(this.criteria == "rating") {
+        return
+      } else {
+        this.criteria = "rating"
+        this.getCounselorsByRatings(0)
+      }
+    },
+    orderByReview() {
+      if(this.criteria == "review") {
+        return
+      } else {
+        this.criteria = "review"
+        this.getCounselorsByReviews(0)
+      }
+    },
+    moveDetail(id){
+      this.$router.push({
+        name: 'reservation',
+        query: {
+          id: id,
+          pageType : 'TARO'
+        }
+      }
+      );
+    }
+  },
+
+  created() {
+    this.getCounselorsByRatings(0);
+  }
  };
 </script>
 
@@ -94,6 +176,7 @@ export default {
   // margin: 0 auto;
   padding-top: 82px;
   width: 70vw;
+  margin-bottom: 200px;
 }
 .top-header {
   display: flex;
@@ -122,23 +205,23 @@ export default {
   display: inline-block;
 }
 .hr-wrapper {
-  border:#000000 0.5px solid;
-  height: 0px;
-  width: 65%;
+  height: 1.5px;
+  background: #000;
+  width: 50%;
   padding: 0;
   margin-top: 20px;
 }
 .search {
-  width: 393px;
+  width: 400px;
   height: 40px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 17px;
   padding-top: 10px;
   position: relative;
 }
 input {
-  width: 300px;
+  width: 110%;
   border-radius: 100px;
   border: 3px solid #D7D7D7;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
@@ -150,32 +233,24 @@ input {
   width: 28px;
   height: 28px;
   position: absolute;
-  left: 10px;
+  left: 20px;
   top: 20px;
 }
-.filter {
-  width: 70%;
-  height: 70px;
-}
-ul{
-  width: 195px;
+.filter-list{
+  width: 10%;
   list-style:none;
   padding-left:0px;
-  float: left;
   font-size: 16px;
   font-weight: 400;
   line-height: normal;
   font-style: normal;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 35px;
   display: flex;
   justify-content: space-between;
 }
-.cards-section {
-  width: 100%;
-}
 .counselor-list {
-  width: inherit;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -184,6 +259,5 @@ ul{
   display: flex;
   justify-content: center;
   margin-top: 40px;
-  margin-bottom: 210px;
 }
 </style>

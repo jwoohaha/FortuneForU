@@ -9,7 +9,7 @@
       </nav>
       <div v-if="tokenStore.isLoggedIn">
         <router-link to="/mypage"><button>마이페이지</button></router-link>
-        <router-link to="/counselor"><button>상담사전용</button></router-link>
+        <router-link to="/counselor"><button v-if="this.memberRole=='ROLE_COUNSELOR'">상담사전용</button></router-link>
       </div>
       <div v-else>
         <button @click="isModalVisible = true">로그인</button>
@@ -25,6 +25,7 @@
 import Logo from "../common/Logo.vue";
 import ModalView from "@/components/common/ModalView.vue";
 import { useTokenStore } from "@/stores/token";
+import { apiInstance } from '@/api/index'
 
 export default {
   components: {
@@ -34,13 +35,31 @@ export default {
   data() {
     return {
       isModalVisible: false,
+      memberRole: null
     };
   },
   setup() {
     const tokenStore = useTokenStore();
+    const api = apiInstance();
 
     return {
       tokenStore,
+      api
+    }
+  },
+  updated(){
+    console.log('created')
+    this.memberRole = this.getMemberRole();
+  },  
+  methods:{
+    async getMemberRole() {
+      await this.api.get('members/info')
+            .then((re) => {
+              // result = re.data;
+              console.log("created"+re.data);
+            })
+            .catch((error) => console.log(error));
+      return 1;
     }
   }
 };

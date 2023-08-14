@@ -41,15 +41,15 @@ public class CounselingScheduleService {
      * 상담 가능 시간 변경
      */
     @Transactional
-    public CounselingSchedule updateSchedule(UpdateScheduleRequest request) {
-        CounselingSchedule schedule = counselingScheduleRepository.findByCounselorNo(request.getCounselorNo()).
+    public CounselingSchedule updateSchedule(Long counselorNo, UpdateScheduleRequest request) {
+        CounselingSchedule schedule = counselingScheduleRepository.findByCounselorNo(counselorNo).
                 orElseThrow(EntityNotFoundException::new);
 
         schedule.updateCounselingSchedule(request);
 
         counselingScheduleRepository.save(schedule);
 
-        return counselingScheduleRepository.findByCounselorNo(request.getCounselorNo()).
+        return counselingScheduleRepository.findByCounselorNo(counselorNo).
                 orElseThrow(EntityNotFoundException::new);
     }
 }

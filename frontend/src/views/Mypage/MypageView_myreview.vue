@@ -20,62 +20,21 @@
                     </div>
     
                     <div class="my-review-part">
-                        <i class="bi bi-chevron-compact-left"></i>
+                        <i class="bi bi-chevron-compact-left" @click="prePage"></i>
                         
                         <div class="review-cards-section">
                             <!-- 카드하나 -->
-                            <div class="review-card">
-                                <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
+                            <div class="review-card" v-for="(reviewIndex, idx) in displayedIndexes" :key="idx">
+                                <img class="card-img" src="{{ reviewIndex.profileImage }}">
                                 <div class="coun-info">
-                                    <div>이쟁점 ⭐ 4.5</div>
-                                    <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
+                                    <div>{{ reviewIndex.counselorName }} ⭐ {{ reviewIndex.reservationScore }}</div>
+                                    <div class="review-txt">{{ reviewIndex.review }}</div>
                                 </div>
-                                <div>✖</div>
-                            </div>
-                             <!-- 카드 하나 -->
-                             <div class="review-card">
-                                <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                                <div class="coun-info">
-                                    <div>이쟁점 ⭐ 4.5</div>
-                                    <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                                </div>
-                                <div>✖</div>
-                            </div>
-                            <div class="review-card">
-                                <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                                <div class="coun-info">
-                                    <div>이쟁점 ⭐ 4.5</div>
-                                    <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                                </div>
-                                <div>✖</div>
-                            </div>
-                            <div class="review-card">
-                                <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                                <div class="coun-info">
-                                    <div>이쟁점 ⭐ 4.5</div>
-                                    <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                                </div>
-                                <div>✖</div>
-                            </div>
-                            <div class="review-card">
-                                <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                                <div class="coun-info">
-                                    <div>이쟁점 ⭐ 4.5</div>
-                                    <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                                </div>
-                                <div>✖</div>
-                            </div>
-                            <div class="review-card">
-                                <img class="card-img" src="https://mblogthumb-phinf.pstatic.net/MjAyMDAxMjBfMjQ2/MDAxNTc5NDY5MjAzNDk1.Ew2K07QBmIZwv73_asAGlhugVhooWISQuAQ0-XWGjWYg.98CVtoAByEROQ7xGSTjl3fO6ev88r6sOpJlFBTn26Dsg.JPEG.skil666/IMG_20190904_202157.jpg?type=w800">
-                                <div class="coun-info">
-                                    <div>이쟁점 ⭐ 4.5</div>
-                                    <div class="review-txt">Lorem ipsum dolor sit amet consectetur. Accumsan lectus vel vel malesuada quis vulputate sapien quis. Tellus vel amet feugiat sit sit nunc congue. Feugiat eros ugiat sit sit nunc congue. Feugiat eros </div>
-                                </div>
-                                <div>✖</div>
+                                <div @click="removeReview(reviewIndex.reservationNo)">✖</div>
                             </div>
                         </div>
 
-                        <i class="bi bi-chevron-compact-right"></i>
+                        <i class="bi bi-chevron-compact-right" @click="nextPage"></i>
                     </div>
                 </div>
             </div>
@@ -83,19 +42,83 @@
     </template>
     
 <script>
+import { apiInstance } from '@/api';
+
 
 export default {
     components: {
     },
     data() {
-    return {
-        counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        ],
-    };
+        return {
+            currentPage : 1,
+            itemsPerPage : 6,
+            reviews: [],
+        }
     },
+    computed: {
+        displayedIndexes() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = startIndex + this.itemsPerPage;
+            return this.reviews.slice(startIndex, endIndex);
+        },
+        totalPages() {
+            return Math.ceil(this.reviews.length / this.itemsPerPage);
+        }
+    },
+    setup(){
+        const api = apiInstance();
+
+        return {
+            api
+        }
+    },
+    methods:{
+        getMyReviews(){
+            this.api.get('/reservations/reviews')
+            .then((response) => {
+                console.log(response);
+                console.log(response.data);
+
+                response.data.forEach(element => {
+                    console.log(element);
+                    this.reviews.push(element);
+                });
+
+            })
+            .catch((error) =>{
+                console.log(error)
+            })
+        },
+        prePage(){
+            if (this.currentPage > 1) {
+                this.currentPage--;
+            }
+        },
+        nextPage(){
+            if (this.currentPage < this.totalPages){
+                this.currentPage++;
+            }
+        },
+        removeReview(reservationNo){
+            this.api.patch(`/reservations/${ reservationNo }`)
+            .then((response) =>{
+                console.log(response)
+                if(response.status == 200){
+                    alert('해당 후기를 삭제하였습니다')
+                    window.location.reload();
+                }else{
+                    console.log('삭제 실패 status : ', response.status);
+                }
+            })
+            .catch((error) =>{
+                console.log(error)
+            })
+        }
+    },
+    created(){
+        this.getMyReviews();
+    }
+
 }
 </script>
 

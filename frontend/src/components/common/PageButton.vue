@@ -1,16 +1,35 @@
 <template>
     <div class="pagebtn-list">
-        <div class="leftbtn">◀</div>
-        <div class="onebtn">1</div>
-        <div class="twobtn">2</div>
-        <div class="threebtn">3</div>
-        <div class="rightbtn">▶</div>
+        <div class="leftbtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">◀</div>
+        <div class="leftbtn" v-else>◀</div>
+        <div v-for="pageNum in totalPages" 
+            :key="pageNum" 
+            @click="goToPage(pageNum-1)">
+            <div v-if="pageType!='TARO'" style="background:'#F6B5C6'">{{ pageNum }}</div>
+            <div v-else>{{ pageNum }}</div>
+        </div>
+        <div class="rightbtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">▶</div>
+        <div class="rightbtn" v-else>▶</div>
     </div>    
 </template>
 
 <script>
 export default {
-    
+    props: {
+        totalPages: {
+        type: Number,
+        required: true,
+        },
+        pageType: {
+            type: String,
+            required: false
+        }
+    },
+    methods: {
+        goToPage(pageNum) {
+            this.$emit('page-changed', pageNum);
+        },
+    },
 }
 </script>
 

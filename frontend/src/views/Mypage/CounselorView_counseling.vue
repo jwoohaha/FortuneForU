@@ -31,11 +31,11 @@
                             <div class="upbox" id="calendar">
                                 <div class="upbox-txt">예약일</div>
                                     <div class="calendar-poster">
-                                        <VDatePicker v-model="date" transparent borderless/>
+                                        <VDatePicker v-model="clicked_date" transparent borderless @click="getCoRezInfo(this.clicked_date)"/>
                                     </div>
                             </div>
                             <div class="upbox" id="lists">
-                                <div class="upbox-txt">2023년 08월 23일 상담 목록</div>
+                                <div class="upbox-txt">{{ formatted_date }}</div>
                                 <div class="list-table">
                                     <div class="list-title">
                                         <div>예약 번호</div>
@@ -50,42 +50,54 @@
                                     </div>
                                     <div class="list-contents">
                                         <!-- 각 row -->
-                                        <div class="list-row">
-                                            <div>A1234</div>
-                                            <div>한소희</div>
-                                            <div>17시 15분</div>
-                                            <div>타로</div>
-                                            <div>확정</div>
+                                        <div v-if="reservations && reservations.length === 0" class="list-row">
+                                            <div colspan="5" style="text-align: center;">해당 날짜에 예약이 없습니다.</div>
+                                        </div>
+                                        <div v-else v-for="reservation, idx in reservations" :key="idx" class="list-row" @click="handleReservationClick(reservation)">
+                                            <div>{{ reservation.reservationNo }}</div>
+                                            <div>{{ reservation.memberName }}</div>
+                                            <div>{{ reservation.reservationDateTime }}</div>
+                                            <div> {{ reservation.reservationType }}</div>
+                                            <div>{{ reservation.reservationStatus }}</div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div class="selected-part">
+                        <div class="selected-part" v-if="clickedReservation">
                             <div class="res-cell">
                                 <div class="cell-label">예약 번호</div>
-                                <div class="cell-txt">A1234</div>
+                                <div class="cell-txt">{{ clickedReservation.reservationNo }}</div>
                             </div>
                             <div class="res-cell">
                                 <div class="cell-label">예약자</div>
-                                <div class="cell-txt">장원영</div>
+                                <div class="cell-txt">{{ clickedReservation.memberName }}</div>
                             </div>
                             <div class="res-cell">
                                 <div class="cell-label">예약 시간</div>
-                                <div class="cell-txt">A1234</div>
+                                <div class="cell-txt">{{ clickedReservation.reservationDateTime }}</div>
                             </div>
                             <div class="res-cell">
                                 <div class="cell-label">예약 상품</div>
-                                <div class="cell-txt">A1234</div>
+                                <div class="cell-txt">{{ clickedReservation.reservationType }}</div>
                             </div>
                             <div class="res-cell">
                                 <div class="cell-label">예약 상태</div>
-                                <div class="cell-txt">A1234</div>
+                                <div class="cell-txt">{{ clickedReservation.reservationStatus }}</div>
                             </div>
-                            <div class="res-cell" id="cell-btns">
-                                <SquareButton id="start-btn">상담 시작</SquareButton>
-                                <SquareButton isTarot id="cancel-btn">취소</SquareButton>
+
+                            <div class="res-cell" id="cell-btns" v-if="clickedReservation.reservationStatus === '상담 전'">
+                                <SquareButton id="start-btn">
+                                    <router-link to="/chatview">상담 시작</router-link>
+                                    </SquareButton>
+                                <SquareButton isTarot id="cancel-btn" @click="cancelReservation">취소</SquareButton>
+                                
                             </div>
+                            <div class="res-cell" id="cell-btns" v-if="clickedReservation.reservationStatus === '상담 종료'">
+                                <SquareButton isTarot id="cancel-btn" @click="checkResult">결과보기</SquareButton>
+                            </div>
+
+
                         </div>
                     </div>
                 </div>
@@ -98,15 +110,129 @@
     
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
+import { apiInstance } from '@/api/index';
 
 export default {
+    
     components: {
         SquareButton,
+
     },
     data() {
-    return {
-    };
+        return {
+            name:'consultant',
+            counselor: null,
+            reservations: null,
+            clicked_date: new Date(),
+            noReservation: true,
+            formatted_date: null,
+            clickedReservation : null,
+            clickedReservationNo: null,
+        };
     },
+    methods: {
+        getCounselorInfo(){
+            const getCounselorInfoRequest = apiInstance(); 
+            getCounselorInfoRequest({
+                method: 'GET',
+                url: `/counselors/info`,
+            })
+            .then((res) => {
+                this.counselor = res.data
+                console.log(this.counselor)
+                this.getCoRezInfo(this.clicked_date)
+                
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
+        getCoRezInfo(date) {
+            const day = date.getDate();
+            var newday = day >= 10 ? day : '0' + day;      
+            const month = date.getMonth() + 1;
+            var newmonth = month >= 10 ? month : '0' + month;
+            const year = date.getFullYear();
+            
+            if(this.formatted_date == `${year}-${newmonth}-${newday}`)  return;
+
+            this.formatted_date = `${year}-${newmonth}-${newday}`;
+
+            const getCoRezInfoRequest = apiInstance();
+            getCoRezInfoRequest({
+                method: 'GET',
+                url: `/reservations/counselor_rez_info/${this.formatted_date}`,
+            })
+            .then((res) => {
+                console.log(res.data)
+               
+                this.reservations = this.handleRezInfo(res.data)
+                this.noReservation = false;
+                this.toggleReservationDetails();
+
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
+        handleRezInfo(reservations) {
+            const statusTable = {
+                "WAITING": "상담 전",
+                "PROCEEDING": "상담 진행",
+                "CANCEL": "상담 취소",
+                "END": "상담 종료",
+            }
+            const typeTable = {
+                "SAJU": "사주",
+                "TARO": '타로'
+            }
+            reservations.forEach((reservation) => {
+                reservation.reservationStatus = statusTable[reservation.reservationStatus];
+                reservation.reservationType = typeTable[reservation.reservationType];
+                reservation.reservationDateTime = reservation.reservationDateTime.substring(11, 16);
+                
+            });
+            return reservations
+        },
+        toggleReservationDetails(){
+            this.clickedReservation = this.clickedReservation ? null : this.clickedReservation;
+        },
+       
+        handleReservationClick(reservation){
+            this.clickedReservation = reservation;
+            this.clickedReservationNo = reservation.reservationNo
+
+        },
+
+        cancelReservation() {
+            const confirmCancel = window.confirm("예약을 취소하시겠습니까?");
+
+            if (confirmCancel) {
+               
+                const cancelRequest = apiInstance();
+                cancelRequest({
+                    method: 'PATCH',
+                    url: `reservations/cancel/${this.clickedReservationNo}`,
+                })
+                .then((res) => {
+                    alert(res.data)
+                    console.log(res.data);
+                    location.reload();
+
+                })
+                .catch((e) => {
+                    console.log(e);
+                    
+                })
+            }            
+        },     
+
+    },
+   
+    created() {
+    this.getCounselorInfo();
+  
+    }
 }
 </script>
     
