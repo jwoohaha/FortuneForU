@@ -1,10 +1,10 @@
 package com.ssafy.a403.domain.counselorform.service;
 
 import com.ssafy.a403.domain.counselorform.dto.CounselorFormRequest;
+import com.ssafy.a403.domain.counselorform.dto.CounselorFormUpdateRequest;
 import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
 import com.ssafy.a403.domain.counselorform.repository.CounselorFormRepository;
 import com.ssafy.a403.domain.member.entity.Member;
-import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -34,5 +34,12 @@ public class CounselorFormService {
     public CounselorForm getCounselorForm(Long counselorFormNo) {
 
         return counselorFormRepository.findById(counselorFormNo).orElseThrow(EntityNotFoundException::new);
+    }
+
+    @Transactional
+    public void updatePassStatus(Long counselorFormNo, CounselorFormUpdateRequest updateRequest) {
+
+        CounselorForm counselorForm = getCounselorForm(counselorFormNo);
+        counselorForm.changeFormStatus(updateRequest);
     }
 }
