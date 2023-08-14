@@ -38,8 +38,8 @@ public class CounselingReservationController {
             String reservationType = reservationRequest.getReservationType();
             LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-            Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationType, reservationDate);
-            return ResponseEntity.ok("예약 성공");
+            String reservation = counselingReservationService.saveReservation(memberId, counselorId, reservationType, reservationDate);
+            return ResponseEntity.ok(reservation);
         }catch (IllegalArgumentException e) {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
@@ -77,21 +77,20 @@ public class CounselingReservationController {
     //예약 취소
     @PatchMapping("/cancel/{reservationNo}")
     public String cancel(@PathVariable Long reservationNo) {
-        counselingReservationService.cancelReservation(reservationNo);
-        return "취소";
+        return counselingReservationService.cancelReservation(reservationNo);
     }
 
 
     //후기 작성
     @PostMapping("/{reservationNo}/save_review")
     public String saveReview(@RequestBody ReviewRequest reviewRequest,
-                             @PathVariable Long reservationNo){
-        Long memberId = reviewRequest.getMemberId();
+                             @PathVariable Long reservationNo,
+                             @AuthenticationPrincipal LoginUser loginUser){
+        Long memberId = loginUser.getMember().getNo();
         String review = reviewRequest.getReservationReview();
-        float rez_score = reviewRequest.getReservationScore();
-        counselingReservationService.postReview(reservationNo, memberId, review, rez_score);
+        Float rez_score = reviewRequest.getReservationScore();
+        return counselingReservationService.postReview(reservationNo, memberId, review, rez_score);
 
-        return "ok";
     }
 
 

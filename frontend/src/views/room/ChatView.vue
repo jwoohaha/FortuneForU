@@ -12,27 +12,29 @@
       <RoundButton isTarot @click="closing" value="Leave session">나가기</RoundButton>
       <RoundButton isTarot @click="convert">convert</RoundButton>
     </div>
-  </div>
-</template>
+    <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationNo" :reservationNo="this.reservationNo"></modal-view>
+    </div>
+  </template>
+  
+  <script>
+  import axios from "axios";
+  import { OpenVidu } from "openvidu-browser";
+  import UserVideo from "../../components/room/UserVideo";
+  import{ useRoute }from "vue-router"
+  import { apiInstance } from '@/api/index'
+  axios.defaults.headers.post["Content-Type"] = "application/json";
+  import ModalView from "@/components/common/ReviewModalView.vue";
+  import { RoundButton } from "../../components/styled-components/StyledButton";
 
-<script>
-import axios from "axios";
-import { OpenVidu } from "openvidu-browser";
-import UserVideo from "../../components/room/UserVideo";
-import{ useRoute }from "vue-router"
-import { apiInstance } from '@/api/index'
-import { RoundButton } from "../../components/styled-components/StyledButton";
+  export default {
+    
+    name:'chatview',
+  
+    components: {
+      UserVideo,
+      ModalView
+    },
 
-axios.defaults.headers.post["Content-Type"] = "application/json";
-
-
-export default {
-  name:'chatview',
-
-  components: {
-    UserVideo,
-    RoundButton
-  },
   setup(){
     const api = apiInstance();
     const username = useRoute().query.name;
@@ -41,7 +43,7 @@ export default {
     return {
       api,username,sessionId
     }
-  },
+    },
 
   data() {
     return {
@@ -64,6 +66,7 @@ export default {
       roomRequest : {
         reservationNo : 1,
       },
+      isModalVisible: false,
 
     };
   },
@@ -254,6 +257,9 @@ return responseData; // The sessionId
       console.log(response.data);
       return response.data.token; // The token
     },
+    showModal(){
+      this.isModalVisible = true;
+    }
   },
 };
 </script>

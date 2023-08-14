@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useTokenStore } from "@/stores/token"
 
-const store = useTokenStore();
-
 function apiInstance() {
     
+    const store = useTokenStore();
+
     const instance = axios.create({
         baseURL: 'https://i9a403.p.ssafy.io/api',
         headers: {
