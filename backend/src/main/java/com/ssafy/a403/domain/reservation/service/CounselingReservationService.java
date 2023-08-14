@@ -35,6 +35,7 @@ public class CounselingReservationService {
         List<CounselingReservation> reservationList = counselingReservationRepository.findByCounselor(counselor);
         for (CounselingReservation reservation : reservationList) {
             if(reservation.getReservationDateTime().equals(reservationDate)){
+
                 return "해당 시간에 이미 예약이 존재합니다.";
             }
         }
