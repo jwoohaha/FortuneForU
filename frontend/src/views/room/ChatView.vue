@@ -86,6 +86,8 @@
 
       </div>
     </div>
+
+    <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationNo" :reservationNo="this.reservationNo"></modal-view>
   </template>
   
   <script>
@@ -95,6 +97,7 @@
   import{ useRoute }from "vue-router"
   import { apiInstance } from '@/api/index'
   axios.defaults.headers.post["Content-Type"] = "application/json";
+  import ModalView from "@/components/common/ReviewModalView.vue";
   
 
   export default {
@@ -103,6 +106,7 @@
   
     components: {
       UserVideo,
+      ModalView
     },
     setup(){
       const api = apiInstance();
@@ -136,6 +140,7 @@
           reservationNo : 1,
         },
 
+        isModalVisible: false,
       };
     },
     created(){
@@ -342,6 +347,10 @@ async stopRecording() {
         return response.data.token; // The token
       },
     },
+    
+    showModal(){
+      this.isModalVisible = true;
+    }
   };
   </script>
   
