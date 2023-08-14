@@ -7,13 +7,13 @@ import lombok.NoArgsConstructor;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-public class SttRequest {
+public class ResultMessage {
     private Long reservationId;
-    private String audioFilePath;
+    private String gptResult;
 
     @Builder
-    public SttRequest(Long reservationId, String audioFilePath) {
+    public ResultMessage(Long reservationId, String gptResult) {
         this.reservationId = reservationId;
-        this.audioFilePath = audioFilePath;
+        this.gptResult = gptResult;
     }
 }
