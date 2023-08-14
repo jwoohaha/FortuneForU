@@ -1,15 +1,16 @@
 <template>
     <div class="pagebtn-list">
-        <div class="leftbtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">◀</div>
-        <div class="leftbtn" v-else>◀</div>
-        <div v-for="pageNum in totalPages" 
+        <div class="leftbtn pagebtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">◀</div>
+        <div class="leftbtn pagebtn" v-else>◀</div>
+        <div v-for="pageNum in (totalPages >= 5 ? 5 : totalPages)" 
+            class="pagebtn"
             :key="pageNum" 
             @click="goToPage(pageNum-1)">
             <div v-if="pageType!='TARO'" style="background:'#F6B5C6'">{{ pageNum }}</div>
             <div v-else>{{ pageNum }}</div>
         </div>
-        <div class="rightbtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">▶</div>
-        <div class="rightbtn" v-else>▶</div>
+        <div class="rightbtn pagebtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">▶</div>
+        <div class="rightbtn pagebtn" v-else>▶</div>
     </div>    
 </template>
 
@@ -54,5 +55,8 @@ export default {
     display : flex;
     justify-content : center;
     align-items : center;
+}
+.pagebtn {
+    cursor: pointer;
 }
 </style>
