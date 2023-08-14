@@ -142,6 +142,7 @@ export default {
         url: 'reservations/'+ id + '/co_reviews',
       })
       .then((result) => {
+        console.log(result);
         //예외처리
         if(Object.keys(result.data) == 0){
           this.emptyReview = true;

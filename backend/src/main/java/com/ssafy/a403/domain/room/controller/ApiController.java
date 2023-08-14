@@ -6,6 +6,7 @@ import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
 import com.ssafy.a403.global.advice.CustomException;
 import com.ssafy.a403.global.config.security.LoginUser;
+import com.ssafy.a403.global.util.rabbitmq.SttProducer;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,6 +30,12 @@ public class ApiController {
     private final OpenVidu openVidu;
 
     private final RoomService roomService;
+
+    private final SttProducer sttProducer;
+
+
+
+
 
 //    @Autowired
 //    private Environment environment;
