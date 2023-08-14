@@ -84,7 +84,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormListView')
   },
   {
-    path: '/admin/counselor-form-view',
+    path: '/admin/counselor-form-view/:formNo',
     name: 'counselor-form-view',
     component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormDetailView')
   }

@@ -2,7 +2,7 @@
     <div class="pagebtn-list">
         <div class="leftbtn pagebtn" v-if="pageType!='TARO'" style="background:'#F6B5C6'">◀</div>
         <div class="leftbtn pagebtn" v-else>◀</div>
-        <div v-for="pageNum in totalPages" 
+        <div v-for="pageNum in (totalPages >= 5 ? 5 : totalPages)" 
             class="pagebtn"
             :key="pageNum" 
             @click="goToPage(pageNum-1)">

@@ -28,8 +28,8 @@
         <td><div class="hr-wrapper"></div></td>
         <td><div class="hr-wrapper"></div></td>
       </tr>
-      <tr v-for="form in counselorForms" :key="form.id">
-          <td style="cursor: pointer;" class="counselor-form-list-td clickable" @click="viewCounselorForm()"><div>{{ form.name }}</div></td>
+      <tr v-for="form in counselorForms" :key="form.no">
+          <td style="cursor: pointer;" class="counselor-form-list-td clickable" @click="viewCounselorForm(form.no)"><div>{{ form.name }}</div></td>
           <td class="counselor-form-list-td"><div>{{ form.created }}</div></td>
           <td class="counselor-form-list-td">
             <status-box :statusCode="statusCode[form.status]"></status-box>
@@ -83,10 +83,10 @@ export default {
     this.getCounselorForms(this.filter, this.pageNo, this.pageSize);
   },
   methods: {
-    viewCounselorForm() {
-
+    viewCounselorForm(no) {
       this.$router.push({
-        name: 'counselor-form-view'
+        name: 'counselor-form-view',
+        params: { formNo: no }
       })
     },
     async getCounselorForms(filter, pageNum, pageSize) {

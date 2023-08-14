@@ -3,16 +3,16 @@
     <form id="counselor-form-content">
       <table id="counselor-form-table">
         <table-row :headerText="'상담분야*'">
-          <drop-down :label="'상담분야'" :options="counselorForm.counselorTypeOptions" :value="counselorForm.counselorType" @change-event="counselorTypeChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'상담분야'" :options="counselorTypeOptions" :value="counselorForm.counselorType" @change-event="counselorTypeChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'전문영역1*'">
-          <drop-down :label="'전문영역1'" :options="counselorForm.majorOptions" :index="0" :value="counselorForm.major[0]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'전문영역1'" :options="majorOptions" :index="0" :value="counselorForm.major[0]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'전문영역2'">
-          <drop-down :label="'전문영역2'" :options="counselorForm.majorOptions" :index="1" :value="counselorForm.major[1]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'전문영역2'" :options="majorOptions" :index="1" :value="counselorForm.major[1]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'전문영역3'">
-          <drop-down :label="'전문영역3'" :options="counselorForm.majorOptions" :index="2" :value="counselorForm.major[2]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
+          <drop-down :label="'전문영역3'" :options="majorOptions" :index="2" :value="counselorForm.major[2]" @change-event="majorChange" :isReadonly="isReadonly"></drop-down>
         </table-row>
         <table-row :headerText="'경력*'">
           <text-field :placeholder="'학력, 자격증, 경력 등을 기재해주세요'" :value="counselorForm.career" @input-event="careerInput" :isReadonly="isReadonly"></text-field>
@@ -26,10 +26,13 @@
         <table-row :headerText="'한줄소개*'">
           <input-field :placeholder="'본인을 나타낼 수 있는 문구를 기재해주세요'" :value="counselorForm.intro" @input-event="introduceInput" :isReadonly="isReadonly"></input-field>
         </table-row>
+        <table-row :headerText="'승인/반려사유'" v-if="isReadonly">
+          <text-field :placeholder="'승인/반려사유를 작성해주세요'" :value="reason" @input-event="reasonInput" :isReadonly="!isReadonly"></text-field>
+        </table-row>
       </table>
       <div class="button-container" v-if="isReadonly">
-        <button class="button-content confirm" type="button">승인</button>
-        <button class="button-content reject" type="button">반려</button>
+        <button class="button-content confirm" type="button" @click="this.updateStatus('PASS')">승인</button>
+        <button class="button-content reject" type="button" @click="this.updateStatus('REJECT')">반려</button>
       </div>
       <div class="button-container" v-else>
         <button class="button-content confirm" type="button" @click="this.submit">제출</button>
@@ -68,19 +71,31 @@ export default {
         address: '',
         phone: '',
         intro : '',
-        counselorTypeOptions: [
-          'none', '사주', '타로', '사주/타로'
-        ],
-        majorOptions: [
-          'none', '가족/건강', '직장/진로', '시험/진학', '연애/결혼', '사업/재물', '사주/신수', '작명/개명', '미래/해몽', '이사/풍수'
-        ]
+        
       },
+      counselorTypeOptions: [
+          'none', '사주', '타로', '사주/타로'
+      ],
+      majorOptions: [
+          'none', '가족/건강', '직장/진로', '시험/진학', '연애/결혼', '사업/재물', '사주/신수', '작명/개명', '미래/해몽', '이사/풍수'
+      ],
       counselorTypeToEnum: {
           'none': 'NONE',
           '사주': 'SAJU',
           '타로': 'TARO',
           '사주/타로': 'BOTH',
-        },
+      },
+      enumToCounselorType: {
+        'SAJU': '사주',
+        'TARO': '타로',
+        'BOTH': '사주/타로'
+      },
+      reason : ""
+    }
+  },
+  created() {
+    if (this.isReadonly){
+      this.getCounselorFormDetails();
     }
   },
   methods: {
@@ -102,16 +117,48 @@ export default {
     introduceInput(value) {
       this.counselorForm.intro = value;
     },
-    submit() {
+    reasonInput(value) {
+      this.reason = value;
+    },
+    async submit() {
       this.counselorForm.counselorType = this.counselorTypeToEnum[this.counselorForm.counselorType];
       this.counselorForm.major = (this.counselorForm.major[0] + ' ' + 
                                   (this.counselorForm.major[1] == 'none' ? '' : this.counselorForm.major[1]) + ' ' + 
                                   (this.counselorForm.major[2] == 'none' ? '' : this.counselorForm.major[2])).trim();
       console.log(this.counselorForm.counselorType);
       console.log(this.counselorForm.major);
-      this.api.post("/members/submit", this.counselorForm)
-              .then(router.push('/'))
-              .catch(error => console.log(error));
+      await this.api.post("/members/submit", this.counselorForm)
+              .then(() => {
+                alert("정상적으로 등록되었습니다.");
+                router.push('/');
+              })
+              .catch(error => {
+                alert("오류가 발생했습니다. 신청 양식을 재등록해주세요.");
+                console.log(error)
+              });
+    },
+    async getCounselorFormDetails() {
+      await this.api.get(`/admin/counselor-forms/${this.$route.params.formNo}`)
+              .then((response) => {
+                const form = response.data;
+                this.counselorForm = form;
+                this.counselorForm.counselorType = this.enumToCounselorType[form.counselorType];
+                this.counselorForm.major = form.major.split(' ');
+              })
+              .catch((error) => {
+                console.log(error);
+              });
+    },
+    async updateStatus(status) {
+      await this.api.patch(`/admin/counselor-forms/${this.$route.params.formNo}/update`, 
+                          { "reason": this.reason, "passState": status})
+                    .then(() => {
+                      alert("요청을 완료하였습니다.")
+                      router.go(-1);
+                    })
+                    .catch(() => {
+                      alert("요청이 실패하였습니다.")
+                    })
     }
   } 
 }
