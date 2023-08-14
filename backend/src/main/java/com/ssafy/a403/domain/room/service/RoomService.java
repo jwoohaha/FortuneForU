@@ -40,9 +40,9 @@ public class RoomService {
 
         Optional<CounselingReservation> counselingReservation = counselingReservationRepository.findById(reservationNo);
 
-        if(counselingReservation.get().getReservationRecorded() == null || counselingReservation.get().getSessionId() != null){
-            return false;
-        }
+//        if(counselingReservation.get().getReservationRecorded() == null || counselingReservation.get().getSessionId() != null){
+//            return false;
+//        }
 
         return true;
 
