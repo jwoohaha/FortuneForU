@@ -1,9 +1,8 @@
 package com.ssafy.a403.domain.member.controller;
 
+import com.ssafy.a403.domain.counselorform.dto.CounselorFormRequest;
 import com.ssafy.a403.domain.member.dto.MemberDetailsResponse;
 import com.ssafy.a403.domain.member.dto.MemberInfoResponse;
-import com.ssafy.a403.domain.member.entity.Member;
-import com.ssafy.a403.domain.member.service.FollowService;
 import com.ssafy.a403.domain.member.service.MemberService;
 import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
@@ -22,16 +21,6 @@ import javax.servlet.http.HttpServletRequest;
 public class MemberController {
 
     private final MemberService memberService;
-    private final FollowService followService;
-
-    @GetMapping("/test")
-    public ResponseEntity testMethod(HttpServletRequest request) {
-        log.trace("====== TEST ======");
-        log.trace("access-token: {}", request.getHeader("Authorization"));
-        log.trace("refresh-token: {}", request.getHeader("Refresh"));
-
-        return new ResponseEntity(HttpStatus.OK);
-    }
 
     // Member 정보 조회
     @GetMapping("/info")
@@ -63,14 +52,23 @@ public class MemberController {
     @PutMapping("follow/{followeeId}")
     public HttpStatus follow(@PathVariable Long followeeId, @AuthenticationPrincipal LoginUser loginUser) {
 
-        followService.follow(loginUser.getMember(), memberService.findById(followeeId));
-        return HttpStatus.OK;
+        memberService.follow(loginUser.getMember(), memberService.findById(followeeId));
+        return HttpStatus.NO_CONTENT;
     }
 
     @DeleteMapping("unfollow/{followeeId}")
     public HttpStatus unfollow(@PathVariable Long followeeId, @AuthenticationPrincipal LoginUser loginUser) {
 
-        followService.unfollow(loginUser.getMember(), memberService.findById(followeeId));
-        return HttpStatus.OK;
+        memberService.unfollow(loginUser.getMember(), memberService.findById(followeeId));
+        return HttpStatus.NO_CONTENT;
+    }
+
+    @PostMapping("/submit")
+    public HttpStatus submitCounselorForm(
+            @RequestBody CounselorFormRequest counselorFormRequest,
+            @AuthenticationPrincipal LoginUser loginUser){
+
+        memberService.submitCounselorForm(counselorFormRequest, loginUser.getMember());
+        return HttpStatus.CREATED;
     }
 }
