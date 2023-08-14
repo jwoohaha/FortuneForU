@@ -25,7 +25,8 @@ const routes = [
   {
     path: '/reservation',
     name: 'reservation',
-    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
+    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue'),
+    props: true
   },
   {
     path: '/redirect',
@@ -87,6 +88,11 @@ const routes = [
     path: '/admin/counselor-form-view/:formNo',
     name: 'counselor-form-view',
     component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormDetailView')
+  },
+  {
+    path: '/chatview',
+    name: 'chatview',
+    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue')
   }
 ]
 
