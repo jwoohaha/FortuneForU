@@ -12,7 +12,6 @@
       <RoundButton isTarot @click="closing" value="Leave session">나가기</RoundButton>
       <RoundButton isTarot @click="convert">convert</RoundButton>
     </div>
-    <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationNo" :reservationNo="this.reservationNo"></modal-view>
     </div>
   </template>
   
@@ -23,7 +22,6 @@
   import{ useRoute }from "vue-router"
   import { apiInstance } from '@/api/index'
   axios.defaults.headers.post["Content-Type"] = "application/json";
-  import ModalView from "@/components/common/ReviewModalView.vue";
   import { RoundButton } from "../../components/styled-components/StyledButton";
 
   export default {
@@ -32,7 +30,7 @@
   
     components: {
       UserVideo,
-      ModalView
+      RoundButton
     },
 
   setup(){
@@ -66,7 +64,6 @@
       roomRequest : {
         reservationNo : 1,
       },
-      isModalVisible: false,
 
     };
   },
@@ -257,9 +254,6 @@ return responseData; // The sessionId
       console.log(response.data);
       return response.data.token; // The token
     },
-    showModal(){
-      this.isModalVisible = true;
-    }
   },
 };
 </script>

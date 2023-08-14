@@ -14,7 +14,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.core.env.Environment;
+//import org.springframework.core.env.Environment;
 
 import java.io.*;
 import java.util.Optional;
@@ -30,8 +30,8 @@ public class ApiController {
 
     private final RoomService roomService;
 
-    @Autowired
-    private Environment environment;
+//    @Autowired
+//    private Environment environment;
 
     //방 생성
     @PostMapping("/api/roomsession")

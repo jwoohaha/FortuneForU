@@ -24,7 +24,7 @@
                         <div class="status-part">
                             <div id="status1">🤍 예약중</div>
                             <div id="status2">🤍 완료</div>
-                            <div id="status3">🤍 취소</div>을 
+                            <div id="status3">🤍 취소</div>
                         </div>
                         <div class="table-header">
                             <div>상담가</div>
