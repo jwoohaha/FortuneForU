@@ -210,6 +210,15 @@ public class CounselingReservationService {
         return reviewList(reservations);
     }
 
+    // gpt 결과 -> 상담사 수정 대기 처리
+    @Transactional
+    public void handleGptResult(Long reservationNo, String gptResult){
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).
+                orElseThrow(EntityNotFoundException::new);
+
+        counselingReservation.changeReportStatusToWaiting();
+        counselingReservation.saveGptResult(gptResult);
+    }
 }
 
 

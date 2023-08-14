@@ -2,7 +2,6 @@ package com.ssafy.a403.domain.reservation.entity;
 
 import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
-import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
 import lombok.Builder;
@@ -11,7 +10,6 @@ import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -47,7 +45,7 @@ public class CounselingReservation {
     @Column(name="rez_review")
     private String reservationReview;
 
-    @Column(name="rez_report")
+    @Column(name="rez_report", length = 1000)
     private String reservationReport;
 
     @Column(name="rez_report_status")
@@ -130,6 +128,13 @@ public class CounselingReservation {
         return reservationStatus.equals(ReservationStatus.END);
     }
 
+    // 리포트 상태 WAITNG으로 변경
+    public void changeReportStatusToWaiting() {
+        this.reportStatus = ReportStatus.WAITING;
+    }
 
-
+    // GPT 처리 결과 저장
+    public void saveGptResult(String gptResult) {
+        this.reservationReport = gptResult;
+    }
 }
