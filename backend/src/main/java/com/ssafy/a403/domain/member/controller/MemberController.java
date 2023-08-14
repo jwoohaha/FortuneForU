@@ -8,12 +8,16 @@ import com.ssafy.a403.domain.member.service.MemberService;
 import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.File;
 
 @RestController
 @RequestMapping("/api/members")
@@ -23,6 +27,7 @@ public class MemberController {
 
     private final MemberService memberService;
     private final FollowService followService;
+    private final ResourceLoader resourceLoader;
 
     @GetMapping("/test")
     public ResponseEntity testMethod(HttpServletRequest request) {
@@ -72,5 +77,17 @@ public class MemberController {
 
         followService.unfollow(loginUser.getMember(), memberService.findById(followeeId));
         return HttpStatus.OK;
+    }
+
+    @PutMapping(value = "/profileImage", consumes = {"multipart/form-data"})
+    public HttpStatus updateProfileImage(@AuthenticationPrincipal LoginUser loginUser,
+                                         @RequestPart("image") MultipartFile profileImageFile) throws Exception {
+        Resource res = resourceLoader.getResource("classpath:static/resources/upload");
+        String ImgName = System.currentTimeMillis() + "_" + profileImageFile.getOriginalFilename();
+        String OrginalImgName = profileImageFile.getOriginalFilename();
+        File f = new File(res.getFile().getCanonicalPath() + "/" + ImgName);
+        profileImageFile.transferTo(f);
+        log.info("업로드 파일 정보={}", f);
+        memberService.updateProfileImage(loginUser.getMember(), f);
     }
 }

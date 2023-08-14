@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.EntityNotFoundException;
+import java.io.File;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -42,5 +43,9 @@ public class MemberService {
 
     public Page<Member> findPaging(Pageable pageable) {
         return memberRepository.findPaging(pageable);
+    }
+
+    public void updateProfileImage(Member member, File f) {
+        member.updateProfileImage(f.getAbsolutePath());
     }
 }
