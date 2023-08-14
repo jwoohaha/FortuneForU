@@ -5,6 +5,7 @@ import com.ssafy.a403.domain.counselorform.dto.CounselorFormDetailsResponse;
 import com.ssafy.a403.domain.counselorform.dto.CounselorFormResponse;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class AdminController {
     private final AdminService adminService;
 
     @GetMapping("/counselor-forms")
-    public ResponseEntity<List<CounselorFormResponse>> counselorForms(@RequestParam String filter, Pageable pageable){
+    public ResponseEntity<Page<CounselorFormResponse>> counselorForms(@RequestParam String filter, Pageable pageable){
         log.trace(filter);
         return new ResponseEntity<>(adminService.counselorFormList(filter, pageable), HttpStatus.OK);
     }
