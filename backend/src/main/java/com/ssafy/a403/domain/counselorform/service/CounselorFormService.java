@@ -19,6 +19,11 @@ public class CounselorFormService {
 
     private final CounselorFormRepository counselorFormRepository;
 
+    @Transactional
+    public void submitForm(CounselorFormRequest counselorFormRequest, Member member) {
+        counselorFormRepository.save(counselorFormRequest.toCounselorForm(member));
+    }
+
     @Transactional(readOnly = true)
     public Page<CounselorForm> getAllCounselorForms(String filter, Pageable pageable) {
 

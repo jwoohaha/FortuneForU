@@ -3,8 +3,6 @@ package com.ssafy.a403.domain.member.controller;
 import com.ssafy.a403.domain.counselorform.dto.CounselorFormRequest;
 import com.ssafy.a403.domain.member.dto.MemberDetailsResponse;
 import com.ssafy.a403.domain.member.dto.MemberInfoResponse;
-import com.ssafy.a403.domain.member.entity.Member;
-import com.ssafy.a403.domain.member.service.FollowService;
 import com.ssafy.a403.domain.member.service.MemberService;
 import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
@@ -70,7 +68,7 @@ public class MemberController {
             @RequestBody CounselorFormRequest counselorFormRequest,
             @AuthenticationPrincipal LoginUser loginUser){
 
-        memberService.submitCounselorForm(counselorFormRequest, loginUser);
-        return HttpStatus.NO_CONTENT;
+        memberService.submitCounselorForm(counselorFormRequest, loginUser.getMember());
+        return HttpStatus.CREATED;
     }
 }

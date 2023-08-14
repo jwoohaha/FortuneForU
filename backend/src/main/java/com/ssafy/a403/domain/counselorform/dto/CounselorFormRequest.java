@@ -1,13 +1,11 @@
 package com.ssafy.a403.domain.counselorform.dto;
 
 import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
+import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.PassState;
-import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-
-import java.time.LocalDateTime;
 
 @Getter
 @AllArgsConstructor
@@ -25,7 +23,7 @@ public class CounselorFormRequest {
 
     private final String intro;
 
-    public CounselorForm toCounselorForm(LoginUser loginUser){
+    public CounselorForm toCounselorForm(Member member){
 
         return CounselorForm.builder()
                 .counselorType(counselorType)
@@ -34,7 +32,7 @@ public class CounselorFormRequest {
                 .address(address)
                 .phone(phone)
                 .intro(intro)
-                .member(loginUser.getMember())
+                .member(member)
                 .passState(PassState.WAITING)
                 .build();
     }
