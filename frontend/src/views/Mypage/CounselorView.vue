@@ -60,7 +60,7 @@
                         <div class="each-row">
                             <h3 class="info-label">전화번호</h3>
                             <div class="info-edit" v-if="!isEditable">{{ counselor.phone }}</div>
-                            <input class="info-edit" v-else v-model="phonetxt" @input="phonetxt = $event.target.value">
+                            <input class="info-edit" v-else v-model="phonetxt" @input="$event.target.value">
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">한 줄 소개</h3>
@@ -186,14 +186,25 @@ export default {
                     endTime: this.endTime
             })
         .then((re) => {
-            console.log("수정"+re.data);
+            console.log(+re.data);
         }).catch((e) => {
-            alert("변경 실패")
             console.log(e)
         })
-        console.log(" 룰루 "+ this.addresstxt +" "+this.careertxt+" "+ this.counselor.counselorType+" "
-                   + this.endTime+ " "+ this.introtxt +" " + this.majortxt +" "+this.phonetxt +" "+ this.startTime)
-    }
+    },
+
+    //전화번호 유효성
+    // phoneCheck(args) {
+    //     this.phonetxt = args
+
+    //     if(this.phonetxt.length == 13){
+    //         const msg = '전화번호 형식을 준수해주세요.';
+    //         if (/^[0-9]{2,3}-[0-9]{3,4}-[0-9]{4}/.test(args)) {
+    //             return true;
+    //         }
+    //         alert(msg);
+    //         return false;
+    //     }
+    // }
 
   },
   created(){
