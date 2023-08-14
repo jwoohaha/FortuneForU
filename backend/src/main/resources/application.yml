@@ -11,7 +11,7 @@ spring:
   zipkin:
     enabled: false
   rabbitmq:
-    host: localhost
+    host: i9a403.p.ssafy.io
     port: 5672
     username: guest
     password: guest

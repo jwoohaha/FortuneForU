@@ -15,8 +15,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-//import org.springframework.core.env.Environment;
-
 import java.io.*;
 import java.util.Optional;
 import java.util.UUID;
@@ -36,9 +34,6 @@ public class ApiController {
 
 
 
-
-//    @Autowired
-//    private Environment environment;
 
     //방 생성
     @PostMapping("/api/roomsession")
@@ -143,6 +138,12 @@ public class ApiController {
             openVidu.getActiveSession(sessionId).close();
             log.info("방 삭제 완료");
             converting(sessionId);
+        }
+
+        try {
+            sttProducer.produceSttTask(reservationNo,"/opt/"+sessionId+"/"+sessionId+".mp4");
+        }catch(Exception e){
+            log.info(e.getMessage());
         }
 
         return ResponseEntity.ok("success");
