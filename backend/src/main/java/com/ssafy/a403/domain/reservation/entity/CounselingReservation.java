@@ -85,24 +85,27 @@ public class CounselingReservation {
 
 
     //예약 취소
-    public void cancel() {
+    public String cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
             reservationStatus = ReservationStatus.CANCEL;
+            reportStatus = ReportStatus.NONE;
+            return "예약이 취소됐습니다.";
         } else {
-            throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
+            return  "취소 가능한 날짜가 지났습니다.";
         }
     }
 
 
     // 리뷰 저장
-    public void saveReview(String review, Float score) {
+    public String saveReview(String review, Float score) {
         if (review.length() > 200) {
-            throw new IllegalArgumentException("200자를 초과하였습니다.");
+            return "200자를 초과하였습니다.";
         }
         reservationReview = review;
         reservationScore = score;
-
         counselor.updateCounselorReview(score);
+
+        return "작성 완료됐습니다.";
     }
 
 

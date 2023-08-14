@@ -1,10 +1,10 @@
 import axios from 'axios'
 import { useTokenStore } from "@/stores/token"
 
-const store = useTokenStore();
-
 function apiInstance() {
     
+    const store = useTokenStore();
+
     const instance = axios.create({
         baseURL: 'http://localhost:5000/api',
         headers: {
