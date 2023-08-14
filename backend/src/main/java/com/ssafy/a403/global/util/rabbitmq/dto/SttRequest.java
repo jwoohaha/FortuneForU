@@ -8,11 +8,11 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SttRequest {
-    private String reservationId;
+    private Long reservationId;
     private String audioFilePath;
 
     @Builder
-    public SttRequest(String reservationId, String audioFilePath) {
+    public SttRequest(Long reservationId, String audioFilePath) {
         this.reservationId = reservationId;
         this.audioFilePath = audioFilePath;
     }
