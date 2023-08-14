@@ -18,6 +18,7 @@
     <div class="modal-button-container">
       <social-login-button :key="platform.title" v-for="platform in platforms" :platform="platform"></social-login-button>
     </div>
+    <router-link to="/admin/counselor-form-list"><a @click="$emit('close-modal')">관리자 로그인</a></router-link>
   </div>
 </template>
 
