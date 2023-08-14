@@ -5,9 +5,7 @@ import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import com.ssafy.a403.domain.model.ReservationStatus;
-import com.ssafy.a403.domain.reservation.dto.AvailableDateTime;
-import com.ssafy.a403.domain.reservation.dto.ReservationResponse;
-import com.ssafy.a403.domain.reservation.dto.ReviewResponse;
+import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.reservation.repository.CounselingReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -219,6 +217,25 @@ public class CounselingReservationService {
         counselingReservation.changeReportStatusToWaiting();
         counselingReservation.saveGptResult(gptResult);
     }
+
+    // 상담 리포트(결과) 조회
+    public ReportResponse getReport(Long reservationNo) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).
+                orElseThrow(EntityNotFoundException::new);
+        return ReportResponse.of(counselingReservation);
+    }
+
+    // gpt 결과 상담사 수정
+    @Transactional
+    public void updateResult(Long id, UpdateResultRequest updatedResult) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(id).
+                orElseThrow(EntityNotFoundException::new);
+
+        counselingReservation.changeReportStatusToComplete();
+        counselingReservation.updateReport(updatedResult);
+    }
+
+
 }
 
 

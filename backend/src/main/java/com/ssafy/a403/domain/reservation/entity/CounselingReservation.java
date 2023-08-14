@@ -4,6 +4,7 @@ import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
+import com.ssafy.a403.domain.reservation.dto.UpdateResultRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -136,5 +137,15 @@ public class CounselingReservation {
     // GPT 처리 결과 저장
     public void saveGptResult(String gptResult) {
         this.reservationReport = gptResult;
+    }
+
+    // 리포트 상태 COMPLETE으로 변경
+    public void changeReportStatusToComplete() {
+        this.reportStatus = ReportStatus.COMPLETE;
+    }
+
+    // GPT 처리 결과 수정
+    public void updateReport(UpdateResultRequest updatedResult) {
+        this.reservationReport = updatedResult.getCounselingResult();
     }
 }
