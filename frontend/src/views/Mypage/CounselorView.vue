@@ -36,13 +36,13 @@
                                     <span class="radio-label">사주</span>
                                 </label>
                                 <label>
-                                    <input type="radio" name="tarot" value="TAROT" v-model="radioval" v-if="!isEditable" onclick="return(false);"/>
-                                    <input type="radio" name="tarot" value="TAROT" v-model="radioval" v-else/>
+                                    <input type="radio" name="tarot" value="TARO" v-model="radioval" v-if="!isEditable" onclick="return(false);"/>
+                                    <input type="radio" name="tarot" value="TARO" v-model="radioval" v-else/>
                                     <span class="radio-label">타로</span>
                                 </label>
                                 <label>
                                     <input type="radio" name="sajutarot" value="BOTH" v-model="radioval" v-if="!isEditable" onclick="return(false);"/>
-                                                                        <input type="radio" name="sajutarot" value="BOTH" v-model="radioval" v-else/>
+                                    <input type="radio" name="sajutarot" value="BOTH" v-model="radioval" v-else/>
                                     <span class="radio-label">사주/타로</span>
                                 </label>
                             </div>
@@ -50,46 +50,44 @@
                         <div class="each-row">
                             <h3 class="info-label">전문 영역</h3>
                             <div class="info-edit" v-if="!isEditable">{{ counselor.major }}</div>
-                            <input class="info-edit" v-else :value="majortxt">
+                            <input class="info-edit" v-else v-model="majortxt" @input="majortxt = $event.target.value">
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">매장 주소</h3>
                             <div class="info-edit" v-if="!isEditable">{{ counselor.address }}</div>
-                            <input class="info-edit" v-else :value="addresstxt">
+                            <input class="info-edit" v-else v-model="addresstxt" @input="addresstxt = $event.target.value">
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">전화번호</h3>
                             <div class="info-edit" v-if="!isEditable">{{ counselor.phone }}</div>
-                            <input class="info-edit" v-else :value="phonetxt">
+                            <input class="info-edit" v-else v-model="phonetxt" @input="phonetxt = $event.target.value">
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">한 줄 소개</h3>
                             <div class="info-edit" v-if="!isEditable">{{ counselor.intro }}</div>
-                            <input class="info-edit" v-else :value="introtxt">
+                            <input class="info-edit" v-else v-model="introtxt" @input="introtxt = $event.target.value">
                         </div>
                         <div class="each-row">
                             <h3 class="info-label">상담 가능 시간</h3>
                             <div class="time-setting">
                                 <div>시작</div>
-                                <select class="time-control" v-model="startTime">
-                                    <option :key="i" :value="`${time.h}:${time.m}`" v-for="(time, i) in options">{{ time.h }}:{{ time.m }}</option>
+                                <div v-if="!isEditable">{{ this.startTime }}</div>
+                                <select class="time-control" v-model="startTime" v-else>
+                                    <option :key="i" :v-model="`${time.h}:${time.m}`" v-for="(time, i) in options">{{ time.h }}:{{ time.m }}</option>
                                 </select>
                                 <div>마감</div>
-                                <select class="time-control" v-model="endTime">
-                                    <option :key="i" :value="`${time.h}:${time.m}`" v-for="(time, i) in options">{{ time.h }}:{{ time.m }}</option>
+                                <div v-if="!isEditable">{{ this.endTime }}</div>
+                                <select class="time-control" v-model="endTime" v-else>
+                                    <option :key="i" :v-model="`${time.h}:${time.m}`" v-for="(time, i) in options">{{ time.h }}:{{ time.m }}</option>
                                 </select>
                             </div>
-                        </div>
-                        <div class="each-row">
-                            <div>{{ this.startTime }}</div>
-                            <div>{{ this.endTime }}</div>
                         </div>
                     </div>
                     <div class="right-part">
                         <h3 class="info-label">경력 사항</h3>
                         <div class="info-edit" v-if="!isEditable">{{ counselor.career }}</div>
-                        <textarea class="info-edit" v-else :value="careertxt"></textarea>
-                        <SquareButton id="edit-save-btn" v-on:click="changeEditable">상담가 정보 수정하기</SquareButton>
+                        <textarea class="info-edit" v-else v-model="careertxt" maxlength="168"></textarea>
+                        <SquareButton id="edit-save-btn" v-on:click="changeEditable">상담사 정보 수정하기</SquareButton>
                     </div>           
                     
                 </div>
@@ -103,17 +101,10 @@
 <script>
 import { SquareButton } from "../../components/styled-components/StyledButton";
 import { apiInstance } from '@/api/index'
-// import VueTimepicker from 'vue3-timepicker'
-// import VueDatepicker from 'vue3-datepicker'
-// import Timeselector from 'vue-timeselector';
-
 
 export default {
     components: {
         SquareButton,
-        // VueTimepicker
-        // VueDatepicker
-        // Timeselector
     },
     data() {
         return {
@@ -150,12 +141,12 @@ export default {
     async getUserInfo(){
 
         var result = "";
-        await this.api.get(`/counselor/${this.counselorNo}`)
+        await this.api.get('/counselors/info')
             .then((re) => result = re.data)
             .catch((error) => console.log(error));
             
-        console.log(result);
         this.counselor= result;
+        this.counselorNo = result.counselorNo;
         this.radioval = this.counselor.counselorType;
         this.majortxt = this.counselor.major;
         this.addresstxt = this.counselor.address;
@@ -173,30 +164,35 @@ export default {
             await this.editUserInfo();
             await this.getUserInfo();
         }            
-        else
+        else{
             this.isEditable = true;
+            this.majortxt = this.counselor.major;
+            this.addresstxt = this.counselor.address;
+            this.introtxt = this.counselor.intro;
+            this.phonetxt = this.counselor.phone;
+        }
     },
 
     async editUserInfo(){
-        await this.api.patch(`/counselors/update/${this.counselorNo}`, 
+        await this.api.patch('/counselors/update', 
             {
-                data:{
-                    address: this.addresstxt,
-                    career: this.careertxt,
-                    counselorType: this.counselor.counselorType,
-                    endTime: this.endTime,
-                    intro: this.introtxt,
+                counselorType: this.radioval,
                     major: this.majortxt,
+                    intro: this.introtxt,
+                    career: this.careertxt,
+                    address: this.addresstxt,
                     phone: this.phonetxt,
-                    startTime: this.startTime
-                }
+                    startTime: this.startTime,
+                    endTime: this.endTime
             })
         .then((re) => {
-            console.log(re.data);
+            console.log("수정"+re.data);
         }).catch((e) => {
             alert("변경 실패")
             console.log(e)
         })
+        console.log(" 룰루 "+ this.addresstxt +" "+this.careertxt+" "+ this.counselor.counselorType+" "
+                   + this.endTime+ " "+ this.introtxt +" " + this.majortxt +" "+this.phonetxt +" "+ this.startTime)
     }
 
   },
@@ -346,10 +342,10 @@ export default {
     box-sizing: border-box;
 }
 .each-row input{
-    border: none;
+    border: solid 0.8px rgba(0, 0, 0, 0.25);
 }
 textarea {
-    border: none;
+    border: solid 0.8px rgba(0, 0, 0, 0.25);
     resize: none;
 }
 .right-part {
