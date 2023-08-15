@@ -5,9 +5,7 @@ import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import com.ssafy.a403.domain.model.ReservationStatus;
-import com.ssafy.a403.domain.reservation.dto.AvailableDateTime;
-import com.ssafy.a403.domain.reservation.dto.ReservationResponse;
-import com.ssafy.a403.domain.reservation.dto.ReviewResponse;
+import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.reservation.repository.CounselingReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -86,6 +84,7 @@ public class CounselingReservationService {
     }
 
 
+
     // 일반회원 예약 조회
     public List<ReservationResponse> getReservation(Long memberId) {
         Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
@@ -97,6 +96,24 @@ public class CounselingReservationService {
 
         return reservationList(reservations);
     }
+
+
+
+    // 종료된 상담 리스트 (결과 목록 보기)
+    public List<ReportsListResponse> getReportsList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        List<CounselingReservation> reservations = counselingReservationRepository.findByMember(member);
+
+        List<ReportsListResponse> reportsListResponses = new ArrayList<>();
+        for (CounselingReservation reservation : reservations) {
+            if (reservation.getReservationStatus().equals(ReservationStatus.END)){
+                System.out.println(reservation.getReservationStatus());
+                reportsListResponses.add(new ReportsListResponse().from(reservation));
+            }
+        }
+        return reportsListResponses;
+    }
+
 
 
     // 상담가 예약 조회
@@ -133,6 +150,14 @@ public class CounselingReservationService {
        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
        return counselingReservation.cancel();
+    }
+
+
+
+    // 상담 결과 상세 조회
+    public ReportDetailResponse getReportDetail(Long reservationNo) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
+        return new ReportDetailResponse().from(counselingReservation);
     }
 
 
@@ -209,6 +234,9 @@ public class CounselingReservationService {
         }
         return reviewList(reservations);
     }
+
+
+
 
 }
 

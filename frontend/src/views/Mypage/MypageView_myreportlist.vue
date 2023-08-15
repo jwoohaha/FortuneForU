@@ -8,7 +8,7 @@
                     <div class="header-line"></div>
                 </div>
         
-                <div class="mypage-contents" id="my-res-list">
+                <div class="mypage-contents" id="my-report-list">
                     <div class="profile-nav">
                         <div class="profile-img"><img :src="getProfileImg"></div>
                         <!-- <div class="profile-img" :style="{ backgroundImage : `url(${this.member.profileImage})`}" ></div> -->
@@ -20,48 +20,36 @@
                         </ul>
                     </div>
     
-                    <div class="res-list-part">
-                        <div class="status-part">
-                            <div id="status1">🤍 예약중</div>
-                            <div id="status2">🤍 완료</div>
-                            <div id="status3">🤍 취소</div>
-                        </div>
+                    <div class="my-report-list">
                         <div class="table-header">
-                            <div>상담가</div>
+                            <div>상담사</div>
                             <div class="divider">|</div>
-                            <div>예약 시간</div>
+                            <div>이용 날짜</div>
                             <div class="divider">|</div>
-                            <!-- <div>취소가능날짜</div>
-                            <div class="divider">|</div> -->
-                            <div>현재 상태</div>
+                            <div>상담 결과서</div>
                             <div class="divider">|</div>
-                            <div>상담실</div>
+                            <div>리뷰 작성</div>
                             <div class="divider">|</div>
-                            <div>취소</div>
+                            
                         </div>
                         <div class="table-contents">
-                            
-                            <router-link to="/tarot"><h3 v-if="noReservation">예약하러 가기</h3></router-link>
-                            <div v-for="(reservation, idx) in reservationList" :key="idx" class="each-row">
+                            <div v-if="noReservation" class="list-row">
+                                            <div colspan="5" style="text-align: center;">상담 결과가 없습니다</div>
+                            </div>                    
+                            <div v-else v-for="reservation, idx in reservationList" :key="idx" class="each-row" >
                                 <div id="coun-name">{{ reservation.counselorName }}</div>
                                 <div class="divider">|</div>
                                 <div id="coun-date">{{ reservation.reservationDateTime }}</div>
                                 <div class="divider">|</div>
-                                <!-- <div id="cancel-date">{{ reservation.cancelableReservationDate }}</div>
-                                <div class="divider">|</div> -->
-                                <div id="coun-satus">{{ reservation.reservationStatus }}</div>
-                                <div class="divider">|</div>
-                                <div id="coun-room">
-                                    
-                                    <div v-if="reservation.reservationStatus==='상담 진행'">
-                                        <a href={{reservation.sessionId}}>🏠</a>
-                                    </div>
-                                    <div v-if="reservation.reservationStatus!='상담 진행'">❌</div>
+                                <div id="coun-satus" @click="reservation.reportStatus === '결과 보러가기' ? handleReservationClick(reservation) : null" >
+                                    {{ reservation.reportStatus }}
                                 </div>
                                 <div class="divider">|</div>
-                                <div id="coun-cancel" @click="cancelReservation(reservation.reservationNo)">💥</div>
+                                <div id="coun-room">             
+                                    <div v-if="reservation.reservationReview === null">리뷰 작성하기</div>
+                                    <div v-else>작성 완료</div>
+                                </div>
                             </div>
-                            
                         </div>
                     </div>
                 </div>
@@ -79,15 +67,18 @@ export default {
         return {
             member: null,
             reservationList: null,
-            noReservation: true
+            noReservation: true,
+            reservationNo:null,
+            clickedReservation : null,
+
         };
     },
     methods: {
         getMemberInfo() {
-            const getRezInfoRequest = apiInstance();
-            getRezInfoRequest({
+            const getmember = apiInstance();
+            getmember({
                 method: 'GET',
-                url: 'members/info',
+                url: '/members/info',
             })
             .then((res) => {
                 console.log(res.data)
@@ -98,11 +89,11 @@ export default {
                 console.log(e)
             })
         },
-        getRezInfo() {
+        getEndRezInfo() {
             const getRezInfoRequest = apiInstance();
             getRezInfoRequest({
                 method: 'GET',
-                url: `reservations/member_rez_info`,
+                url: '/reservations/member/reports',
             })
             .then((res) => {
                 console.log(res.data)
@@ -110,39 +101,34 @@ export default {
                     this.reservationList = this.handleRezInfo(res.data)
                     this.noReservation = false;
                 }
+            
             })
             .catch((e) => {
                 console.log(e)
             })
         },
-        // 예약 정보 변환(영 -> 한, 시간 다듬기)
+        // 예약 정보 변환
         handleRezInfo(reservationList) {
             const statusTable = {
-                "WAITING": "상담 전",
-                "PROCEEDING": "상담 진행",
-                "CANCEL": "상담 취소",
-                "END": "상담 종료",
+                "NONE": "없음",
+                "WAITING" : "대기",
+                "COMPLETE": "결과 보러가기"
             }
             reservationList.forEach((reservation) => {
-                reservation.reservationStatus = statusTable[reservation.reservationStatus];
+                reservation.reportStatus = statusTable[reservation.reportStatus];
                 reservation.reservationDateTime = reservation.reservationDateTime.replace("T", " ");
             });
             return reservationList
         },
-        cancelReservation(reservationNo) {
-            const cancelRezRequest = apiInstance();
-            console.log("예약 취소 클릭")
-            cancelRezRequest({
-                method: 'PUT',
-                url: `reservations/cancel/${reservationNo}`,
-            })
-            .then((res) => {
-                console.log(res)
-            })
-            .catch((e) => {
-                console.log(e)
-                alert("취소가 불가능한 예약입니다")
-            })
+        handleReservationClick(reservation){
+            const clickedReservationNo = reservation.reservationNo
+            console.log()
+            this.$router.push({
+                name: 'counslingresult',
+                params: {
+                clickedReservationNo
+                }
+            });
         },
         getProfileImg() {
             const ImgUrl = this.member.profileImage;
@@ -150,8 +136,8 @@ export default {
         }
     },
     created() {
-        this.getRezInfo();
-        this.getMemberInfo();
+        //this.getMemberInfo();
+        this.getEndRezInfo();
     }
 }
 </script>
@@ -225,7 +211,7 @@ export default {
     font-weight: 700;
     line-height: normal;
 }
-.res-list-part{
+.my-report-list{
     height: 552px;
     width: 1021px;
     border-radius: 10px;
@@ -290,6 +276,6 @@ export default {
     color: white;
 }
 #coun-room div{
-    font-size: 25px;
+    font-size: 16px;
 }
 </style>
