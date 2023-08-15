@@ -67,7 +67,7 @@ public class Member {
         roles.add(role);
     }
 
-    public void updateProfileImage(String imagePath) {
-        this.profileImage = imagePath;
+    public void updateProfileImage(String path) {
+        this.profileImage = path;
     }
 }

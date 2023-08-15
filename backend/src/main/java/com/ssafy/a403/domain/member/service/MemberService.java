@@ -45,7 +45,9 @@ public class MemberService {
         return memberRepository.findPaging(pageable);
     }
 
-    public void updateProfileImage(Member member, File f) {
-        member.updateProfileImage(f.getAbsolutePath());
+    @Transactional
+    public void updateProfileImage(Long id, String Path) {
+        Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
+        member.updateProfileImage(Path);
     }
 }

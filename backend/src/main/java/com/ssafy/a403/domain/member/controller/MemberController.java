@@ -27,7 +27,6 @@ public class MemberController {
 
     private final MemberService memberService;
     private final FollowService followService;
-    private final ResourceLoader resourceLoader;
 
     @GetMapping("/test")
     public ResponseEntity testMethod(HttpServletRequest request) {
@@ -82,12 +81,13 @@ public class MemberController {
     @PutMapping(value = "/profileImage", consumes = {"multipart/form-data"})
     public HttpStatus updateProfileImage(@AuthenticationPrincipal LoginUser loginUser,
                                          @RequestPart("image") MultipartFile profileImageFile) throws Exception {
-        Resource res = resourceLoader.getResource("classpath:static/resources/upload");
-        String ImgName = System.currentTimeMillis() + "_" + profileImageFile.getOriginalFilename();
-        String OrginalImgName = profileImageFile.getOriginalFilename();
-        File f = new File(res.getFile().getCanonicalPath() + "/" + ImgName);
+        String HomeDirectory = System.getProperty("user.home");
+        String ImgName = System.currentTimeMillis() + "_" + profileImageFile.getOriginalFilename(); // 이름 중복 방지
+        String Path = HomeDirectory + "/" + ImgName;
+        File f = new File(Path);
         profileImageFile.transferTo(f);
-        log.info("업로드 파일 정보={}", f);
-        memberService.updateProfileImage(loginUser.getMember(), f);
+        log.info("저장된 파일 정보={}", f);
+        memberService.updateProfileImage(loginUser.getMember().getNo(), Path);
+        return HttpStatus.OK;
     }
 }
