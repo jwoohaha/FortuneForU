@@ -7,8 +7,8 @@ function apiInstance() {
     const store = useTokenStore();
 
     const instance = axios.create({
-        baseURL: 'https://i9a403.p.ssafy.io/api',
-        // baseURL: 'http://localhost:5000/api',
+        // baseURL: 'https://i9a403.p.ssafy.io/api',
+        baseURL: 'http://localhost:5000/api',
         timeout: 5000
     });
 
@@ -16,6 +16,7 @@ function apiInstance() {
         (config) => {
             config.headers['Content-Type'] = 'application/json;charset=utf-8';
             config.headers['Authorization'] = store.getAccessToken;
+            config.headers['']
             config.withCredentials = true;
             
             return config;
@@ -29,7 +30,7 @@ function apiInstance() {
     instance.interceptors.response.use(
         (response) => {
             // console.log("successed response: " + response);
-
+            // setTimeout(silentReissue, 8 * 1000);
             return response;
         },
         (error) => {
@@ -42,14 +43,14 @@ function apiInstance() {
     return instance;
 }
 
-function reissue() {
+async function reissue() {
 
     const store = useTokenStore();
 
     const instance = axios.create({
         method: 'GET',
-        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
-        // baseURL: 'http://localhost:5000/api/auth/reissue',
+        // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
         withCredentials: true
     })
@@ -59,11 +60,13 @@ function reissue() {
             // console.log("newAccessToken: " + accessToken);
             store.saveAccessToken(accessToken);
             store.login();
+            setTimeout(silentReissue, 5 * 1000);
         },
         (error) => {
             console.log("Access Token 재발급 실패" + error)
             alert("로그인이 만료되었습니다❌\n다시 로그인하세요.");
             store.logout();
+            return error;
         }
     )
 }
@@ -74,8 +77,8 @@ function silentReissue() {
 
     const instance = axios.create({
         method: 'GET',
-        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
-        // baseURL: 'http://localhost:5000/api/auth/reissue',
+        // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
         withCredentials: true
     })
@@ -93,7 +96,7 @@ function silentReissue() {
         }
     )
 
-    return instance;
+    instance();
 }
 
 export { apiInstance, silentReissue }

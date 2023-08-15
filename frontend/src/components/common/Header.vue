@@ -10,6 +10,7 @@
       <div v-if="tokenStore.isLoggedIn">
         <router-link to="/mypage"><button>마이페이지</button></router-link>
         <router-link to="/counselor"><button>상담사전용</button></router-link>
+        <router-link to="/admin/counselor-form-list"><button>관리자</button></router-link>
       </div>
       <div v-else>
         <button @click="isModalVisible = true">로그인</button>

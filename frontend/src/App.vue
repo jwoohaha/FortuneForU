@@ -12,7 +12,7 @@ export default {
     Header,
   },
   mounted() {
-    silentReissue().get();
+    silentReissue();
   },
  };
 </script>

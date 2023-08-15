@@ -35,10 +35,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private static final List<String> EXCLUDE_URL = List.of(
             "/favicon.ico",
             "/api/auth/**",  // 인증 관련(토큰 발급, 재발급)
-            "/api/counselors",
-            "/api/counselors/{counselorNo}",
-            "/api/counselors/by_ratings",
-            "/api/counselors/by_reviews"
+            "/api/counselors", "/api/counselors/**", "/api/counselors/{counselorNo}",
+            "/api/counselors/by_ratings", "/api/counselors/by_reviews", "/api/reservations/availabledate/**", "/api/reservation/**/co_reviews"
     );
 
     @Override

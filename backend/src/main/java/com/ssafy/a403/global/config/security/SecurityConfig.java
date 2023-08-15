@@ -1,5 +1,6 @@
 package com.ssafy.a403.global.config.security;
 
+import com.ssafy.a403.domain.model.Role;
 import com.ssafy.a403.global.config.security.exception.ExceptionHandlerFilter;
 import com.ssafy.a403.global.config.security.jwt.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
@@ -17,7 +18,9 @@ import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest;
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserService;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.access.ExceptionTranslationFilter;
+import org.springframework.security.web.authentication.AuthenticationFailureHandler;
 import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -32,6 +35,8 @@ import java.util.List;
 public class SecurityConfig {
 
     private final AuthenticationSuccessHandler successHandler;
+    private final AuthenticationFailureHandler failureHandler;
+    private final AccessDeniedHandler accessDeniedHandler;
    // <Member, Long> 이런 느낌이라고 생각하면 됨
     private final OAuth2UserService<OAuth2UserRequest, OAuth2User> oAuth2UserService;
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
@@ -53,19 +58,25 @@ public class SecurityConfig {
                         requests ->
                                 // swagger 사용을 위한 url -> permitAll()로 지정
                                 requests.antMatchers(
-                                                "/v2/api-docs",
-                                                "/swagger-resources",
-                                                "/swagger-resources/**",
-                                                "/configuration/ui",
-                                                "/configuration/security",
-                                                "/swagger-ui.html",
-                                                "/webjars/**",
-                                                "/v3/api-docs/**",
-                                                "/swagger-ui/**",
-                                                "/api/auth",
-                                                "/api/**")
-                                        .permitAll()
-                                        .anyRequest().authenticated())
+                                                "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+                                                "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+                                                "/api/auth/**",
+                                                "/api/counselors", "/api/counselors/**", "/api/counselors/by_ratings", "/api/counselors/by_reviews",
+                                                "/api/reservations/availabledate/**", "/api/reservations/co_reviews", "/api/reservations/**/co_reviews"
+                                        ).permitAll()
+                                        .antMatchers(
+                                                "/api/roomsession", "/api/sessions/{sessionId}",
+                                                "/api/reservations/counselor_rez_info/**", "/api/reservations/counseling_results/**",
+                                                "/api/counselors/time/update/{counselorNo}", "/api/counselors/info", "/api/counselors/update"
+                                        ).hasAnyRole("COUNSELOR")
+                                        .antMatchers(
+                                                "/api/admin/counselor-forms","/api/admin/counselor-forms/**"
+                                        ).hasAnyRole("ADMIN")
+                                        .anyRequest().authenticated()
+                )
+                .exceptionHandling()
+                .accessDeniedHandler(accessDeniedHandler)
+                .and()
                 .oauth2Login(setOAuth2Config())
                 .sessionManagement(config -> config.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
@@ -81,9 +92,9 @@ public class SecurityConfig {
                         .userInfoEndpoint(e -> e.userService(oAuth2UserService))    // 공급자가 제공한 사용자 정보를 로드한다 -> LoginUser와 매핑
                         // .tokenEndpoint() // 이처럼 tokenEndpoint()를 명시해주지 않으면 default는 spring에 기본 구현한대로 동작 -> code와 token을 교환
                         // .accessTokenResponseClient(accessTokenResponseClient());
-                        // .redirectionEndpoint()   // 이처럼 redirectionEndpoint()를 명시해주지 않으면 default는 login/oauth2/code
-                        // .baseUri("/oauth2/redirect")
-                        .successHandler(successHandler);
+                        // .redirectionEndpoint()를 명시해주지 않으면 default는 login/oauth2/code
+                        .successHandler(successHandler)
+                        .failureHandler(failureHandler);
     }
 
     @Bean
