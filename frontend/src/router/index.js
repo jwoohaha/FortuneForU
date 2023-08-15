@@ -45,7 +45,7 @@ const routes = [
     component: () => import(/* webpackChunkName: "reservationlist" */ '../views/Mypage/MypageView_myreservationlist.vue')
   },
   {
-    path: '/mypage/counslingresult',
+    path: '/mypage/counslingresult/:rezNo',
     name: 'counslingresult',
     component: () => import(/* webpackChunkName: "counslingresult" */ '../views/Mypage/MypageView_counselingresult.vue')
   },

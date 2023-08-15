@@ -1,5 +1,7 @@
 package com.ssafy.a403.domain.reservation.controller;
 
+import com.ssafy.a403.domain.member.entity.Counselor;
+import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.service.CounselingReservationService;
 import com.ssafy.a403.global.config.security.LoginUser;
@@ -63,6 +65,13 @@ public class CounselingReservationController {
         return counselingReservationService.getReportsList(memberId);
     }
 
+
+    // 대기중인 상담 개수 조회
+    @GetMapping("counselor_waiting/")
+    public Long countWaiting(@AuthenticationPrincipal LoginUser loginUser) {
+        Long counselorId = loginUser.getMember().getCounselor().getNo();
+        return counselingReservationService.countWaitingList(counselorId);
+    }
 
 
     // 상담가 id로 예약 조회

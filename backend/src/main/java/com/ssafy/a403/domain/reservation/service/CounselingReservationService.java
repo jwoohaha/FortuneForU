@@ -115,6 +115,19 @@ public class CounselingReservationService {
     }
 
 
+    // Waiting 상태의 상담 갯수
+    public Long countWaitingList(Long counselorId) {
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
+        List<CounselingReservation> reservations = counselingReservationRepository.findByCounselor(counselor);
+        if (reservations.isEmpty()) {
+            return 0L;
+        }
+        return reservations.stream()
+                .filter(reservation -> reservation.getReservationStatus() == ReservationStatus.WAITING)
+                .count();
+
+    }
+
 
     // 상담가 예약 조회
     public List<ReservationResponse> getCoReservation(Long counselorId, String date) {

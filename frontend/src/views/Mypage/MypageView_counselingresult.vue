@@ -24,14 +24,14 @@
                         
                         <div class="result-header">
                             <div >
-                                상담 날짜: {{ reportDetail.reservationDateTime }}
+                                상담 일시: {{ reportDetail.reservationDateTime }}
                             </div>
                             <div>
                                 상담가: {{ reportDetail.counselorName }}
                             </div>
                         </div>
                         <div class="result-content">
-                            {{ reportDetail.reservationReview }}
+                            {{ reportDetail.reservationReport }}
                         </div>
                 
                         
@@ -49,18 +49,26 @@ import { apiInstance } from '@/api';
 
 export default {
     components: {
-      
+
     },
     data() {
         return {
-            reservationNo:1,
+            reservationNo: null,
             reportDetail: {
-                reservationDateTime: "test",
-                counselorName: "test",
-                reservationReview: "test",
+                reservationDateTime: "결과 받아오는 중",
+                counselorName: "결과 받아오는 중",
+                reservationReview: "결과 받아오는 중",
             },
         };
     },
+    created() {
+    const rezNo = this.$route.params.rezNo;
+    console.log(rezNo)
+
+    if (rezNo) {
+      this.getReportDetail(rezNo);
+    }
+  },
     methods: {
         getReportDetail(reservationNo){
            
@@ -88,22 +96,7 @@ export default {
         }
         
     },
-    beforeRouteEnter(to, from, next) {
-        const clickedReservationNo = to.params.clickedReservationNo;
-        next(vm => {
-        if (clickedReservationNo) {
-            vm.getReportDetail(clickedReservationNo);
-        }
-        });
-    },
-    created() {
-        const clickedReservationNo = this.$route.params.clickedReservationNo;
-        console.log("check"+clickedReservationNo)
-        if (clickedReservationNo) {
-            console.log(clickedReservationNo)
-            this.getReportDetail(clickedReservationNo);
-            }
-        },
+    
 }
 </script>
 

@@ -122,13 +122,12 @@ export default {
         },
         handleReservationClick(reservation){
             const clickedReservationNo = reservation.reservationNo
-            console.log()
+           
             this.$router.push({
                 name: 'counslingresult',
-                params: {
-                clickedReservationNo
-                }
-            });
+                params: { rezNo : clickedReservationNo }
+            })
+          
         },
         getProfileImg() {
             const ImgUrl = this.member.profileImage;
