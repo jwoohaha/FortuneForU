@@ -34,10 +34,6 @@ public class DefaultUserService extends DefaultOAuth2UserService {
         AuthProvider authProvider = AuthProvider.valueOf(userRequest.getClientRegistration().getClientName().toUpperCase());
         OAuth2AccessToken accessToken = userRequest.getAccessToken();
         log.trace("Access Token Value: {}", accessToken.getTokenValue());
-        log.trace("Access Token Value: {}", accessToken.getTokenType());
-        log.trace("Access Token Value: {}", accessToken.getExpiresAt());
-        log.trace("Access Token Value: {}", accessToken.getScopes());
-        log.trace("Access Token Value: {}", accessToken.getIssuedAt());
 
         OAuth2User oAuth2User = super.loadUser(userRequest);
         OAuth2Request oAuth2Request = attributeMapperFactory.getAttributeMapper(authProvider)
