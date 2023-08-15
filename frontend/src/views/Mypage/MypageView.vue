@@ -10,7 +10,7 @@
     
                 <div class="mypage-contents">
                     <div class="profile-nav">
-                        <div class="profile-img"></div>
+                        <img :src="imgUrl" class="profile-img">
                         <input 
                             style="display: none" 
                             type="file" 
@@ -31,44 +31,29 @@
                         <div class="info-box">
                             <div class="up-info">
                                 <div class="info-labels">
-                                    <div class="each-label">이메일</div>
                                     <div class="each-label">이름</div>
+                                    <div class="each-label">이메일</div>
                                 </div>
                                 <div class="info-fields">
-                                    <div class="each-field">{{ this.email }}</div>
                                     <div class="each-field">{{ this.name }}</div>
-                                    <!-- <div class="each-field"></div> -->
+                                    <div class="each-field">{{ this.email }}</div>
                                 </div>
                             </div>
-                            <!-- <div class="down-info">
-                                <div class="each-label">성별</div>
-                                <div class="each-field" id="select-field">
-                                    <label>
-                                        <input type="radio" name="male" value="male" />
-                                        <span>남성</span>
-                                    </label>
-                                    <label>
-                                        <input type="radio" name="female" value="female" />
-                                        <span>여성</span>
-                                    </label>
-                                </div>
-                            </div> -->
                         </div>
     
-                        <!-- <SquareButton id="info-edit-btn">회원 정보 수정</SquareButton> -->
     
                     </div>
                     <div class="like-part">
                         <div class="sub-title">관심 상담가</div>
                         <div class="like-box">
-                            <i class="bi bi-chevron-compact-left"></i>
                             <div class="like-list">
+                                <div v-if="!isCounselors">
+                                    <router-link to="/tarot">상담사 찜하러 가기</router-link>
+                                </div>
                                 <div v-for="counselor in counselors" :key="counselor.id">
                                     <ReviewCard :counselor="counselor" id="reviewcard"></ReviewCard>
                                 </div>
                             </div>
-    
-                            <i class="bi bi-chevron-compact-right"></i>
                         </div>
                     </div>
                 </div>
@@ -92,7 +77,9 @@
             email: null,
             name: null,
             counselors: null,
+            isCounselors: false,
             selectedImg: null,
+            imgUrl: require ('@/assets/dummy_counselor_img.jpg'),
         };
       },
       methods: {
@@ -107,6 +94,12 @@
                 this.email = res.data.email
                 this.name = res.data.name
                 this.counselors = res.data.followInfoList
+                if (this.counselors.length > 0) {
+                    this.isCounselors = true
+                }
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
             })
             .catch((e) => {
                 console.log(e)
@@ -140,7 +133,7 @@
       },
       created() {
         this.getMemberDetail()
-      }
+      },
     }
     </script>
     
@@ -193,11 +186,9 @@
         width: 180.9px;
         height: 180px;
         border-radius: 180.9px;
-        background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
         background-repeat : no-repeat;
         background-size : cover;
         margin-bottom: 14px;
-        // background: lightgray 50% / cover no-repeat, #D7D7D7;
     }
     .nav-menu{
         display: flex;
@@ -247,7 +238,7 @@
     .info-labels {
         display: flex;
         flex-direction: column;
-        justify-content: space-between;
+        justify-content: space-around;
     }
     .info-fields {
         display: flex;
