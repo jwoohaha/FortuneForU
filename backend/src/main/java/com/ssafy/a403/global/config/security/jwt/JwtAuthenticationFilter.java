@@ -1,9 +1,10 @@
 package com.ssafy.a403.global.config.security.jwt;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
@@ -30,17 +31,23 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 	
 	private final JwtValidator jwtValidator;
 
-    @Value("${jwt.access-header}")
-    private String accessTokenHeaderTag;
+    // Token Validation에서 제외할 경로들
+    private static final List<String> EXCLUDE_URL = List.of(
+            "/favicon.ico",
+            "/api/auth/**",  // 인증 관련(토큰 발급, 재발급)
+            "/api/counselors",
+            "/api/counselors/{counselorNo}",
+            "/api/counselors/by_ratings",
+            "/api/counselors/by_reviews"
+    );
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
+        return EXCLUDE_URL.stream().anyMatch(exclude -> exclude.equalsIgnoreCase(request.getServletPath()));
+    }
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        // Token 재발급 요청 -> Refresh Token 검증
-        if (request.getRequestURI().equals("/api/auth/reissue")){
-            filterChain.doFilter(request, response);
-            return;
-        }
 
         Optional<String> token = Optional.ofNullable(getTokensFromHeader(request));
         log.trace("Token: {}", token);
@@ -57,6 +64,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     }
     
     private String getTokensFromHeader(HttpServletRequest request) {
-    	return request.getHeader(accessTokenHeaderTag);
+    	return request.getHeader(HttpHeaders.AUTHORIZATION);
     }
 }
