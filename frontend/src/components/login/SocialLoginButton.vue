@@ -1,5 +1,5 @@
 <template>
-  <div class="sns-login-button" :style="{background: platform.color}" @click="socialLogin()">
+  <div class="sns-login-button" :style="{background: platform.color}" @click="socialLogin(platform.provider)">
     <img class="sns-login-logo" :src='require(`@/assets/login/${platform.icon}`)' />
     <div class="sns-login-button-text" :style="{color: platform.textColor}">{{ platform.title }}</div>
   </div>
@@ -11,9 +11,9 @@ export default {
     platform: Object
   },
   methods: {
-    socialLogin() {
-      const url = 'https://i9a403.p.ssafy.io/oauth2/authroize/google';
-      // const url = 'http://localhost:5000/oauth2/authorize/google';
+    socialLogin(provider) {
+      const url = 'https://i9a403.p.ssafy.io/oauth2/authroize/' + provider;
+      // const url = 'http://localhost:5000/oauth2/authorize/' + provider;
       //local 에서는 ssafytest.shop 안됨
       location.href = url;
     }
