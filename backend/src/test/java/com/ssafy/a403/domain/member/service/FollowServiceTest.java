@@ -3,6 +3,7 @@ package com.ssafy.a403.domain.member.service;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.FollowRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
+import lombok.extern.slf4j.Slf4j;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.slf4j.Logger;
@@ -11,16 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 // JUnit의 기본 LifeCycle은 PER_METHOD -> METHOD 단위로 테스트
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @SpringBootTest
+@Slf4j
 public class FollowServiceTest {
-
-    private static final Logger log = LoggerFactory.getLogger(FollowServiceTest.class);
 
     @Autowired
     MemberRepository memberRepository;
@@ -31,25 +28,17 @@ public class FollowServiceTest {
     @Autowired
     FollowRepository followRepository;
 
-    @BeforeAll
-    void beforeAll() {
-        List<String> names = List.of("박박박", "김김김", "최최최");
-        log.trace("=========== Member Save ============");
-        names.forEach((name) -> {
-            memberRepository.save(Member.builder().name(name).build());
-        });
-    }
-
     @Test
     @DisplayName("상담사 팔로우 성공")
     @Transactional
     void followCounselorSuccess(){
+        List<Member> members = init();
 
         log.trace("=========== Member Find ============");
         // given
-        Member follower = memberService.findById(1L);
-        Member followee1 = memberService.findById(2L);
-        Member followee2 = memberService.findById(3L);
+        Member follower = memberService.findById(members.get(0).getNo());
+        Member followee1 = memberService.findById(members.get(1).getNo());
+        Member followee2 = memberService.findById(members.get(2).getNo());
 
         log.trace("=========== Follow Save ============");
         // when
@@ -66,12 +55,13 @@ public class FollowServiceTest {
     @DisplayName("상담사 팔로우 중복")
     @Transactional
     void followDuplicatedCounselor(){
+        List<Member> members = init();
 
         log.trace("=========== Member Find ============");
         // given
-        Member follower = memberService.findById(1L);
-        Member followee1 = memberService.findById(2L);
-        Member followee2 = memberService.findById(3L);
+        Member follower = memberService.findById(members.get(0).getNo());
+        Member followee1 = memberService.findById(members.get(1).getNo());
+        Member followee2 = memberService.findById(members.get(2).getNo());
 
         log.trace("=========== Follow Save ============");
         // when
@@ -89,12 +79,13 @@ public class FollowServiceTest {
     @DisplayName("상담사 팔로우 취소")
     @Transactional
     void unfollowCounselor(){
+        List<Member> members = init();
 
         log.trace("=========== Member Find ============");
         // given
-        Member follower = memberService.findById(1L);
-        Member followee1 = memberService.findById(2L);
-        Member followee2 = memberService.findById(3L);
+        Member follower = memberService.findById(members.get(0).getNo());
+        Member followee1 = memberService.findById(members.get(1).getNo());
+        Member followee2 = memberService.findById(members.get(2).getNo());
 
         log.trace("=========== Follow Save ============");
         // when
@@ -105,5 +96,16 @@ public class FollowServiceTest {
         log.trace("=========== Follow Find ============");
         // then
         Assertions.assertThat(followService.followerList(follower).size()).isEqualTo(1);
+    }
+
+    private List<Member> init() {
+        List<Member> members = List.of(
+                Member.builder().email("abc123@gmail.com").name("김김김").profileImage("image1.png").build(),
+                Member.builder().email("abc456gmail.com").name("박박박").profileImage("image2.png").build(),
+                Member.builder().email("abc789@gmail.com").name("최최최").profileImage("image3.png").build()
+        );
+        memberRepository.saveAll(members);
+
+        return members;
     }
 }
