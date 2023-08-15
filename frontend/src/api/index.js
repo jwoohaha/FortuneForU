@@ -1,6 +1,6 @@
 import axios from 'axios'
 import { useTokenStore } from "@/stores/token"
-import router from '@/router';
+// import router from '@/router';
 
 function apiInstance() {
     
@@ -16,6 +16,7 @@ function apiInstance() {
         (config) => {
             config.headers['Content-Type'] = 'application/json;charset=utf-8';
             config.headers['Authorization'] = store.getAccessToken;
+            config.withCredentials = true;
             
             return config;
         },
@@ -27,12 +28,12 @@ function apiInstance() {
 
     instance.interceptors.response.use(
         (response) => {
-            console.log("successed response: " + response);
+            // console.log("successed response: " + response);
 
             return response;
         },
         (error) => {
-            console.log("response error: " + error);
+            // console.log("response error: " + error);
             reissue();
             return error;
         }
@@ -45,23 +46,54 @@ function reissue() {
 
     const store = useTokenStore();
 
-    axios.create({
-        baseURL: 'https://i9a403.p.ssafy.io/api',
-        // baseURL: 'http://localhost:5000/api',
-        timeout: 5000
+    const instance = axios.create({
+        method: 'GET',
+        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        // baseURL: 'http://localhost:5000/api/auth/reissue',
+        timeout: 5000,
+        withCredentials: true
     })
-    .get("/auth/reissue")
-    .then((response) => {
-        const accessToken = response.headers.authorization;
-        console.log("newAccessToken: " + accessToken);
-        store.saveAccessToken(accessToken);
-    })
-    .catch((error) => {
-        console.log("Access Token 재발급 실패" + error)
-        alert("로그인이 만료되었습니다❌\n다시 로그인하세요.");
-        store.logout();
-        router.push('/');
-    });
+    instance.interceptors.response.use(
+        (response) => {
+            const accessToken = response.headers.authorization;
+            // console.log("newAccessToken: " + accessToken);
+            store.saveAccessToken(accessToken);
+            store.login();
+        },
+        (error) => {
+            console.log("Access Token 재발급 실패" + error)
+            alert("로그인이 만료되었습니다❌\n다시 로그인하세요.");
+            store.logout();
+        }
+    )
 }
 
-export { apiInstance }
+function silentReissue() {
+
+    const store = useTokenStore();
+
+    const instance = axios.create({
+        method: 'GET',
+        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        // baseURL: 'http://localhost:5000/api/auth/reissue',
+        timeout: 5000,
+        withCredentials: true
+    })
+    instance.interceptors.response.use(
+        (response) => {
+            const accessToken = response.headers.authorization;
+            // console.log("newAccessToken: " + accessToken);
+            store.saveAccessToken(accessToken);
+            store.login();
+        },
+        (error) => {
+            console.log("로그인이 필요합니다." + error)
+            store.logout();
+            return "";
+        }
+    )
+
+    return instance;
+}
+
+export { apiInstance, silentReissue }

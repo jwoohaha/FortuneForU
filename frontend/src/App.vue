@@ -5,11 +5,15 @@
 
 <script>
 import Header from './components/common/Header.vue';
+import { silentReissue } from '@/api/index.js';
 
 export default {
   components: {
     Header,
-  }
+  },
+  mounted() {
+    silentReissue().get();
+  },
  };
 </script>
 
