@@ -1,40 +1,31 @@
 <template>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">  
-        <div class="mypage">
-            <div class="empty-box"></div>
-            <div class="mypage-area">
-                <div class="mypage-header">
-                    <div>마이페이지</div>
-                    <div class="header-line"></div>
+    <div class="mypage">
+        <div class="empty-box"></div>
+        <div class="mypage-area">
+            <div class="mypage-header">
+                <div>상담사 마이페이지</div>
+                <div class="header-line"></div>
+            </div>
+            <div class="mypage-contents">
+                <div class="profile-nav">
+                    <ul class="nav-menu">
+                        <!-- <li id="coun"> 상담사 전용</li> -->
+                        <router-link to="/counselor"><li id="coun"> | 상담사 정보 수정</li></router-link>
+                        <router-link to="/counselor/counseling"><li id="coun"> | 상담 관리</li></router-link>
+                        <router-link to="/counselor/counreview"><li id="coun"> | 후기 관리</li></router-link>
+                    </ul>
                 </div>
-        
-                <div class="mypage-contents" id="my-res-list">
-                    <div class="profile-nav">
-                        <div class="profile-img"></div>
-                        
-                        <ul class="nav-menu">
-                            <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
-                        <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
-                        <router-link to="/mypage/reportlist"><li> | 상담 결과</li></router-link> 
-                        <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
-                        </ul>
-                    </div>
-    
                     <div class="coun-result-part">
-                        
                         <div class="result-header">
-                            <div >
-                                상담 일시: {{ reportDetail.reservationDateTime }}
-                            </div>
                             <div>
-                                상담가: {{ reportDetail.counselorName }}
+                                상담 내용 요약
                             </div>
                         </div>
                         <div class="result-content">
-                            {{ reportDetail.reservationReport }}
+                            <input type="text" v-model="reportDetail.reservationReport" style="width: 100%; height: 350px;">
                         </div>
-                
-                        
+                        <UpdateButton @click="updateReport(this.reservationNo)">수정</UpdateButton>
                     </div>
                 </div>
             </div>
@@ -43,21 +34,22 @@
     
 <script>
 import { apiInstance } from '@/api';
+import { UpdateButton } from '../../components/styled-components/StyledButton'
 // import { SquareButton } from "../../components/styled-components/StyledButton";
 // import { ReviewCard } from "../components/common/ReviewCard";
 // import PageButton from '../../components/common/PageButton.vue';
 
 export default {
     components: {
+        UpdateButton,
 
     },
     data() {
         return {
             reservationNo: null,
             reportDetail: {
-                reservationDateTime: "결과 받아오는 중",
-                counselorName: "결과 받아오는 중",
-                reservationReview: "결과 받아오는 중",
+                reservationNo: "test",
+                reservationReport: "test"
             },
         };
     },
@@ -73,27 +65,43 @@ export default {
         getReportDetail(reservationNo){
            
             const api = apiInstance();
+            this.reservationNo = reservationNo
             api({
                 method: 'GET',
-                url: `/reservations/report/${reservationNo}`,
+                url: `/reservations/reports/${reservationNo}`,
             })
             .then((res) => {
                 console.log(res.data)
              
-                this.reportDetail = res.data;
-            
-                this.handleRezInfo(res.data)
+                this.reportDetail = res.data;          
             })
             .catch((e) => {
                 console.log(e)
             })
         },
-        handleRezInfo(reportDetail) {
-           
-            reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
-            console.log(reportDetail.reservationDateTime)
-            return reportDetail;
+        updateReport(reservationNo){
+            const confirmUpdate = window.confirm("수정하시겠습니까?")
+            
+            if (confirmUpdate) {
+                const api = apiInstance();
+                api({
+                method: 'PUT',
+                url: `/reservations/counseling_results/${reservationNo}`,
+                data: {
+                    counselingResult: this.reportDetail.reservationReport
+                    }
+                })
+                .then((res) => {
+                    alert("수정되었습니다!")
+                    console.log(res.data)
+                    location.reload();
+                }) 
+                .catch((e) => {
+                    console.log(e);
+                })
+            }          
         }
+        
         
     },
     
@@ -141,13 +149,10 @@ export default {
     justify-content: space-around;
     // background-color: red;
 }
-#my-res-list{
-    // justify-content: space-between !important;
-    // background-color: red;
-}
+
 .profile-nav {
     height: 588px;
-    width: 181px;
+    width: 210px;
 }
 .profile-img{
     width: 180.9px;
@@ -173,6 +178,10 @@ export default {
     font-weight: 700;
     line-height: normal;
 }
+.nav-menu #coun{
+    color: #9C7AE7;
+}
+    
 .coun-result-part{
     height: 552px;
     width: 1021px;

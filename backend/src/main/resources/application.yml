@@ -40,7 +40,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
-#        dialect: org.hibernate.dialect.H2Dialect
+  #        dialect: org.hibernate.dialect.H2Dialect
 
   # Security
   security:

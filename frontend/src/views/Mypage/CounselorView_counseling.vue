@@ -85,11 +85,11 @@
                                     <!-- <router-link to="/chatview">상담 시작</router-link> -->
                                     <router-link :to="{ name: 'chatviewforconsultant', params: { reservationNo: clickedReservation.reservationNo } }">상담 시작</router-link>
                                     </SquareButton>
-                                <SquareButton isTarot id="cancel-btn" @click="cancelReservation">취소</SquareButton>
+                                <SquareButton isTarot id="cancel-btn" @click="cancelReservation()">취소</SquareButton>
                                 
                             </div>
                             <div class="res-cell" id="cell-btns" v-if="clickedReservation.reservationStatus === '상담 종료'">
-                                <SquareButton isTarot id="cancel-btn" @click="checkResult">결과보기</SquareButton>
+                                <SquareButton isTarot id="cancel-btn" @click="checkResult(clickedReservation.reservationNo)">결과보기</SquareButton>
                             </div>
 
 
@@ -224,7 +224,15 @@ export default {
                     
                 })
             }            
-        },     
+        }, 
+        checkResult(reservationNo) {
+            const clickedReservationNo = reservationNo
+            console.log(clickedReservationNo)
+            this.$router.push({
+                name: 'counselorreportupdate',
+                params: {rezNo : clickedReservationNo}
+            })
+        }    
 
     },
    
