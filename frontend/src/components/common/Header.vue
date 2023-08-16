@@ -8,6 +8,7 @@
         <router-link to="/community">커뮤니티</router-link>
       </nav>
       <div v-if="tokenStore.isLoggedIn">
+        <button @click="this.logout">로그아웃</button>
         <router-link to="/mypage"><button>마이페이지</button></router-link>
         <router-link to="/counselor"><button>상담사전용</button></router-link>
         <router-link to="/admin/counselor-form-list"><button>관리자</button></router-link>
@@ -26,6 +27,7 @@
 import Logo from "../common/Logo.vue";
 import ModalView from "@/components/common/ModalView.vue";
 import { useTokenStore } from "@/stores/token";
+import { apiInstance } from "@/api";
 
 export default {
   components: {
@@ -39,10 +41,24 @@ export default {
   },
   setup() {
     const tokenStore = useTokenStore();
+    const api = apiInstance();
     return {
       tokenStore,
+      api
     }
   },
+  methods: {
+    logout() {
+      this.api.get('/auth/logout')
+        .then((response) => {
+          console.log(response);
+          this.tokenStore.logout();
+        })
+        .catch((error) => {
+          console.log(error);
+        })
+    }
+  }
 };
 </script>
 

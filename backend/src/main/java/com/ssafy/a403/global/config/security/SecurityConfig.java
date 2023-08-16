@@ -56,23 +56,28 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         requests ->
-                                // swagger 사용을 위한 url -> permitAll()로 지정
                                 requests.antMatchers(
-                                                "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-                                                "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
-                                                "/api/auth/**",
-                                                "/api/counselors", "/api/counselors/**", "/api/counselors/by_ratings", "/api/counselors/by_reviews",
-                                                "/api/reservations/availabledate/**", "/api/reservations/co_reviews", "/api/reservations/**/co_reviews"
-                                        ).permitAll()
-                                        .antMatchers(
-                                                "/api/roomsession", "/api/sessions/{sessionId}",
-                                                "/api/reservations/counselor_rez_info/**", "/api/reservations/counseling_results/**",
-                                                "/api/counselors/time/update/{counselorNo}", "/api/counselors/info", "/api/counselors/update"
-                                        ).hasAnyRole("COUNSELOR")
-                                        .antMatchers(
-                                                "/api/admin/counselor-forms","/api/admin/counselor-forms/**"
-                                        ).hasAnyRole("ADMIN")
-                                        .anyRequest().authenticated()
+                                        "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+                                        "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+                                        "/api/**"
+                                ).permitAll()
+                                // swagger 사용을 위한 url -> permitAll()로 지정
+//                                requests.antMatchers(
+//                                                "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+//                                                "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+//                                                "/api/auth/**",
+//                                                "/api/counselors", "/api/counselors/**", "/api/counselors/by_ratings", "/api/counselors/by_reviews",
+//                                                "/api/reservations/availabledate/**", "/api/reservations/co_reviews", "/api/reservations/**/co_reviews"
+//                                        ).permitAll()
+//                                        .antMatchers(
+//                                                "/api/roomsession", "/api/sessions/{sessionId}",
+//                                                "/api/reservations/counselor_rez_info/**", "/api/reservations/counseling_results/**",
+//                                                "/api/counselors/time/update/{counselorNo}", "/api/counselors/info", "/api/counselors/update"
+//                                        ).hasAnyRole("COUNSELOR")
+//                                        .antMatchers(
+//                                                "/api/admin/counselor-forms","/api/admin/counselor-forms/**"
+//                                        ).hasAnyRole("ADMIN")
+//                                        .anyRequest().authenticated()
                 )
                 .exceptionHandling()
                 .accessDeniedHandler(accessDeniedHandler)

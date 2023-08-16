@@ -44,4 +44,16 @@ public class AuthController {
         HttpHeaders headers = jwtSetupService.makeAuthorizationHeader(refreshToken);
         return ResponseEntity.ok().headers(headers).build();
     }
+
+    @GetMapping("/logout")
+    public ResponseEntity<?> logout(@CookieValue(name = "Refresh", required = false) Cookie refreshCookie) {
+        log.trace("로그아웃을 시도합니다.");
+        if (refreshCookie == null) {
+            log.trace("Refresh Token이 만료되었습니다.");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        HttpHeaders headers = jwtSetupService.removeAuthorizationHeader(refreshCookie.getValue());
+        return ResponseEntity.ok().headers(headers).build();
+    }
 }
