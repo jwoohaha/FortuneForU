@@ -10,7 +10,7 @@
           <div class="modal-content">{{ this.content }}</div>
           <div class="modal-buttons">
             <div class="btn" id="left" @click="movePage(this.pagePath[this.prePage])">이전으로</div>
-            <div class="btn" id="right" @click="movePage('mypage')" v-if="rightBtn">마이페이지</div>
+            <div class="btn" id="right" @click="movePage('reservationlist')" v-if="rightBtn">마이페이지</div>
           </div>
       </div>
     </modal-content>
