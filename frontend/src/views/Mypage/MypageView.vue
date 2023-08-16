@@ -22,7 +22,7 @@
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                             <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link>
-                            <router-link to="/mypage/counslingresult"><li> | 상담 결과</li></router-link>
+                            <router-link to="/mypage/reportlist"><li> | 상담 결과</li></router-link>
                             <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
                         </ul>
                     </div>
