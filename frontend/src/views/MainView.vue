@@ -291,15 +291,18 @@ hr {
 }
 .card-txt {
   width: 222px;
-  height: 80px;
+  height: 78px;
   overflow: hidden;
   color: #333;
   text-overflow: ellipsis;
-  /* body1 */
   font-size: 16px;
   font-style: normal;
   font-weight: 400;
   line-height: normal;
+  display: -webkit-box;
+  word-wrap: break-word;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 }
 #card-name { 
   color: #333;

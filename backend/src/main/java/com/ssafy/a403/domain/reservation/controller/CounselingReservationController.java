@@ -1,5 +1,7 @@
 package com.ssafy.a403.domain.reservation.controller;
 
+import com.ssafy.a403.domain.member.entity.Counselor;
+import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.service.CounselingReservationService;
 import com.ssafy.a403.global.config.security.LoginUser;
@@ -54,6 +56,22 @@ public class CounselingReservationController {
 
     }
 
+    // 일반회원 종료된 상담 리스트 조회
+    @GetMapping("/member/reports")
+    public List<ReportsListResponse> getReportsList(@AuthenticationPrincipal LoginUser loginUser) {
+        Long memberId = loginUser.getMember().getNo();
+
+        return counselingReservationService.getReportsList(memberId);
+    }
+
+
+    // 대기중인 상담 개수 조회
+    @GetMapping("/counselor_waiting")
+    public Long countWaiting(@AuthenticationPrincipal LoginUser loginUser) {
+        Long counselorId = loginUser.getMember().getCounselor().getNo();
+        return counselingReservationService.countWaitingList(counselorId);
+    }
+
 
     // 상담가 id로 예약 조회
     @GetMapping("/counselor_rez_info/{date}")
@@ -78,6 +96,14 @@ public class CounselingReservationController {
     public String cancel(@PathVariable Long reservationNo) {
         return counselingReservationService.cancelReservation(reservationNo);
     }
+
+
+    // 상담 결과 상세 조회
+    @GetMapping("/report/{reservationNo}")
+    public ReportDetailResponse getReportDetail(@PathVariable Long reservationNo) {
+        return counselingReservationService.getReportDetail(reservationNo);
+    }
+
 
 
     //후기 작성

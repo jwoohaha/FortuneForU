@@ -14,27 +14,27 @@
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
-                        <router-link to="/mypage/counslingresult"><li> | 상담 결과</li></router-link> 
+                        <router-link to="/mypage/reportlist"><li> | 상담 결과</li></router-link> 
                         <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
                         </ul>
                     </div>
     
                     <div class="my-review-part">
-                        <i class="bi bi-chevron-compact-left" @click="prePage"></i>
+                        <img src="@/assets/left_btn.png"  @click="prePage"/>
                         
                         <div class="review-cards-section">
                             <!-- 카드하나 -->
                             <div class="review-card" v-for="(reviewIndex, idx) in displayedIndexes" :key="idx">
                                 <img class="card-img" src="{{ reviewIndex.profileImage }}">
                                 <div class="coun-info">
-                                    <div>{{ reviewIndex.counselorName }} ⭐ {{ reviewIndex.reservationScore }}</div>
+                                    <div id="review-title">{{ reviewIndex.counselorName }} <span> ⭐ {{ reviewIndex.reservationScore }}</span></div>
                                     <div class="review-txt">{{ reviewIndex.review }}</div>
                                 </div>
                                 <div @click="removeReview(reviewIndex.reservationNo)">✖</div>
                             </div>
                         </div>
 
-                        <i class="bi bi-chevron-compact-right" @click="nextPage"></i>
+                        <img src="@/assets/right_btn.png"  @click="nextPage"/>
                     </div>
                 </div>
             </div>
@@ -136,8 +136,6 @@ export default {
     height: 900px;
     width: 1273px;
     margin-top: 96px;
-    // margin-left: 15%;
-    // margin-right: 15%;
 }
 .mypage-header { 
     height: 57px;
@@ -161,7 +159,6 @@ export default {
     margin-top: 81px;
     display: flex;
     justify-content: space-around;
-    // background-color: red;
 }
 .profile-nav {
     height: 588px;
@@ -216,6 +213,7 @@ export default {
     background: #FFF;
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
     display: flex;
+    justify-content: space-evenly;
     padding: 10px;
     margin-bottom: 10px;
 }
@@ -225,26 +223,37 @@ export default {
     border-radius: 70px;
     border: 1px solid #F7F7F7;
     background: lightgray 50% / cover no-repeat;
-    margin-right: 21px;
 }
 .coun-info {
     color: #333;
     text-align: center;
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
     font-weight: 700;
     line-height: normal;
     text-align: left;
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: start;
+    padding-left: 15px;
+}
+#review-title{
+    width: 220px;
+    margin: 5px 10px 5px 0px;
+}
+#review-title span{
+    margin-left: 10px;
 }
 .review-txt {
-    overflow: hidden;
+    width: 220px;
     color: #333;
-    text-overflow: ellipsis;
-    font-size: 12px;
+    font-size: 16px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     margin-top: 5px;
+    height: 65%;
+    overflow:auto;
 }
 </style>

@@ -50,9 +50,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "reservationlist" */ '../views/Mypage/MypageView_myreservationlist.vue')
   },
   {
-    path: '/mypage/counslingresult',
+    path: '/mypage/counslingresult/:rezNo',
     name: 'counslingresult',
     component: () => import(/* webpackChunkName: "counslingresult" */ '../views/Mypage/MypageView_counselingresult.vue')
+  },
+  {
+    path: '/mypage/reportlist',
+    name: 'reportlist',
+    component: () => import(/* webpackChunkName: "reportlist" */ '../views/Mypage/MypageView_myreportlist.vue')
   },
   {
     path: '/mypage/review',
@@ -68,11 +73,6 @@ const routes = [
     path: '/counselor/counseling',
     name: 'counseling',
     component: () => import(/* webpackChunkName: "counseling" */ '../views/Mypage/CounselorView_counseling.vue')
-  },
-  {
-    path: '/counselor/timeset',
-    name: 'timeset',
-    component: () => import(/* webpackChunkName: "timeset" */ '../views/Mypage/CounselorView_timeset.vue')
   },
   {
     path: '/counselor/counreview',
