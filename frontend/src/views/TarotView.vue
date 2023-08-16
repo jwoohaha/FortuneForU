@@ -35,22 +35,24 @@
           <div class="filter">
             <div>
               <ul class="filter-list">
-                <li @click="orderByReview()">후기순</li>
-                <li @click="orderByRating()">별점순</li>
+                <li @click="orderByReview()" v-if="criteria=='review'" style="color: #A38BD9">후기순</li>
+                <li @click="orderByReview()" v-else style="color: #333">후기순</li>
+                <li @click="orderByRating()" v-if="criteria!='review'" style="color: #A38BD9">별점순</li>
+                <li @click="orderByRating()" v-else style="color: #333">별점순</li>
               </ul>
             </div>
           </div>
           <div class="counselor-list">
-            <div v-for="(counselor, idx) in counselors" :key="idx">
-              <router-link to="/reservation">
-                <CounselorCard :counselor="counselor"></CounselorCard>
-              </router-link> 
+            <div v-for="(counselor, idx) in counselors" :key="idx" @click="moveDetail(counselor.counselorNo)">
+              <CounselorCard :counselor="counselor" :colorType="isTarot"></CounselorCard>
             </div>
           </div>
+          <!-- 예외처리 -->
+          <div class="counselor-list" v-if="emptyPage" style="height: 600px; display: flex; justify-content: center; font-size: 30px;">상담사 정보가 없습니다.</div>
       </div>
       
       <div class="paging-section">
-        <PageButton :totalPages="totalPages" @page-changed="handlePageChange"></PageButton>
+        <PageButton :totalPages="totalPages" :pageType="TARO" @page-changed="handlePageChange"></PageButton>
       </div>
     </div>
   </div>
@@ -70,8 +72,10 @@ export default {
   },
   data() {
     return {
+      emptyPage: false,
       counselors: null,
       criteria: 'review',
+      isTarot: true
     };
   },
   methods: {
@@ -79,7 +83,7 @@ export default {
       const getCounselorsRequest = apiInstance();
       getCounselorsRequest({
         method: 'GET',
-        url: '/counselors/by_ratings/',
+        url: '/counselors/by_ratings',
         params: {
           counselorType: 'TARO',
           page: pageNum
@@ -87,8 +91,12 @@ export default {
       })
       .then((res) => {
         console.log(res.data)
-        this.counselors = res.data.content
-        this.totalPages = res.data.totalPages
+        //보여줄 컨텐츠(상담사 정보)가 없을 경우 예외처리
+        if(Object.keys(res.data.content) == 0){
+          this.emptyPage = true;
+        }
+        this.counselors = res.data.content;
+        this.totalPages = res.data.totalPages;
       })
       .catch((e) => {
         console.log(e)
@@ -98,7 +106,7 @@ export default {
       const getCounselorsRequest = apiInstance();
       getCounselorsRequest({
         method: 'GET',
-        url: '/counselors/by_reviews/',
+        url: '/counselors/by_reviews',
         params: {
           counselorType: 'TARO',
           page: pageNum
@@ -135,8 +143,17 @@ export default {
       } else {
         this.criteria = "review"
         this.getCounselorsByReviews(0)
-        console.log("실행!")
       }
+    },
+    moveDetail(id){
+      this.$router.push({
+        name: 'reservation',
+        query: {
+          id: id,
+          pageType : 'TARO'
+        }
+      }
+      );
     }
   },
 
@@ -159,6 +176,7 @@ export default {
   // margin: 0 auto;
   padding-top: 82px;
   width: 70vw;
+  margin-bottom: 200px;
 }
 .top-header {
   display: flex;
@@ -187,23 +205,23 @@ export default {
   display: inline-block;
 }
 .hr-wrapper {
-  border:#000000 0.5px solid;
-  height: 0px;
-  width: 65%;
+  height: 1.5px;
+  background: #000;
+  width: 50%;
   padding: 0;
   margin-top: 20px;
 }
 .search {
-  width: 393px;
+  width: 400px;
   height: 40px;
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   gap: 17px;
   padding-top: 10px;
   position: relative;
 }
 input {
-  width: 300px;
+  width: 110%;
   border-radius: 100px;
   border: 3px solid #D7D7D7;
   box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
@@ -215,32 +233,24 @@ input {
   width: 28px;
   height: 28px;
   position: absolute;
-  left: 10px;
+  left: 20px;
   top: 20px;
 }
-.filter {
-  width: 70%;
-  height: 70px;
-}
-ul{
-  width: 195px;
+.filter-list{
+  width: 10%;
   list-style:none;
   padding-left:0px;
-  float: left;
   font-size: 16px;
   font-weight: 400;
   line-height: normal;
   font-style: normal;
-  margin-top: 20px;
-  margin-bottom: 20px;
+  margin-top: 30px;
+  margin-bottom: 35px;
   display: flex;
   justify-content: space-between;
 }
-.cards-section {
-  width: 100%;
-}
 .counselor-list {
-  width: inherit;
+  width: 100%;
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
@@ -249,6 +259,5 @@ ul{
   display: flex;
   justify-content: center;
   margin-top: 40px;
-  margin-bottom: 210px;
 }
 </style>

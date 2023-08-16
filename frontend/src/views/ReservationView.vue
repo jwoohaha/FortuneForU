@@ -1,13 +1,13 @@
 <template>
     <div class="reservation-view">
       <div class="empty-box"></div>
-      <div class="contents">
+      <div class="reservation-contents">
         
         <div class="reservation-header">
           <div class="top-header">
             <div class="left-header">
               <div class="top-title">
-                타로 상담 예약
+                {{ typeTxt }} 상담 예약
                   <span class="top-subtitle">
                     원하는 상담사를 선택한 후 예약하세요.
                   </span>
@@ -22,28 +22,31 @@
 
           <div class="reservation-box">
             <div class="res-title">
-                안녕하세요. 타로 외길 인생 24년, 소윤파크입니다.
+                안녕하세요. {{ typeTxt }} 상담사 {{ counselor.name }}입니다.
                 <div class="hr-wrapper"></div>
             </div>
 
-           <div class="reservation-content">
+           <div class="reservation-section">
              <div class="profile-section">
                 <div class="profile-img">
-                    <img src="../assets/dummy_counselor_img.jpg" alt="">
+                    <img src={{counselor.profileImg}}>
                 </div>
                 <div class="profile-txt">
-                    <div>성명 : 소윤파크</div>
-                    <div>소개 : MBTI 박사 과정</div>
-                    <div>전문분야 : 궁합/애정, 취업/시험</div>
-                    <div class="tag-info">#솔직담백 #연애전문</div>
+                    <div>성명 : {{ counselor.name }}</div>
+                    <div>경력 : {{ counselor.career }}</div>
+                    <div>전문분야 : {{ counselor.major }}</div>
+                    <div class="tag-info" v-if="pageType=='SAJU'" style="color: #F6B5C6;">{{ counselor.intro }}</div>
+                    <div class="tag-info" v-else>{{ counselor.intro }}</div>
                 </div>
             </div>
             
             <div class="review-section">
                 <div class="review-title">생생한 상담 후기</div>
-                <div v-for="counselor in counselors" :key="counselor.id">
-                    <ReviewCard :counselor="counselor"></ReviewCard>
+                <div v-for="review in reviews" :key="review.id">
+                    <ReviewCard :review="review"></ReviewCard>
                 </div>
+                <!-- 예외처리 -->
+                <div v-if="emptyReview" style="font-size: 20px; background-color: bisque;">후기가 없습니다.</div>
             </div>
 
             <div class="calendar-section">
@@ -51,49 +54,217 @@
                     <div class="calendar-txt">예약일</div>
                     <div class="calendar-poster">
                         <!-- <VCalendar /> -->
-                        <VDatePicker v-model="date" transparent borderless/>
+                        <VDatePicker v-model="clicked_date" transparent borderless @click="setDate(this.counselor.counselorNo, this.clicked_date)"/>
+                        <div>선택된 날짜 : {{ this.formatted_date }}</div>
                     </div>
                     <div class="calendar-hr"></div>
                     <div class="calendar-txt">예약 가능 시간</div>
                     <div class="time-section">
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                    </div>
-                    <div class="time-section">
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
-                        <div class="res-btn">12:00</div>
+                      <div v-for="(resTime, idx) in availableTimes" :key="idx" style="margin: 2px 4px;" >
+                        <SquareButton v-if="pageType=='SAJU'" :style="{ backgroundColor: clickedBtnIdx === idx ? '#F47F9E' : '' }" @click="clickedButton(resTime, idx)">{{ resTime }}</SquareButton>
+                        <SquareButton isTarot v-else :style="{ backgroundColor: clickedBtnIdx === idx ? '#9C7AE7' : '' }" @click="clickedButton(resTime, idx)">{{ resTime }}</SquareButton>
+                      </div>
                     </div>
                 </div>
-                <div class="res-btn">예약하기</div>
+                <SquareButton class="res-btn" @click="reserve" v-if="pageType=='SAJU'">예약하기</SquareButton>
+                <SquareButton isTarot class="res-btn" @click="reserve" v-else>예약하기</SquareButton>
+                <!-- <div v-if="this.reservationStatus!=''" style="font-size: 20px; height: 100px;">{{ this.reservationStatus }}</div> -->
             </div>
            </div>
           </div>
         </div>
         
+        <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :reservationStatus="reservationStatus" :prePage="this.pageType">
+          {{ this.reservationStatus }}
+        </modal-view>
+
     </div>
     
   </template>
 
 <script>
 import ReviewCard from '../components/common/ReviewCard.vue';
+import { SquareButton } from '../components/styled-components/StyledButton'
+import ModalView from "@/components/common/AlertModalView.vue";
+import { apiInstance } from '@/api/index';
 
 export default {
   components: {
     ReviewCard,
-  },
+    SquareButton,
+    ModalView
+},
   data() {
     return {
-      counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-      ],
+      pageType: "TARO",
+      typeTxt : "타로",
+      emptyReview: false,
+      reviews: [],
+      counselor: [],
+      clicked_date: new Date(),
+      cantReservations: null,
+      availableTimes: [],
+      formatted_date: null,
+      clickedTime:null,
+      clickedBtnIdx: null,
+      reservationStatus: "",
+      isModalVisible: false,
     };
   },
+  setup(){
+    
+  },
+  methods: {
+    getCounselorInfo(id){
+      
+    const api = apiInstance();
+
+      api({
+        method: 'GET',
+        url: `/counselors/${id}/`,
+      })
+      .then((result) => {
+        console.log(result.data);
+        this.counselor = result.data;        
+        this.getReviewInfo(this.counselor.counselorNo)
+        this.setDate(this.counselor.counselorNo, this.clicked_date)
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    getReviewInfo(id){
+      
+    const api = apiInstance();
+
+      api({
+        method: 'GET',
+        url: 'reservations/'+ id + '/co_reviews',
+      })
+      .then((result) => {
+        console.log(result);
+        //예외처리
+        if(result.data.length == 0){
+          this.emptyReview = true;
+          return;
+        }
+        
+        this.reviews = result.data;
+      })
+      .catch((e) => {
+        console.log(e)
+      })
+    },
+    setDate(id, date){
+        const day = date.getDate();
+        var newday = day >= 10 ? day : '0' + day;      
+        const month = date.getMonth() + 1;
+        var newmonth = month >= 10 ? month : '0' + month;
+        const year = date.getFullYear();
+
+        if(this.formatted_date == `${year}-${newmonth}-${newday}`)  return;
+
+        this.formatted_date = `${year}-${newmonth}-${newday}`;
+
+        const api = apiInstance();
+        api({
+          method: 'GET',
+          url: `reservations/availabledate/${id}/${this.formatted_date}`
+        })
+        .then((result) => {
+          console.log(result.data);
+          this.cantReservations = result.data;
+          this.availableTimes = [];
+          this.makeAvailableTimes();
+        })
+    },
+    makeAvailableTimes(){
+      
+      //값이 없을 때의 오류 처리 필요
+      if(this.counselor.startTime == null)
+        return;
+
+      var startTimeHour = Number(this.counselor.startTime.substr(0, 2));
+      var startTimeMin = Number(this.counselor.startTime.substr(3, 5));
+      var endTimeHour = Number(this.counselor.endTime.substr(0, 2));
+      var endTimeMin = Number(this.counselor.endTime.substr(3, 5));
+
+      while(startTimeHour <= endTimeHour){
+        
+        var txtHour = startTimeHour >= 10 ? startTimeHour.toString() : '0'+startTimeHour.toString();
+        var txtMin = startTimeMin >= 10 ? startTimeMin.toString() : '0'+startTimeMin.toString();
+        this.availableTimes.push( txtHour + ":" + txtMin )
+        
+        if(startTimeHour == endTimeHour && startTimeMin == endTimeMin){
+          break;
+        }  
+
+        if(startTimeMin == 0){
+          startTimeMin = 30;
+        }else{
+          startTimeHour += 1;
+          startTimeMin = 0;
+        }
+      }
+      if( this.cantReservations.length == 0 ) return;
+      
+      for(var i = 0; i <  this.availableTimes.length; i++){ 
+        for(var j = 0; j < this.cantReservations.length; j++){
+
+          var retxtHour = this.cantReservations[j].hour >= 10 ? this.cantReservations[j].hour.toString() : '0'+this.cantReservations[j].hour.toString();
+          var retxtMin = this.cantReservations[j].minute >= 10 ? this.cantReservations[j].minute.toString() : '0'+this.cantReservations[j].minute.toString();
+          var cantReservation = retxtHour + ":" + retxtMin;
+          
+          if ( this.availableTimes[i] === cantReservation) { 
+            this.availableTimes.splice(i, 1); 
+            i--; 
+          }
+        }
+      }
+    },
+    clickedButton(e, idx){
+      this.resTime = e;
+      this.clickedBtnIdx = idx;
+    },
+    reserve(){
+
+      const reservationDatetime =  this.formatted_date + "T" + this.resTime + ":00" 
+      const api = apiInstance();
+      
+        api({
+          method: 'POST',
+          url: `reservations/reserve`,
+          data: {
+            "counselorId": this.counselor.counselorNo,
+            "reservationDate": reservationDatetime,
+            "reservationType": this.pageType
+          },
+        })
+        .then((result) => {
+          console.log(result);
+
+          if(result.data == "예약이 완료 됐습니다."){
+            this.reservationStatus = "200";
+            this.isModalVisible = true;
+          }else{
+            this.reservationStatus = result.data
+            this.isModalVisible = true;
+          }
+          
+        }).catch((e) => {
+          console.log("ERROR:" + e)
+          this.reservationStatus = e
+        })
+    }     
+  },
+  created(){
+    this.pageType = this.$route.query.pageType;
+    if(this.pageType != "TARO"){
+      this.typeTxt = "사주";
+    }
+    
+    this.getCounselorInfo(this.$route.query.id)
+  }
  };
 </script>
 <style lang="scss" scoped>
@@ -103,6 +274,11 @@ export default {
 }
 .empty-box {
   height: 92px;
+}
+.reservation-contents{
+  padding-top: 82px;
+  width: 70vw;
+  margin-bottom: 200px;
 }
 .top-header {
   display: flex;
@@ -131,28 +307,23 @@ export default {
   display: inline-block;
 }
 .hr-wrapper {
-    border:#000000 0.5px solid;
-    height: 0px;
-    width: 65%;
-    padding: 0;
-    margin-top: 20px;
+  height: 1.5px;
+  background: #000;
+  width: 50%;
+  padding: 0;
+  margin-top: 20px;
     margin-bottom: 67px;
 }
-.contents {
-    width: 70%;
-    padding-top: 82px;
-    margin-bottom: 300px;
-}
 .reservation-box {
-    width: 1353px;
-    height: 836px;
-    flex-shrink: 0;
+    width: 100%;
+    height: 800px;
     border-radius: 10px;
     border: 2px solid #D7D7D7;  
     padding-top: 75px;
     padding-left: 65px;
     padding-bottom: 64px;
     padding-right: 65px;
+    // box-sizing: border-box;
 }
 .res-title {
     color: #333;
@@ -164,10 +335,11 @@ export default {
     //text-decoration: underline;
     //text-underline-position : under;
 }
-.reservation-content {
+.reservation-section {
     display: flex;
     justify-content: space-between;
     margin-top: 64px;
+    flex-wrap: wrap;
 }
 .profile-section {
     display: inline-flex;
@@ -221,13 +393,6 @@ img {
     justify-content: center;
     align-items: center;
 }
-// .calendar-poster {
-//     // height: 293px;
-//     // width: 319px;
-//     // display: inline;
-//     // align-content: center;
-    
-// }
 .res-calendar {
     width: 407px;
     height: 553px;
@@ -236,8 +401,7 @@ img {
     background: #FFF;
     margin-bottom: 45px;
     padding-top: 10px;
-    padding-bottom: 22px;
-    box-sizing: border-box;
+    padding-bottom: 15px;
 }
 .calendar-hr {
     height: 2px;
@@ -252,37 +416,21 @@ img {
     font-style: normal;
     font-weight: 700;
     line-height: normal;
-    margin: 12px 0px 10px 55px;
+    margin: 12px 35px 10px 35px;
     text-align: left;
 }
 .time-section{
-    margin: 20px 33px;
+    height: 130px;
+    overflow-y: scroll;
+    margin: 15px 25px;
     display: flex;
-    justify-content: space-between;
+    justify-content: start;
+    align-items: center;
     flex-wrap : wrap;
 }
-.time-section .res-btn {
-    width: 80px;
-    height: 40px;
-    box-sizing: border-box;
-}
 .res-btn {
-    display: flex;
     width: 346px;
     height: 40px;
-    padding: 7px 23px;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    flex-shrink: 0;
-    border-radius: 5px;
-    background: #BFAEE5;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-    color: #FFF;
-    font-family: Inter;
-    font-size: 16px;
-    font-style: normal;
-    font-weight: 700;
-    line-height: normal;
+    padding: 20px 23px;
 }
 </style>

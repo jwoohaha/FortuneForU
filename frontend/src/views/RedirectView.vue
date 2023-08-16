@@ -23,23 +23,21 @@ export default {
     methods: {
         async auth() {
             const authToken = this.$route.query.token;
-            console.log('AuthToken', authToken);
 
             if (authToken) {
                 await this.api.post('/auth', authToken)
-                .then((result) => this.onSuccess(result.data))
-                .catch((error) => this.onError(error));
+                .then(response => this.onSuccess(response.headers))
+                .catch((error) => this.onError(error))
             } else {
                 window.alert("로그인에 실패하였습니다.");
                 router.push({path: '/'});
             }   
         },
-        async onSuccess(tokens) {
-            const accessToken = tokens.accessToken;
-            const refreshToken = tokens.refreshToken;
+        onSuccess(headers) {
+            console.log(headers);
+            const accessToken = headers.authorization;
             console.log("accessToken: " + accessToken);
-            console.log("refreshToken: " + refreshToken);
-            this.store.saveTokens(accessToken, refreshToken);
+            this.store.saveAccessToken(accessToken);
             this.store.login();
             router.push({path: '/'});
         },

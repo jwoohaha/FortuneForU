@@ -35,7 +35,7 @@ public class SttProducer {
     @Bean
     public Queue createResultQueue() { return new Queue(RESULT_QUEUE); }
 
-    public void produceSttTask(String reservationId, String audioFilePath) throws JsonProcessingException {
+    public void produceSttTask(Long reservationId, String audioFilePath) throws JsonProcessingException {
 
         final SttRequest sttRequest = SttRequest.builder()
                 .reservationId(reservationId)

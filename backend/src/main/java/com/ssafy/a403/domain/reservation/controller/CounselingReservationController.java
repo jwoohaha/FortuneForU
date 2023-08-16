@@ -1,5 +1,7 @@
 package com.ssafy.a403.domain.reservation.controller;
 
+import com.ssafy.a403.domain.member.entity.Counselor;
+import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.service.CounselingReservationService;
 import com.ssafy.a403.global.config.security.LoginUser;
@@ -7,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -29,17 +30,21 @@ public class CounselingReservationController {
 
     //예약 db에 저장
     @PostMapping("/reserve")
-    public String reserve(@RequestBody ReservationRequest reservationRequest,
-                          RedirectAttributes redirectAttributes){
+    public ResponseEntity<String> reserve(@AuthenticationPrincipal LoginUser loginUser,
+                          @RequestBody ReservationRequest reservationRequest){
 
-        Long memberId = reservationRequest.getMemberId();
-        Long counselorId = reservationRequest.getCounselorId();
-        LocalDateTime reservationDate = reservationRequest.getReservationDate();
+        try {
+            Long memberId = loginUser.getMember().getNo();
+            Long counselorId = reservationRequest.getCounselorId();
+            String reservationType = reservationRequest.getReservationType();
+            LocalDateTime reservationDate = reservationRequest.getReservationDate();
 
-        Long reservationNo = counselingReservationService.reservation(memberId, counselorId, reservationDate);
-        redirectAttributes.addFlashAttribute("reservationNo", reservationNo);
+            String reservation = counselingReservationService.saveReservation(memberId, counselorId, reservationType, reservationDate);
+            return ResponseEntity.ok(reservation);
+        }catch (IllegalArgumentException e) {
+            return ResponseEntity.badRequest().body(e.getMessage());
+        }
 
-        return "예약 완료!";
     }
 
 
@@ -49,6 +54,22 @@ public class CounselingReservationController {
         Long memberId = loginUser.getMember().getNo();
         return  counselingReservationService.getReservation(memberId);
 
+    }
+
+    // 일반회원 종료된 상담 리스트 조회
+    @GetMapping("/member/reports")
+    public List<ReportsListResponse> getReportsList(@AuthenticationPrincipal LoginUser loginUser) {
+        Long memberId = loginUser.getMember().getNo();
+
+        return counselingReservationService.getReportsList(memberId);
+    }
+
+
+    // 대기중인 상담 개수 조회
+    @GetMapping("/counselor_waiting")
+    public Long countWaiting(@AuthenticationPrincipal LoginUser loginUser) {
+        Long counselorId = loginUser.getMember().getCounselor().getNo();
+        return counselingReservationService.countWaitingList(counselorId);
     }
 
 
@@ -73,21 +94,28 @@ public class CounselingReservationController {
     //예약 취소
     @PatchMapping("/cancel/{reservationNo}")
     public String cancel(@PathVariable Long reservationNo) {
-        counselingReservationService.cancelReservation(reservationNo);
-        return "취소";
+        return counselingReservationService.cancelReservation(reservationNo);
     }
+
+
+    // 상담 결과 상세 조회
+    @GetMapping("/report/{reservationNo}")
+    public ReportDetailResponse getReportDetail(@PathVariable Long reservationNo) {
+        return counselingReservationService.getReportDetail(reservationNo);
+    }
+
 
 
     //후기 작성
     @PostMapping("/{reservationNo}/save_review")
     public String saveReview(@RequestBody ReviewRequest reviewRequest,
-                             @PathVariable Long reservationNo){
-        Long memberId = reviewRequest.getMemberId();
+                             @PathVariable Long reservationNo,
+                             @AuthenticationPrincipal LoginUser loginUser){
+        Long memberId = loginUser.getMember().getNo();
         String review = reviewRequest.getReservationReview();
-        float rez_score = reviewRequest.getReservationScore();
-        counselingReservationService.postReview(reservationNo, memberId, review, rez_score);
+        Float rez_score = reviewRequest.getReservationScore();
+        return counselingReservationService.postReview(reservationNo, memberId, review, rez_score);
 
-        return "ok";
     }
 
 
@@ -124,5 +152,20 @@ public class CounselingReservationController {
     public List<ReviewResponse> getCoReview(@AuthenticationPrincipal LoginUser loginUser) {
         Long counselorId = loginUser.getMember().getCounselor().getNo();
         return counselingReservationService.getCoReview(counselorId);
+    }
+
+
+    // 상담 결과 조회
+    @GetMapping("reports/{reservationNo}")
+    public ResponseEntity<ReportResponse> getReport(@PathVariable Long reservationNo) {
+        return ResponseEntity.ok(counselingReservationService.getReport(reservationNo));
+    }
+
+    // 상담 결과(gptResult) 수정
+    @PutMapping("/counseling_results/{reservationNo}")
+    public ResponseEntity<String> updateCounselingResult(@PathVariable Long reservationNo,
+                                                         @RequestBody UpdateResultRequest updatedResult) {
+        counselingReservationService.updateResult(reservationNo, updatedResult);
+        return ResponseEntity.ok("게시글이 성공적으로 수정됨");
     }
 }

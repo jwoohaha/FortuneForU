@@ -24,9 +24,9 @@ public class Member {
     @Column(name = "member_no")
     private Long no;
 
+    @Column(unique = true)
     private String email;
 
-    @Column(unique = true)
     private String name;
 
     @ColumnDefault("true")

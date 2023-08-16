@@ -4,13 +4,13 @@ import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.ReportStatus;
 import com.ssafy.a403.domain.model.ReservationStatus;
+import com.ssafy.a403.domain.reservation.dto.UpdateResultRequest;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import javax.persistence.*;
-import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 @Slf4j
@@ -46,7 +46,7 @@ public class CounselingReservation {
     @Column(name="rez_review")
     private String reservationReview;
 
-    @Column(name="rez_report")
+    @Column(name="rez_report", length = 1000)
     private String reservationReport;
 
     @Column(name="rez_report_status")
@@ -56,14 +56,18 @@ public class CounselingReservation {
     @Column(name="rez_recorded")
     private String reservationRecorded;
 
-    @Column(name="rez_score")
-    private float reservationScore;
 
+    @Column(name="rez_score")
+    private Float reservationScore;
+
+    @Column(name="rez_type")
+    private String reservationType;
 
 
     @Builder
     public CounselingReservation(Long reservationNo, Member member, Counselor counselor, LocalDateTime reservationDateTime, ReservationStatus reservationStatus,
-                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus, String reservationRecorded, float reservationScore) {
+                                 String sessionId, String reservationReview, String reservationReport, ReportStatus reportStatus,
+                                 String reservationRecorded, Float reservationScore, String reservationType) {
         this.reservationNo = reservationNo;
         this.member = member;
         this.counselor = counselor;
@@ -75,28 +79,32 @@ public class CounselingReservation {
         this.reportStatus = reportStatus;
         this.reservationRecorded = reservationRecorded;
         this.reservationScore = reservationScore;
+        this.reservationType = reservationType;
     }
 
 
     //예약 취소
-    public void cancel() {
+    public String cancel() {
         if (reservationDateTime.isAfter(LocalDateTime.now())) {
             reservationStatus = ReservationStatus.CANCEL;
+            reportStatus = ReportStatus.NONE;
+            return "예약이 취소됐습니다.";
         } else {
-            throw new IllegalArgumentException("취소 가능한 날짜가 지났습니다.");
+            return  "취소 가능한 날짜가 지났습니다.";
         }
     }
 
 
     // 리뷰 저장
-    public void saveReview(String review, float score) {
+    public String saveReview(String review, Float score) {
         if (review.length() > 200) {
-            throw new IllegalArgumentException("200자를 초과하였습니다.");
+            return "200자를 초과하였습니다.";
         }
         reservationReview = review;
         reservationScore = score;
-
         counselor.updateCounselorReview(score);
+
+        return "작성 완료됐습니다.";
     }
 
 
@@ -119,5 +127,25 @@ public class CounselingReservation {
     // 상담 종료 확인
     public boolean checkStatus(){
         return reservationStatus.equals(ReservationStatus.END);
+    }
+
+    // 리포트 상태 WAITNG으로 변경
+    public void changeReportStatusToWaiting() {
+        this.reportStatus = ReportStatus.WAITING;
+    }
+
+    // GPT 처리 결과 저장
+    public void saveGptResult(String gptResult) {
+        this.reservationReport = gptResult;
+    }
+
+    // 리포트 상태 COMPLETE으로 변경
+    public void changeReportStatusToComplete() {
+        this.reportStatus = ReportStatus.COMPLETE;
+    }
+
+    // GPT 처리 결과 수정
+    public void updateReport(UpdateResultRequest updatedResult) {
+        this.reservationReport = updatedResult.getCounselingResult();
     }
 }

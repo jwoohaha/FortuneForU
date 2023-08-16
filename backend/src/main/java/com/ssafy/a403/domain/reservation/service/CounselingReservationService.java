@@ -5,9 +5,7 @@ import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.CounselorRepository;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
 import com.ssafy.a403.domain.model.ReservationStatus;
-import com.ssafy.a403.domain.reservation.dto.AvailableDateTime;
-import com.ssafy.a403.domain.reservation.dto.ReservationResponse;
-import com.ssafy.a403.domain.reservation.dto.ReviewResponse;
+import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.reservation.repository.CounselingReservationRepository;
 import lombok.RequiredArgsConstructor;
@@ -29,29 +27,32 @@ public class CounselingReservationService {
 
 
     //예약하기
-    public Long reservation(Long memberId, Long counselorId, LocalDateTime reservationDate) {
+    @Transactional
+    public String saveReservation(Long memberId, Long counselorId, String reservationType, LocalDateTime reservationDate) {
 
         Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
         Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
         List<CounselingReservation> reservationList = counselingReservationRepository.findByCounselor(counselor);
         for (CounselingReservation reservation : reservationList) {
             if(reservation.getReservationDateTime().equals(reservationDate)){
-                throw new IllegalArgumentException("해당 시간에 이미 예약이 존재합니다.");
+
+                return "해당 시간에 이미 예약이 존재합니다.";
             }
         }
         if (counselor.isSelf(memberId)){
-            throw new IllegalArgumentException("자기자신은 예약할 수 없습니다.");
+            return "자기자신은 예약할 수 없습니다.";
         }
         CounselingReservation counselingReservation = CounselingReservation.builder()
                 .member(member)
                 .counselor(counselor)
+                .reservationType(reservationType)
                 .reservationDateTime(reservationDate)
                 .reservationStatus(ReservationStatus.WAITING)
                 .build();
 
         CounselingReservation savedReservation = counselingReservationRepository.save(counselingReservation);
 
-        return savedReservation.getReservationNo();
+        return "예약이 완료 됐습니다.";
     }
 
 
@@ -61,10 +62,13 @@ public class CounselingReservationService {
         List<AvailableDateTime> reservationDatetimeList = new ArrayList<>();
         // 상담사의 모든 예약들
         List<ReservationResponse> reservationResponse = getCoReservation(counselorId, date);
+
         reservationResponse.sort(Comparator.comparing(ReservationResponse::getReservationDateTime));
 
         for (ReservationResponse reservation : reservationResponse) {
-            reservationDatetimeList.add(new AvailableDateTime().from(reservation));
+            if (reservation.getReservationStatus().equals(ReservationStatus.WAITING)) {
+                reservationDatetimeList.add(new AvailableDateTime().from(reservation));
+            }
         }
 
         return reservationDatetimeList;
@@ -91,6 +95,37 @@ public class CounselingReservationService {
         reservations.sort(Comparator.comparing(CounselingReservation::getReservationDateTime).reversed());
 
         return reservationList(reservations);
+    }
+
+
+
+    // 종료된 상담 리스트 (결과 목록 보기)
+    public List<ReportsListResponse> getReportsList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        List<CounselingReservation> reservations = counselingReservationRepository.findByMember(member);
+
+        List<ReportsListResponse> reportsListResponses = new ArrayList<>();
+        for (CounselingReservation reservation : reservations) {
+            if (reservation.getReservationStatus().equals(ReservationStatus.END)){
+                System.out.println(reservation.getReservationStatus());
+                reportsListResponses.add(new ReportsListResponse().from(reservation));
+            }
+        }
+        return reportsListResponses;
+    }
+
+
+    // Waiting 상태의 상담 갯수
+    public Long countWaitingList(Long counselorId) {
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
+        List<CounselingReservation> reservations = counselingReservationRepository.findByCounselor(counselor);
+        if (reservations.isEmpty()) {
+            return 0L;
+        }
+        return reservations.stream()
+                .filter(reservation -> reservation.getReservationStatus() == ReservationStatus.WAITING)
+                .count();
+
     }
 
 
@@ -124,10 +159,18 @@ public class CounselingReservationService {
 
     //예약 취소
     @Transactional
-    public void cancelReservation(Long reservationNo) {
+    public String cancelReservation(Long reservationNo) {
        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
-       counselingReservation.cancel();
+       return counselingReservation.cancel();
+    }
+
+
+
+    // 상담 결과 상세 조회
+    public ReportDetailResponse getReportDetail(Long reservationNo) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
+        return new ReportDetailResponse().from(counselingReservation);
     }
 
 
@@ -135,7 +178,7 @@ public class CounselingReservationService {
 
     // 후기 작성
     @Transactional
-    public void postReview(Long reservationNo, Long memberId, String review, float rez_score) {
+    public String postReview(Long reservationNo, Long memberId, String review, Float rez_score) {
         CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
         if (!counselingReservation.checkEmpty()) {
@@ -148,8 +191,8 @@ public class CounselingReservationService {
             throw new IllegalArgumentException("Counseling is not finished");
         }
 
-        counselingReservation.saveReview(review, rez_score);
-        counselingReservationRepository.save(counselingReservation);
+        return counselingReservation.saveReview(review, rez_score);
+
     }
 
 
@@ -169,13 +212,16 @@ public class CounselingReservationService {
     public List<ReviewResponse> reviewList(List<CounselingReservation> reservations){
         List<ReviewResponse> reviewResponses = new ArrayList<>();
         for ( CounselingReservation reservation : reservations) {
+
             if (reservation.getReservationReview() != null){
                 reviewResponses.add(new ReviewResponse().from(reservation));
             }
         }
+        if (reviewResponses.isEmpty()) {
+            return Collections.emptyList();
+        }
         return reviewResponses;
     }
-
 
 
     // 일반회원 후기 조회
@@ -201,6 +247,34 @@ public class CounselingReservationService {
         }
         return reviewList(reservations);
     }
+
+    // gpt 결과 -> 상담사 수정 대기 처리
+    @Transactional
+    public void handleGptResult(Long reservationNo, String gptResult){
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).
+                orElseThrow(EntityNotFoundException::new);
+
+        counselingReservation.changeReportStatusToWaiting();
+        counselingReservation.saveGptResult(gptResult);
+    }
+
+    // 상담 리포트(결과) 조회
+    public ReportResponse getReport(Long reservationNo) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).
+                orElseThrow(EntityNotFoundException::new);
+        return ReportResponse.of(counselingReservation);
+    }
+
+    // gpt 결과 상담사 수정
+    @Transactional
+    public void updateResult(Long id, UpdateResultRequest updatedResult) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(id).
+                orElseThrow(EntityNotFoundException::new);
+
+        counselingReservation.changeReportStatusToComplete();
+        counselingReservation.updateReport(updatedResult);
+    }
+
 
 }
 

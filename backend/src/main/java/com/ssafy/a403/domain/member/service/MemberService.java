@@ -1,10 +1,14 @@
 package com.ssafy.a403.domain.member.service;
 
-import com.ssafy.a403.domain.member.dto.FollowerInfoResponse;
+import com.ssafy.a403.domain.counselorform.dto.CounselorFormRequest;
+import com.ssafy.a403.domain.counselorform.service.CounselorFormService;
 import com.ssafy.a403.domain.member.dto.MemberDetailsResponse;
 import com.ssafy.a403.domain.member.dto.MemberInfoResponse;
+import com.ssafy.a403.domain.member.entity.Follow;
+import com.ssafy.a403.domain.member.entity.FollowId;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.member.repository.MemberRepository;
+import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
@@ -17,7 +21,6 @@ import javax.persistence.EntityNotFoundException;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Slf4j
 @Service
@@ -25,6 +28,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class MemberService {
 
+    private final CounselorFormService counselorFormService;
     private final FollowService followService;
     private final MemberRepository memberRepository;
 
@@ -39,10 +43,25 @@ public class MemberService {
     public MemberDetailsResponse getMemberDetails(Member member){
 
         List<Member> followers = followService.followerList(member);
-        List<FollowerInfoResponse> followerInfoList = followers.stream()
-                .map(f -> FollowerInfoResponse.of(f))
-                .collect(Collectors.toList());
-        return MemberDetailsResponse.of(member, followerInfoList);
+        return MemberDetailsResponse.of(member, followers);
+    }
+
+    @Transactional
+    public void follow(Member follower, Member followee) {
+
+        followService.follow(follower, followee);
+    }
+
+    @Transactional
+    public void unfollow(Member follower, Member followee) {
+
+        followService.unfollow(follower, followee);
+    }
+
+    @Transactional
+    public void submitCounselorForm(CounselorFormRequest counselorFormRequest, Member member) {
+
+        counselorFormService.submitForm(counselorFormRequest, member);
     }
 
     public Page<Member> findPaging(Pageable pageable) {
