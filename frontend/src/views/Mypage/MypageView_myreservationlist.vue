@@ -54,8 +54,9 @@
                                 <div id="coun-room">
                                     
                                     <div v-if="reservation.reservationStatus==='상담 진행'">
-                                        <a href={{reservation.sessionId}}>🏠</a>
-                                    </div>
+                                        <!-- <a href={{reservation.sessionId}}>🏠</a> -->
+                                        <router-link :to="{ name: 'chatviewforuser', params: { IdforSession: reservation.sessionId} }">🏠</router-link>
+                                    </div>``
                                     <div v-if="reservation.reservationStatus!='상담 진행'">❌</div>
                                 </div>
                                 <div class="divider">|</div>
@@ -64,7 +65,7 @@
                             
                         </div>
                     </div>
-                </div>
+                </div>s
             </div>
         </div>
     </template>

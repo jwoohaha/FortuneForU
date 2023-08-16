@@ -142,12 +142,13 @@ export default {
         url: 'reservations/'+ id + '/co_reviews',
       })
       .then((result) => {
+        console.log(result);
         //예외처리
-        if(Object.keys(result.data) == 0){
+        if(result.data.length == 0){
           this.emptyReview = true;
           return;
         }
-
+        
         this.reviews = result.data;
       })
       .catch((e) => {
@@ -205,7 +206,7 @@ export default {
           startTimeMin = 0;
         }
       }
-      if( Object.keys(this.cantReservations) == 0 ) return;
+      if( this.cantReservations.length == 0 ) return;
       
       for(var i = 0; i <  this.availableTimes.length; i++){ 
         for(var j = 0; j < this.cantReservations.length; j++){
@@ -242,7 +243,7 @@ export default {
         .then((result) => {
           console.log(result);
 
-          if(result.data == "예약 성공"){
+          if(result.status == "예약이 완료 됐습니다."){
             this.reservationStatus = "200";
             this.isModalVisible = true;
           }else{

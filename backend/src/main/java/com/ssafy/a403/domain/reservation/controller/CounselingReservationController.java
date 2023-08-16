@@ -9,7 +9,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -153,5 +152,20 @@ public class CounselingReservationController {
     public List<ReviewResponse> getCoReview(@AuthenticationPrincipal LoginUser loginUser) {
         Long counselorId = loginUser.getMember().getCounselor().getNo();
         return counselingReservationService.getCoReview(counselorId);
+    }
+
+
+    // 상담 결과 조회
+    @GetMapping("reports/{reservationNo}")
+    public ResponseEntity<ReportResponse> getReport(@PathVariable Long reservationNo) {
+        return ResponseEntity.ok(counselingReservationService.getReport(reservationNo));
+    }
+
+    // 상담 결과(gptResult) 수정
+    @PutMapping("/counseling_results/{reservationNo}")
+    public ResponseEntity<String> updateCounselingResult(@PathVariable Long reservationNo,
+                                                         @RequestBody UpdateResultRequest updatedResult) {
+        counselingReservationService.updateResult(reservationNo, updatedResult);
+        return ResponseEntity.ok("게시글이 성공적으로 수정됨");
     }
 }

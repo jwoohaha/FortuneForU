@@ -6,7 +6,6 @@ import lombok.Data;
 @Data
 public class ReviewRequest {
 
-
     private Long counselorId;
     private String reservationReview;
     private Float reservationScore;

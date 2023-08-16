@@ -59,7 +59,6 @@
                                             <div>{{ reservation.reservationDateTime }}</div>
                                             <div> {{ reservation.reservationType }}</div>
                                             <div>{{ reservation.reservationStatus }}</div>
-                                            
                                         </div>
                                     </div>
                                 </div>
@@ -86,9 +85,11 @@
                                 <div class="cell-label">예약 상태</div>
                                 <div class="cell-txt">{{ clickedReservation.reservationStatus }}</div>
                             </div>
+
                             <div class="res-cell" id="cell-btns" v-if="clickedReservation.reservationStatus === '상담 전'">
                                 <SquareButton id="start-btn">
-                                    <router-link to="/chatview">상담 시작</router-link>
+                                    <!-- <router-link to="/chatview">상담 시작</router-link> -->
+                                    <router-link :to="{ name: 'chatviewforconsultant', params: { reservationNo: clickedReservation.reservationNo } }">상담 시작</router-link>
                                     </SquareButton>
                                 <SquareButton isTarot id="cancel-btn" @click="cancelReservation">취소</SquareButton>
                                 
@@ -141,7 +142,6 @@ export default {
                 this.counselor = res.data
                 console.log(this.counselor)
                 this.getCoRezInfo(this.clicked_date)
-
                 
             })
             .catch((e) => {
@@ -149,7 +149,6 @@ export default {
             })
         },
         getCoRezInfo(date) {
-
             const day = date.getDate();
             var newday = day >= 10 ? day : '0' + day;      
             const month = date.getMonth() + 1;
@@ -159,7 +158,7 @@ export default {
             if(this.formatted_date == `${year}-${newmonth}-${newday}`)  return;
 
             this.formatted_date = `${year}-${newmonth}-${newday}`;
-            
+
             const getCoRezInfoRequest = apiInstance();
             getCoRezInfoRequest({
                 method: 'GET',
@@ -172,7 +171,6 @@ export default {
                 this.noReservation = false;
                 this.toggleReservationDetails();
 
-                
             })
             .catch((e) => {
                 console.log(e)
