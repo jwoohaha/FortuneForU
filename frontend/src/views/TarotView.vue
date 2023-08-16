@@ -83,7 +83,7 @@ export default {
       const getCounselorsRequest = apiInstance();
       getCounselorsRequest({
         method: 'GET',
-        url: '/counselors/by_ratings/',
+        url: '/counselors/by_ratings',
         params: {
           counselorType: 'TARO',
           page: pageNum
@@ -106,7 +106,7 @@ export default {
       const getCounselorsRequest = apiInstance();
       getCounselorsRequest({
         method: 'GET',
-        url: '/counselors/by_reviews/',
+        url: '/counselors/by_reviews',
         params: {
           counselorType: 'TARO',
           page: pageNum

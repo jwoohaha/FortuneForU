@@ -10,7 +10,7 @@ import { useTokenStore } from '@/stores/token'
 export default { 
 
     created() {
-        this.auth(); 
+        this.reissue(); 
     },
     setup() {
         const store = useTokenStore();
@@ -21,11 +21,11 @@ export default {
         };
     },
     methods: {
-        async auth() {
-            const authToken = this.$route.query.token;
+        async reissue() {
+            const refreshToken = this.$route.query.token;
 
-            if (authToken) {
-                await this.api.post('/auth', authToken)
+            if (refreshToken) {
+                await this.api.post('/auth/reissue', refreshToken)
                 .then(response => this.onSuccess(response.headers))
                 .catch((error) => this.onError(error))
             } else {

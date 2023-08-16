@@ -12,6 +12,8 @@
 //import org.springframework.stereotype.Component;
 //
 //import javax.annotation.PostConstruct;
+//import java.util.List;
+//import java.util.stream.Collectors;
 //import java.util.stream.IntStream;
 //
 //@Component
@@ -30,28 +32,28 @@
 //    }
 //
 //    public void initCounselorForms() {
-//        Member member = Member.builder().name("user1").build();
-//        memberRepository.save(member);
-//        IntStream.range(0, 6).mapToObj(i ->
+//        List<CounselorType> counselorTypes = List.of(CounselorType.SAJU, CounselorType.TARO, CounselorType.BOTH);
+//        List<PassState> passStates = List.of(PassState.PASS, PassState.WAITING, PassState.REJECT);
+//
+//        List<Member> members = List.of(
+//                Member.builder().email("abc123@gmail.com").name("김김김").profileImage("image1.png").build(),
+//                Member.builder().email("abc456gmail.com").name("박박박").profileImage("image2.png").build(),
+//                Member.builder().email("abc789@gmail.com").name("최최최").profileImage("image3.png").build()
+//        );
+//        memberRepository.saveAll(members);
+//
+//        List<CounselorForm> counselorForms = IntStream.range(0, 18).mapToObj(i ->
 //                        CounselorForm.builder()
-//                                .counselorType(CounselorType.SAJU)
-//                                .passState(PassState.PASS)
-//                                .member(member)
+//                                .counselorType(counselorTypes.get(i % 3))
+//                                .major("major" + i)
+//                                .career("career" + i)
+//                                .intro("intro" + i)
+//                                .address("address" + i)
+//                                .phone("phone" + i)
+//                                .passState(passStates.get(i % 3))
+//                                .member(members.get(i % 3))
 //                                .build())
-//                .forEach(counselorFormRepository::save);
-//        IntStream.range(0, 6).mapToObj(i ->
-//                        CounselorForm.builder()
-//                                .counselorType(CounselorType.TARO)
-//                                .passState(PassState.REJECT)
-//                                .member(member)
-//                                .build())
-//                .forEach(counselorFormRepository::save);
-//        IntStream.range(0, 6).mapToObj(i ->
-//                        CounselorForm.builder()
-//                                .counselorType(CounselorType.BOTH)
-//                                .passState(PassState.WAITING)
-//                                .member(member).
-//                                build())
-//                .forEach(counselorFormRepository::save);
+//                .collect(Collectors.toList());
+//        counselorFormRepository.saveAll(counselorForms);
 //    }
 //}

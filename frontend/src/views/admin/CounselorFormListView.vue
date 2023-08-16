@@ -80,7 +80,7 @@ export default {
     }
   },
   created() {
-    this.getCounselorForms(this.filter, this.pageNo, this.pageSize);
+    this.getCounselorForms(this.filter, this.pageNum, this.pageSize);
   },
   methods: {
     viewCounselorForm(no) {
@@ -90,12 +90,13 @@ export default {
       })
     },
     async getCounselorForms(filter, pageNum, pageSize) {
-      
       await this.api.get(`/admin/counselor-forms?filter=${filter}&page=${pageNum}&size=${pageSize}`)
         .then((response) => {
-            this.counselorForms = response.data.content;
-            this.totalPages = response.data.totalElements / pageSize;
             console.log(response.data);
+            this.counselorForms = response.data.content;
+            if (response.data.totalElements != 0) {
+              this.totalPages = response.data.totalElements / pageSize;
+            }            
         })
         .catch((error) => {
           console.log('상담사 목록을 불러오지 못했습니다.\n' + error);

@@ -27,13 +27,6 @@ public class GlobalControllerAdvice {
         return ResponseEntity.notFound().build();
     }
 
-    @ExceptionHandler(ExpiredJwtException.class)
-    public void expiredJwtExceptionHandler(Exception e, HttpServletResponse response) throws IOException {
-        log.info("ExpiredJwtException: {}", e.getMessage());
-        response.sendRedirect(clientUrl + "/login");
-//        return ResponseEntity.badRequest().body(e.getMessage());
-    }
-
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> runtimeExceptionHandler(Exception e) {
