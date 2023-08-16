@@ -87,6 +87,7 @@ import ReviewCard from '../components/common/ReviewCard.vue';
 import { SquareButton } from '../components/styled-components/StyledButton'
 import ModalView from "@/components/common/AlertModalView.vue";
 import { apiInstance } from '@/api/index';
+import { useTokenStore } from '@/stores/token';
 
 export default {
   components: {
@@ -112,7 +113,7 @@ export default {
     };
   },
   setup(){
-    
+
   },
   methods: {
     getCounselorInfo(id){
@@ -231,15 +232,11 @@ export default {
       const reservationDatetime =  this.formatted_date + "T" + this.resTime + ":00" 
       const api = apiInstance();
       
-        api({
-          method: 'POST',
-          url: `reservations/reserve`,
-          data: {
+        api.post('reservations/reserve', {
             "counselorId": this.counselor.counselorNo,
             "reservationDate": reservationDatetime,
             "reservationType": this.pageType
-          },
-        })
+          })
         .then((result) => {
           console.log(result);
 
@@ -251,9 +248,15 @@ export default {
             this.isModalVisible = true;
           }
           
-        }).catch((e) => {
-          console.log("ERROR:" + e)
-          this.reservationStatus = e
+        })
+        .catch((error) => {
+          console.log(error)
+          this.reservationStatus = error
+          if (error.response.status == 401){
+            const tokenStore = useTokenStore();
+            alert("로그인이 필요한 페이지입니다.");
+            tokenStore.makeLoginModalVisible();
+          }
         })
     }     
   },
