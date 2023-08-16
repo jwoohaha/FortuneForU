@@ -45,9 +45,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "reservationlist" */ '../views/Mypage/MypageView_myreservationlist.vue')
   },
   {
-    path: '/mypage/counslingresult',
+    path: '/mypage/counslingresult/:rezNo',
     name: 'counslingresult',
     component: () => import(/* webpackChunkName: "counslingresult" */ '../views/Mypage/MypageView_counselingresult.vue')
+  },
+  {
+    path: '/mypage/reportlist',
+    name: 'reportlist',
+    component: () => import(/* webpackChunkName: "reportlist" */ '../views/Mypage/MypageView_myreportlist.vue')
   },
   {
     path: '/mypage/review',
