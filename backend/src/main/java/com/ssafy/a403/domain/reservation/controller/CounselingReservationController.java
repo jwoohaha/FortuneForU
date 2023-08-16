@@ -67,7 +67,7 @@ public class CounselingReservationController {
 
 
     // 대기중인 상담 개수 조회
-    @GetMapping("counselor_waiting/")
+    @GetMapping("/counselor_waiting")
     public Long countWaiting(@AuthenticationPrincipal LoginUser loginUser) {
         Long counselorId = loginUser.getMember().getCounselor().getNo();
         return counselingReservationService.countWaitingList(counselorId);

@@ -50,7 +50,7 @@ spring:
           google:
             client-id: 576948301615-rulk67ue42f71ef21f127k8it1leoltd.apps.googleusercontent.com
             client-secret: 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
-            redirect-uri: "http://localhost:5000/{action}/oauth2/code/{registrationId}"
+            redirect-uri: "https://i9a403.p.ssafy.io/{action}/oauth2/code/{registrationId}"
             scope: profile,email  # 받아올 범위
 
 # RabbitMQ Alias
@@ -72,8 +72,8 @@ jwt:
 
 # Client Alias
 client:
-  host: localhost:8080
-  url: http://localhost:8080
+  host: i9a403.p.ssafy.io
+  url: https://i9a403.p.ssafy.io
   endpoint: /redirect
 
 # Logging level
