@@ -243,7 +243,7 @@ export default {
         .then((result) => {
           console.log(result);
 
-          if(result.status == "예약이 완료 됐습니다."){
+          if(result.data == "예약이 완료 됐습니다."){
             this.reservationStatus = "200";
             this.isModalVisible = true;
           }else{

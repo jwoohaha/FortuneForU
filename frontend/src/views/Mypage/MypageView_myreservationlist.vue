@@ -21,13 +21,13 @@
                     </div>
     
                     <div class="res-list-part">
-                        <div class="status-part">
+                        <!-- <div class="status-part">
                             <div id="status1">🤍 예약중</div>
                             <div id="status2">🤍 완료</div>
                             <div id="status3">🤍 취소</div>
-                        </div>
+                        </div> -->
                         <div class="table-header">
-                            <div>상담가</div>
+                            <div>상담사</div>
                             <div class="divider">|</div>
                             <div>예약 시간</div>
                             <div class="divider">|</div>
@@ -56,7 +56,7 @@
                                     <div v-if="reservation.reservationStatus==='상담 진행'">
                                         <!-- <a href={{reservation.sessionId}}>🏠</a> -->
                                         <router-link :to="{ name: 'chatviewforuser', params: { IdforSession: reservation.sessionId} }">🏠</router-link>
-                                    </div>``
+                                    </div>
                                     <div v-if="reservation.reservationStatus!='상담 진행'">❌</div>
                                 </div>
                                 <div class="divider">|</div>
@@ -65,7 +65,7 @@
                             
                         </div>
                     </div>
-                </div>s
+                </div>
             </div>
         </div>
     </template>
@@ -127,6 +127,7 @@ export default {
             reservationList.forEach((reservation) => {
                 reservation.reservationStatus = statusTable[reservation.reservationStatus];
                 reservation.reservationDateTime = reservation.reservationDateTime.replace("T", " ");
+                reservation.reservationDateTime = reservation.reservationDateTime.substring(0, 16);
             });
             return reservationList
         },
@@ -234,7 +235,7 @@ export default {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     padding-top: 30px;
     padding-bottom: 15px;
@@ -265,21 +266,24 @@ export default {
 }
 .table-contents {
     width: 975px;
-    height: 340px;
+    height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
+    align-items: center;
+    overflow: auto;
 }
 .each-row {
-    width: 975px;
+    width: 840px;
     height: 60px;
+    margin: 10px 10px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     color:#333;
-    font-size: 16px;
+    font-size: 17px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 600;
     line-height: normal;
 }
 #coun-room {
@@ -291,6 +295,9 @@ export default {
     color: white;
 }
 #coun-room div{
-    font-size: 25px;
+    font-size: 20px;
+}
+#coun-cancel{
+    font-size: 20px;
 }
 </style>
