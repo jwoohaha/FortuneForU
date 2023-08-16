@@ -9,12 +9,15 @@ function apiInstance() {
     const instance = axios.create({
         baseURL: 'https://i9a403.p.ssafy.io/api',
         // baseURL: 'http://localhost:5000/api',
+        headers:{
+            "Content-Type": 'application/json;charset=utf-8'
+        },
         timeout: 5000
     });
 
     instance.interceptors.request.use(
         (config) => {
-            config.headers['Content-Type'] = 'application/json;charset=utf-8';
+            // config.headers['Content-Type'] = 'application/json;charset=utf-8';
             config.headers['Authorization'] = store.getAccessToken;
             config.headers['']
             config.withCredentials = true;
