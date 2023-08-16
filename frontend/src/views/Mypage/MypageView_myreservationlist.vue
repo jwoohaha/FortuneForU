@@ -41,7 +41,7 @@
                         </div>
                         <div class="table-contents">
                             
-                            <router-link to="/tarot"><h3 v-if="noReservation">예약하러 가기</h3></router-link>
+                            <router-link to="/tarot"><h3 v-if="noReservation" style="margin-top: 150px; font-size:25px; text-decoration: underline;">예약하러 가기🎪</h3></router-link>
                             <div v-for="(reservation, idx) in reservationList" :key="idx" class="each-row">
                                 <div id="coun-name">{{ reservation.counselorName }}</div>
                                 <div class="divider">|</div>
@@ -49,18 +49,20 @@
                                 <div class="divider">|</div>
                                 <!-- <div id="cancel-date">{{ reservation.cancelableReservationDate }}</div>
                                 <div class="divider">|</div> -->
-                                <div id="coun-satus">{{ reservation.reservationStatus }}</div>
+                                <div id="coun-status" >{{ reservation.reservationStatus }}</div>
                                 <div class="divider">|</div>
                                 <div id="coun-room">
                                     
-                                    <div v-if="reservation.reservationStatus==='상담 진행'">
+                                    <div v-if="reservation.reservationStatus==='상담 진행'" >
                                         <!-- <a href={{reservation.sessionId}}>🏠</a> -->
-                                        <router-link :to="{ name: 'chatviewforuser', params: { IdforSession: reservation.sessionId} }">🏠</router-link>
+                                        <router-link :to="{ name: 'chatviewforuser', params: { IdforSession: reservation.sessionId} }">입장하기🏠</router-link>
                                     </div>
-                                    <div v-if="reservation.reservationStatus!='상담 진행'">❌</div>
+                                    <div v-if="reservation.reservationStatus=='상담 전'" style="white-space: nowrap;">대기중💥</div>
+                                    <div v-else style="width: 20%;"></div>
                                 </div>
                                 <div class="divider">|</div>
-                                <div id="coun-cancel" @click="cancelReservation(reservation.reservationNo)">💥</div>
+                                <div id="coun-cancel" v-if="reservation.reservationStatus=='상담 전'" @click="cancelReservation(reservation.reservationNo)" >취소하기❌</div>
+                                <div v-else style="width: 20%;"></div>
                             </div>
                             
                         </div>
@@ -133,13 +135,18 @@ export default {
         },
         cancelReservation(reservationNo) {
             const cancelRezRequest = apiInstance();
-            console.log("예약 취소 클릭")
+            // console.log("예약 취소 클릭" + reservationNo)
             cancelRezRequest({
-                method: 'PUT',
+                method: 'PATCH',
                 url: `reservations/cancel/${reservationNo}`,
             })
             .then((res) => {
                 console.log(res)
+                if(res.status==200){
+                    alert("예약된 상담이 취소되었습니다.")
+                    this.getRezInfo();
+                    this.getMemberInfo();
+                }
             })
             .catch((e) => {
                 console.log(e)
@@ -177,7 +184,7 @@ export default {
 }
 .mypage-header { 
     height: 57px;
-    width: 344px;
+    width: 80%;
     text-align: left;
     color: #333;
     font-size: 34px;
@@ -186,10 +193,12 @@ export default {
     line-height: normal;
 }
 .header-line {
-    height: 1px;
-    width: 100%;
-    background-color: #333;
-    margin-top: 10px;
+    height: 1.5px;
+    background: #000;
+    width: 45%;
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 67px;
 }
 .mypage-contents{
     height: 588px;
@@ -274,9 +283,10 @@ export default {
     overflow: auto;
 }
 .each-row {
-    width: 840px;
+    width: 98%;
     height: 60px;
-    margin: 10px 10px;
+    margin: 16px 0px;
+    padding-left: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -286,18 +296,29 @@ export default {
     font-weight: 600;
     line-height: normal;
 }
+#coun-name{
+    width: 20%;
+}
+#coun-date{
+    width: 20%;
+}
+#coun-status{
+    width: 20%;
+    margin-left: 20px;
+}
+
 #coun-room {
-    width: 93px;
-    display: flex;
-    justify-content: space-around;
+    width: 20%;
+    margin-left: 20px;
 }
 .each-row .divider{
     color: white;
 }
 #coun-room div{
-    font-size: 20px;
+    font-size: 16px;
 }
 #coun-cancel{
-    font-size: 20px;
+    width: 20%;
+    font-size: 16px;
 }
 </style>

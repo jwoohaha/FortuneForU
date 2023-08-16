@@ -28,25 +28,27 @@
                             <div class="divider">|</div>
                             <div>상담 결과서</div>
                             <div class="divider">|</div>
-                            <div>리뷰 작성</div>
-                            <div class="divider">|</div>
+                            <div>후기 작성</div>
                             
                         </div>
                         <div class="table-contents">
                             <div v-if="noReservation" class="list-row">
-                                            <div colspan="5" style="text-align: center;">상담 결과가 없습니다</div>
+                                <div colspan="5" style="text-align: center; margin-top: 150px; font-size: 25px; font-weight: 600;">상담 결과가 없습니다</div>
                             </div>                    
                             <div v-else v-for="reservation, idx in reservationList" :key="idx" class="each-row" >
-                                <div id="coun-name">{{ reservation.counselorName }}</div>
+                                <div id="coun-name" >{{ reservation.counselorName }}</div>
                                 <div class="divider">|</div>
                                 <div id="coun-date">{{ reservation.reservationDateTime }}</div>
                                 <div class="divider">|</div>
-                                <div id="coun-satus" @click="reservation.reportStatus === '결과 보러가기' ? handleReservationClick(reservation) : null" >
+                                <div id="coun-status" v-if="reservation.reportStatus==='결과 보러가기'" @click="handleReservationClick(reservation)" style="text-decoration : underline; ">
+                                    {{ reservation.reportStatus }}<img src="@/assets/review_icon.png" alt="">
+                                </div>
+                                <div id="coun-satus" v-else style="width: 18%;">
                                     {{ reservation.reportStatus }}
                                 </div>
                                 <div class="divider">|</div>
                                 <div id="coun-room">             
-                                    <div v-if="reservation.reservationReview === null">리뷰 작성하기</div>
+                                    <div v-if="reservation.reservationReview === null" @click="writeReview" ><span style="text-decoration : underline;">후기 작성하기</span>🧾</div>
                                     <div v-else>작성 완료</div>
                                 </div>
                             </div>
@@ -54,14 +56,17 @@
                     </div>
                 </div>
             </div>
+            <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationList.counselorId" :reservationNo="this.reservationList.reservationNo"></modal-view><modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationNo" :reservationNo="this.reservationNo"></modal-view>
         </div>
     </template>
     
 <script>
 import { apiInstance } from '@/api/index';
+import ModalView from "@/components/common/ReviewModalView.vue";
 
 export default {
     components: {
+        ModalView
     },
     data() {
         return {
@@ -70,7 +75,7 @@ export default {
             noReservation: true,
             reservationNo:null,
             clickedReservation : null,
-
+            isModalVisible: false,
         };
     },
     methods: {
@@ -117,6 +122,7 @@ export default {
             reservationList.forEach((reservation) => {
                 reservation.reportStatus = statusTable[reservation.reportStatus];
                 reservation.reservationDateTime = reservation.reservationDateTime.replace("T", " ");
+                reservation.reservationDateTime = reservation.reservationDateTime.substring(0, 16);
             });
             return reservationList
         },
@@ -132,12 +138,15 @@ export default {
         getProfileImg() {
             const ImgUrl = this.member.profileImage;
             return ImgUrl
+        },
+        writeReview(){
+            this.isModalVisible = true;
         }
     },
     created() {
         //this.getMemberInfo();
         this.getEndRezInfo();
-    }
+    },
 }
 </script>
 
@@ -160,7 +169,7 @@ export default {
 }
 .mypage-header { 
     height: 57px;
-    width: 344px;
+    width: 80%;
     text-align: left;
     color: #333;
     font-size: 34px;
@@ -169,10 +178,12 @@ export default {
     line-height: normal;
 }
 .header-line {
-    height: 1px;
-    width: 100%;
-    background-color: #333;
-    margin-top: 10px;
+    height: 1.5px;
+    background: #000;
+    width: 45%;
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 67px;
 }
 .mypage-contents{
     height: 588px;
@@ -218,7 +229,7 @@ export default {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
     align-items: center;
     padding-top: 30px;
     padding-bottom: 15px;
@@ -249,32 +260,48 @@ export default {
 }
 .table-contents {
     width: 975px;
-    height: 340px;
+    height: 400px;
     display: flex;
     flex-direction: column;
-    justify-content: center;
+    justify-content: start;
+    align-items: center;
+    overflow: auto;
+    margin-bottom: 15px;
 }
 .each-row {
-    width: 975px;
+    width: 96%;
     height: 60px;
     display: flex;
-    justify-content: space-evenly;
+    justify-content: space-between;
     align-items: center;
     color:#333;
-    font-size: 16px;
+    font-size: 18px;
     font-style: normal;
-    font-weight: 400;
+    font-weight: 600;
     line-height: normal;
+    margin: 20px 0px;
+    margin-left: 10px;
+}
+#coun-name{
+    width: 18%;
+}
+#coun-date{
+    width:18%;
+}
+#coun-status {
+    width: 18%;
+}
+#coun-status img{
+    height: 25px;
+    width: 25px
 }
 #coun-room {
-    width: 93px;
+    width: 18%;
     display: flex;
-    justify-content: space-around;
+    justify-content: center;
+    white-space: nowrap;
 }
 .each-row .divider{
     color: white;
-}
-#coun-room div{
-    font-size: 16px;
 }
 </style>

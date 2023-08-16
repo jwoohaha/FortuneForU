@@ -119,7 +119,7 @@ export default {
 }
 .mypage-header { 
     height: 57px;
-    width: 344px;
+    width: 80%;
     text-align: left;
     color: #333;
     font-size: 34px;
@@ -128,10 +128,12 @@ export default {
     line-height: normal;
 }
 .header-line {
-    height: 1px;
-    width: 100%;
-    background-color: #333;
-    margin-top: 10px;
+    height: 1.5px;
+    background: #000;
+    width: 45%;
+    padding: 0;
+    margin-top: 20px;
+    margin-bottom: 67px;
 }
 .mypage-contents{
     height: 588px;
@@ -139,11 +141,6 @@ export default {
     margin-top: 81px;
     display: flex;
     justify-content: space-around;
-    // background-color: red;
-}
-#my-res-list{
-    // justify-content: space-between !important;
-    // background-color: red;
 }
 .profile-nav {
     height: 588px;
