@@ -25,7 +25,8 @@ const routes = [
   {
     path: '/reservation',
     name: 'reservation',
-    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue')
+    component: () => import(/* webpackChunkName: "reservation" */ '../views/ReservationView.vue'),
+    props: true
   },
   {
     path: '/redirect',
@@ -33,10 +34,15 @@ const routes = [
     component: () => import('../views/RedirectView.vue')
   },
   {
+    path: '/reissue',
+    name: 'reissue',
+    component: () => import('../views/ReissueView.vue')
+  },
+  {
     path: '/mypage',
     name: 'mypage',
     component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage/MypageView.vue'),
-    meta: { requiresAuth: true }
+    // meta: { requiresAuth: true }
   },
   {
     path: '/mypage/reservationlist',
@@ -44,9 +50,14 @@ const routes = [
     component: () => import(/* webpackChunkName: "reservationlist" */ '../views/Mypage/MypageView_myreservationlist.vue')
   },
   {
-    path: '/mypage/counslingresult',
+    path: '/mypage/counslingresult/:rezNo',
     name: 'counslingresult',
     component: () => import(/* webpackChunkName: "counslingresult" */ '../views/Mypage/MypageView_counselingresult.vue')
+  },
+  {
+    path: '/mypage/reportlist',
+    name: 'reportlist',
+    component: () => import(/* webpackChunkName: "reportlist" */ '../views/Mypage/MypageView_myreportlist.vue')
   },
   {
     path: '/mypage/review',
@@ -64,20 +75,41 @@ const routes = [
     component: () => import(/* webpackChunkName: "counseling" */ '../views/Mypage/CounselorView_counseling.vue')
   },
   {
-    path: '/counselor/timeset',
-    name: 'timeset',
-    component: () => import(/* webpackChunkName: "timeset" */ '../views/Mypage/CounselorView_timeset.vue')
-  },
-  {
     path: '/counselor/counreview',
     name: 'counreview',
     component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
   },
   {
-    path: '/chatview',
-    name: 'chatview',
-    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue')
-  }
+    path: '/counselor-form',
+    name: 'counselor-form',
+    component: () => import(/* webpackChunkName: "counreview" */ '@/views/CounselorFormView')
+  },
+  {
+    path: '/admin/counselor-form-list',
+    name: 'counselor-form-list-view',
+    component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormListView')
+  },
+  {
+    path: '/admin/counselor-form-view/:formNo',
+    name: 'counselor-form-view',
+    component: () => import(/* webpackChunkName: "counreview" */ '@/views/admin/CounselorFormDetailView')
+  },
+  {
+    path: '/chatview/:reservationNo',
+    name: 'chatviewforconsultant',
+    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue'),
+    props:route=>({
+      reservationNo: route.params.reservationNo
+    })
+  },
+  {
+    path: '/chatview/:IdforSession',
+    name: 'chatviewforuser',
+    component: () => import(/* webpackChunkName: "chatView" */ '../views/room/ChatView.vue'),
+    props:route=>({
+      IdforSession: route.params.IdforSession
+    })
+  },
 ]
 
 const router = createRouter({

@@ -6,14 +6,16 @@ import com.ssafy.a403.domain.room.dto.RoomResponse;
 import com.ssafy.a403.domain.room.service.RoomService;
 import com.ssafy.a403.global.advice.CustomException;
 import com.ssafy.a403.global.config.security.LoginUser;
+import com.ssafy.a403.global.util.rabbitmq.SttProducer;
 import io.openvidu.java.client.*;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-
+import java.io.*;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -27,21 +29,24 @@ public class ApiController {
 
     private final RoomService roomService;
 
+    private final SttProducer sttProducer;
+
+
+
+
+
     //방 생성
     @PostMapping("/api/roomsession")
     public ResponseEntity<?> makeRoomSession(@RequestBody RoomRequest roomRequest, @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException {
         log.info("---------------------방 만들기 시작----------------------");
-        log.info("roomRequest reservationNo: " + roomRequest.getReservationNo());
 
-        //email @ 앞부분 추출
         String email = loginUser.getMember().getEmail();
         int idx = email.indexOf("@");
-        String memberId = email.substring(0, idx); 
+        String memberId = email.substring(0, idx);
         
         //아이디 + 랜덤 sessionId 생성
         String sessionId = memberId + UUID.randomUUID().toString();
-
         //session생성
         //properties의 customSessionId설정
         SessionProperties properties = new SessionProperties.Builder()
@@ -60,15 +65,15 @@ public class ApiController {
 
         //sessionId를 response로 반환
         RoomResponse roomResponse = RoomResponse.builder()
-                        .sessionId(sessionId)
-                        .build();
+                .sessionId(sessionId)
+                .build();
 
         return new ResponseEntity<>(roomResponse, HttpStatus.OK);
     }
 
     //방 입장하기
     @PostMapping("/api/sessions/{sessionId}/connections")
-    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId)
+    public ResponseEntity<?> createConnection(@PathVariable("sessionId") String sessionId, @AuthenticationPrincipal LoginUser loginUser)
             throws OpenViduJavaClientException, OpenViduHttpException{
 
         log.info("--------------------방 접속 시작---------------------------");
@@ -132,9 +137,16 @@ public class ApiController {
         if(session != null) {
             openVidu.getActiveSession(sessionId).close();
             log.info("방 삭제 완료");
+            converting(sessionId);
         }
 
-        return ResponseEntity.noContent().build();
+        try {
+            sttProducer.produceSttTask(reservationNo,"/opt/"+sessionId+"/"+sessionId+".mp4");
+        }catch(Exception e){
+            log.info(e.getMessage());
+        }
+
+        return ResponseEntity.ok("success");
 
     }
 
@@ -157,6 +169,51 @@ public class ApiController {
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
         }
 
+
     }
+
+    //    String directoryPath = "/opt/sessionA"; // 실제 경로로 변경해야 함
+
+    public void converting(String sessionId){
+        System.out.println("들어옵니당");
+        try {
+            // 실행할 명령어 설정
+            String command = "ffmpeg -i " + sessionId+".webm " + sessionId+".mp4";
+            System.out.println(command);
+            // 원하는 작업 디렉토리 설정
+            String workingDirectory = "/opt/"+sessionId; // 실제 경로로 변경해야 함
+
+            // ProcessBuilder 생성
+            ProcessBuilder processBuilder = new ProcessBuilder();
+            processBuilder.command("bash", "-c", command);
+            processBuilder.directory(new File(workingDirectory));
+
+            // 프로세스 실행
+            Process process = processBuilder.start();
+
+            // 프로세스의 출력 스트림 처리 (선택 사항)
+            InputStream inputStream = process.getInputStream();
+            BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+            String line;
+            while ((line = reader.readLine()) != null) {
+                System.out.println(line);
+            }
+
+            // 프로세스의 에러 스트림 처리 (선택 사항)
+            InputStream errorStream = process.getErrorStream();
+            BufferedReader errorReader = new BufferedReader(new InputStreamReader(errorStream));
+            while ((line = errorReader.readLine()) != null) {
+                System.err.println(line);
+            }
+
+            // 프로세스 완료 대기
+            int exitCode = process.waitFor();
+            System.out.println("Process exited with code " + exitCode);
+
+        } catch (IOException | InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
+
 
 }

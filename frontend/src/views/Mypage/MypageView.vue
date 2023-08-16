@@ -1,5 +1,5 @@
 <template>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">  
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
         <div class="mypage">
             <div class="empty-box"></div>
             <div class="mypage-area">
@@ -7,13 +7,13 @@
                     <div>마이페이지</div>
                     <div class="header-line"></div>
                 </div>
-    
+
                 <div class="mypage-contents">
                     <div class="profile-nav">
                         <img :src="imgUrl" class="profile-img">
-                        <input 
-                            style="display: none" 
-                            type="file" 
+                        <input
+                            style="display: none"
+                            type="file"
                             @change="onFileChange"
                             ref="imgInput"
                             accept="image/*" />
@@ -21,8 +21,8 @@
                         <SquareButton @click="uploadImage">프로필 사진 변경</SquareButton>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
-                            <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
-                            <router-link to="/mypage/counslingresult"><li> | 상담 결과</li></router-link> 
+                            <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link>
+                            <router-link to="/mypage/counslingresult"><li> | 상담 결과</li></router-link>
                             <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
                         </ul>
                     </div>
@@ -40,8 +40,6 @@
                                 </div>
                             </div>
                         </div>
-    
-    
                     </div>
                     <div class="like-part">
                         <div class="sub-title">관심 상담가</div>
@@ -57,16 +55,16 @@
                         </div>
                     </div>
                 </div>
-    
+
             </div>
         </div>
     </template>
-    
+
     <script>
     import { SquareButton } from "../../components/styled-components/StyledButton";
     import ReviewCard from '../../components/common/ReviewCard.vue';
     import { apiInstance } from '@/api/index';
-    
+
     export default {
         components: {
             SquareButton,
@@ -113,7 +111,7 @@
             if (this.selectedImage) {
             const formData = new FormData();
             formData.append('image', this.selectedImage, this.selectedImage.name);
-            
+
             updateImgRequest({
                 method: 'PUT',
                 url: 'members/profileImage',
@@ -136,9 +134,9 @@
       },
     }
     </script>
-    
+
     <style lang="scss" scoped="scss">
-    
+
     .mypage {
         display: inline-flex;
         justify-content: center;
@@ -154,7 +152,7 @@
         // margin-left: 15%;
         // margin-right: 15%;
     }
-    .mypage-header { 
+    .mypage-header {
         height: 57px;
         width: 344px;
         text-align: left;
@@ -320,11 +318,11 @@
         width: 13.911px;
         height: 25px;
     }
-    
+
     #reviewcard{
         // width: 344px;
         width: 100%;
         margin-bottom: 5px;
     }
-    
+
     </style>

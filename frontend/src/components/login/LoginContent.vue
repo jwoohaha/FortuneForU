@@ -18,6 +18,7 @@
     <div class="modal-button-container">
       <social-login-button :key="platform.title" v-for="platform in platforms" :platform="platform"></social-login-button>
     </div>
+    <router-link to="/admin/counselor-form-list"><a @click="$emit('close-modal')">관리자 로그인</a></router-link>
   </div>
 </template>
 
@@ -32,18 +33,21 @@ export default {
     return {
       platforms: [
         {
+          provider: 'google',
           icon: "g-logo.png",
           color: "#FFFFFF",
           textColor: "rgba(0, 0, 0, 0.54)",
           title: "구글로 시작하기"
         },
         {
+          provider: 'kakao',
           icon: "k-logo.png",
           color: "#FEE500",
           textColor: "rgba(0, 0, 0, 0.85)",
           title: "카카오로 시작하기"
         },
         {
+          provider: 'naver',
           icon: "n-logo.png",
           color: "#03C75A",
           textColor: "#FFFFFF",

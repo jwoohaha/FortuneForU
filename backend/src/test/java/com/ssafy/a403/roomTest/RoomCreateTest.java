@@ -2,19 +2,18 @@ package com.ssafy.a403.roomTest;
 
 import com.ssafy.a403.domain.reservation.entity.CounselingReservation;
 import com.ssafy.a403.domain.reservation.repository.CounselingReservationRepository;
-import org.junit.After;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 public class RoomCreateTest {
 
     private static final Logger logger = LoggerFactory.getLogger(RoomCreateTest.class);
@@ -22,7 +21,7 @@ public class RoomCreateTest {
     @Autowired
     CounselingReservationRepository counselingReservationRepository;
 
-    @After
+    @AfterEach
     public void clean(){
         counselingReservationRepository.deleteAll();
     }
