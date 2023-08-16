@@ -61,7 +61,7 @@ public class JwtSetupService {
                 .maxAge(maxAge / 1000)
                 .path("/")
                 .httpOnly(true)
-                .secure(true)
+//                .secure(true)
                 .domain(clientHost)
                 .build();
     }
