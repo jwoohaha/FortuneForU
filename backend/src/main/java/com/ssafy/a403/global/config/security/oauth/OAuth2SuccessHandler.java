@@ -31,8 +31,8 @@ public class OAuth2SuccessHandler extends SimpleUrlAuthenticationSuccessHandler 
     @Override
     public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) throws IOException {
         LoginUser loginUser = (LoginUser) authentication.getPrincipal();
+        // Access Token 발급을 위한 Auth Token을 발급한다
         String authToken = jwtSetupService.createAuthToken(loginUser);
-//        String authToken = jwtSetupService.addJwtTokensToCookie(response, loginUser);
         getRedirectStrategy().sendRedirect(request, response, clientUrl + redirectEndPoint + "?token=" + authToken);
     }
 

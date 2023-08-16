@@ -154,7 +154,6 @@ public class CounselingReservationController {
         return counselingReservationService.getCoReview(counselorId);
     }
 
-
     // 상담 결과 조회
     @GetMapping("reports/{reservationNo}")
     public ResponseEntity<ReportResponse> getReport(@PathVariable Long reservationNo) {

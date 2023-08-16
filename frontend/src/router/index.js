@@ -34,6 +34,11 @@ const routes = [
     component: () => import('../views/RedirectView.vue')
   },
   {
+    path: '/reissue',
+    name: 'reissue',
+    component: () => import('../views/ReissueView.vue')
+  },
+  {
     path: '/mypage',
     name: 'mypage',
     component: () => import(/* webpackChunkName: "mypage" */ '../views/Mypage/MypageView.vue'),
@@ -73,6 +78,11 @@ const routes = [
     path: '/counselor/counreview',
     name: 'counreview',
     component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
+  },
+  {
+    path: '/counselor/review-update/:rezNo',
+    name: 'counselorreportupdate',
+    component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_reportUpdate.vue')
   },
   {
     path: '/counselor-form',

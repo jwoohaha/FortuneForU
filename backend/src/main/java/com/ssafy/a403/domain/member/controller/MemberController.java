@@ -11,8 +11,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
 
 @RestController
 @RequestMapping("/api/members")
@@ -70,5 +72,13 @@ public class MemberController {
 
         memberService.submitCounselorForm(counselorFormRequest, loginUser.getMember());
         return HttpStatus.CREATED;
+    }
+
+    @PutMapping(value = "/profileImage", consumes = {"multipart/form-data"})
+    public HttpStatus updateProfileImage(@AuthenticationPrincipal LoginUser loginUser,
+                                         @RequestPart("image") MultipartFile profileImageFile) throws IOException {
+
+        memberService.updateProfileImage(loginUser.getMember().getNo(), profileImageFile);
+        return HttpStatus.OK;
     }
 }

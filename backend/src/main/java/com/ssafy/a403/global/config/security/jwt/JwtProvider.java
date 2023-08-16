@@ -18,12 +18,8 @@ import javax.persistence.EntityNotFoundException;
 @RequiredArgsConstructor
 @Slf4j
 public class JwtProvider {
-	private final Key key;
 
-	private static final Long AUTH_TOKEN_VALIDATION_SECOND = 60L * 1000;
-    private static final Long ACCESS_TOKEN_VALIDATION_SECOND = 60L * 60 * 24 * 1000;
-    private static final Long REFRESH_TOKEN_VALIDATION_SECOND = 60L * 60 * 24 * 14 * 1000;
-    private static final String BEARER_TYPE = "bearer";
+	private final Key key;
     
     private final JwtValidator jwtValidator;
 
@@ -32,16 +28,16 @@ public class JwtProvider {
         log.trace("JWT token created");
         log.trace("loginUser: {}", loginUser.getMember().getName());
 
-        String accessToken = getToken(loginUser, claims, ACCESS_TOKEN_VALIDATION_SECOND);
-        String refreshToken = getToken(loginUser, claims, REFRESH_TOKEN_VALIDATION_SECOND);
+        String accessToken = getToken(loginUser, claims, JwtProperties.ACCESS_TOKEN_VALIDATION_SECOND);
+        String refreshToken = getToken(loginUser, claims, JwtProperties.REFRESH_TOKEN_VALIDATION_SECOND);
 
-        return new JwtToken(accessToken, refreshToken, BEARER_TYPE);
+        return new JwtToken(accessToken, refreshToken, JwtProperties.BEARER_TYPE);
     }
     
     public String createAuthToken(LoginUser loginUser) {
         log.trace("Auth token created");
     	Claims claims = getClaims(loginUser);
-    	return getToken(loginUser, claims, AUTH_TOKEN_VALIDATION_SECOND);
+    	return getToken(loginUser, claims, JwtProperties.AUTH_TOKEN_VALIDATION_SECOND);
     }
     
     public JwtToken createJwtTokenByAuthToken(String authToken) throws NumberFormatException, EntityNotFoundException {
