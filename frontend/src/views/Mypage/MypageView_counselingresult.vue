@@ -15,7 +15,7 @@
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
-                        <router-link to="/mypage/counslingresult"><li> | 상담 결과</li></router-link> 
+                        <router-link to="/mypage/reportlist"><li> | 상담 결과</li></router-link> 
                         <router-link to="/mypage/review"><li> | 나의 후기</li></router-link>
                         </ul>
                     </div>
@@ -24,14 +24,14 @@
                         
                         <div class="result-header">
                             <div >
-                                상담 날짜: 2023년 08월 02일
+                                상담 일시: {{ reportDetail.reservationDateTime }}
                             </div>
                             <div>
-                                상담가: 잭슨킴
+                                상담가: {{ reportDetail.counselorName }}
                             </div>
                         </div>
                         <div class="result-content">
-                            Lorem ipsum dolor sit amet consectetur. Mi diam rutrum urna vestibulum odio etiam. Pharetra varius pulvinar diam sed porttitor nulla proin. Erat pulvinar fermentum in diam vitae sagittis urna pretium cras. Sit eget consequat nec nulla vitae nibh egestas. Lorem ipsum dolor sit amet consectetur. Mi diam rutrum urna vestibulum odio etiam. Pharetra v. Sit eget consequat nec nulla vitae nibh egestas. Lorem ipsum dolor sit amet consectetur. Mi diam rutrum urna vestibulum odio etiam. Pharetra varius pulvinar diam sed porttitor nulla proin. Erat pulvinar fermentum in diam vitae sagittis urna pretium cras. Sit eget consequat nec nulla vitae nibh egestas.Lorem ipsum dolor sit amet consectetur. Mi diam rutrum urna vestibulum odio etiam. Pharetra varius p pretium cras. Sit eget consequat nec nulla vitae nibh egestas. am rutrum urna vestibulum odio etiam. Pharetra varius pulvinar diam sed porttitor nulla proin. Erat pulvinar fermentum in diam vitae sagittis urna pretium cras. Sit eget consequat nec nulla vitae nibh egestas. Lorem ipsum dolor sit amet consectetur. Mi diam rutrum urna vestibulum odio etiam. Pharetra varius pulvinar diam sed porttitor nulla proin. Erat pulvinar fermentum in diam vitae sagittis urna pretium cras. Sit eget consequat nec nulla vitae nibh egesam rutrum urna vestibulum odio etiam. Pharetra varius pulvinar diam sed porttitor nulla proin. Erat pulvinar fermentum in diam vitae sagittis urna pretium cras. Sit eget consequat nec nulla vitae nibh egestas. Lorem ipsum dolor sit amet consectetur. Mi diam rutrum urna vestibulum odio etiam. Pharetra varius pulvinar diam sed porttitor nulla proin. Erat pulvinar fermentum in diam vitae sagittis urna pretium cras. Sit eget consequat nec nulla vitae nibh eges
+                            {{ reportDetail.reservationReport }}
                         </div>
                 
                         
@@ -42,25 +42,61 @@
     </template>
     
 <script>
+import { apiInstance } from '@/api';
 // import { SquareButton } from "../../components/styled-components/StyledButton";
 // import { ReviewCard } from "../components/common/ReviewCard";
 // import PageButton from '../../components/common/PageButton.vue';
 
 export default {
     components: {
-        // SquareButton,
-        // ReviewCard
-        // PageButton
+
     },
     data() {
-    return {
-        counselors: [
-        { id: 1, name: 'John Doe', rating: 4.5, reviews: 20 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        { id: 2, name: 'Jane Smith', rating: 5.0, reviews: 15 },
-        ],
-    };
+        return {
+            reservationNo: null,
+            reportDetail: {
+                reservationDateTime: "결과 받아오는 중",
+                counselorName: "결과 받아오는 중",
+                reservationReview: "결과 받아오는 중",
+            },
+        };
     },
+    created() {
+    const rezNo = this.$route.params.rezNo;
+    console.log(rezNo)
+
+    if (rezNo) {
+      this.getReportDetail(rezNo);
+    }
+  },
+    methods: {
+        getReportDetail(reservationNo){
+           
+            const api = apiInstance();
+            api({
+                method: 'GET',
+                url: `/reservations/report/${reservationNo}`,
+            })
+            .then((res) => {
+                console.log(res.data)
+             
+                this.reportDetail = res.data;
+            
+                this.handleRezInfo(res.data)
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
+        handleRezInfo(reportDetail) {
+           
+            reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
+            console.log(reportDetail.reservationDateTime)
+            return reportDetail;
+        }
+        
+    },
+    
 }
 </script>
 

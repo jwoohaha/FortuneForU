@@ -98,6 +98,37 @@ public class CounselingReservationService {
     }
 
 
+
+    // 종료된 상담 리스트 (결과 목록 보기)
+    public List<ReportsListResponse> getReportsList(Long memberId) {
+        Member member = memberRepository.findById(memberId).orElseThrow(EntityNotFoundException::new);
+        List<CounselingReservation> reservations = counselingReservationRepository.findByMember(member);
+
+        List<ReportsListResponse> reportsListResponses = new ArrayList<>();
+        for (CounselingReservation reservation : reservations) {
+            if (reservation.getReservationStatus().equals(ReservationStatus.END)){
+                System.out.println(reservation.getReservationStatus());
+                reportsListResponses.add(new ReportsListResponse().from(reservation));
+            }
+        }
+        return reportsListResponses;
+    }
+
+
+    // Waiting 상태의 상담 갯수
+    public Long countWaitingList(Long counselorId) {
+        Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
+        List<CounselingReservation> reservations = counselingReservationRepository.findByCounselor(counselor);
+        if (reservations.isEmpty()) {
+            return 0L;
+        }
+        return reservations.stream()
+                .filter(reservation -> reservation.getReservationStatus() == ReservationStatus.WAITING)
+                .count();
+
+    }
+
+
     // 상담가 예약 조회
     public List<ReservationResponse> getCoReservation(Long counselorId, String date) {
         Counselor counselor = counselorRepository.findById(counselorId).orElseThrow(EntityNotFoundException::new);
@@ -132,6 +163,14 @@ public class CounselingReservationService {
        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
 
        return counselingReservation.cancel();
+    }
+
+
+
+    // 상담 결과 상세 조회
+    public ReportDetailResponse getReportDetail(Long reservationNo) {
+        CounselingReservation counselingReservation = counselingReservationRepository.findById(reservationNo).orElseThrow(EntityNotFoundException::new);
+        return new ReportDetailResponse().from(counselingReservation);
     }
 
 
