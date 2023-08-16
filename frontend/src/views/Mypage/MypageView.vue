@@ -49,7 +49,7 @@
                                     <router-link to="/tarot">상담사 찜하러 가기</router-link>
                                 </div>
                                 <div v-for="counselor in counselors" :key="counselor.id">
-                                    <ReviewCard :counselor="counselor" id="reviewcard"></ReviewCard>
+                                    <FollowCard :follow="counselor" id="followcard"></FollowCard>
                                 </div>
                             </div>
                         </div>
@@ -62,13 +62,13 @@
 
     <script>
     import { SquareButton } from "../../components/styled-components/StyledButton";
-    import ReviewCard from '../../components/common/ReviewCard.vue';
+    import FollowCard from '../../components/common/FollowCard.vue';
     import { apiInstance } from '@/api/index';
 
     export default {
         components: {
             SquareButton,
-            ReviewCard,
+            FollowCard,
       },
       data() {
         return {
@@ -319,7 +319,7 @@
         height: 25px;
     }
 
-    #reviewcard{
+    #followcard{
         // width: 344px;
         width: 100%;
         margin-bottom: 5px;
