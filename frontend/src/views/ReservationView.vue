@@ -30,6 +30,10 @@
              <div class="profile-section">
                 <div class="profile-img">
                     <img src={{counselor.profileImg}}>
+                    <div class="follow-btn">
+                      <img v-if="isFollowing" :src="selectedIcon" @click="unfollowRequest">
+                      <img v-else :src="unselectedIcon" @click="followRequest"> 
+                    </div>
                 </div>
                 <div class="profile-txt">
                     <div>성명 : {{ counselor.name }}</div>
@@ -109,6 +113,9 @@ export default {
       clickedBtnIdx: null,
       reservationStatus: "",
       isModalVisible: false,
+      selectedIcon: require ('@/assets/selected_icon.png'),
+      unselectedIcon: require ('@/assets/unselected_icon.png'),
+      isFollowing: false,
     };
   },
   setup(){
@@ -128,6 +135,7 @@ export default {
         this.counselor = result.data;        
         this.getReviewInfo(this.counselor.counselorNo)
         this.setDate(this.counselor.counselorNo, this.clicked_date)
+        this.getIsFollowing(result.data.memberNo)
       })
       .catch((e) => {
         console.log(e)
@@ -172,7 +180,6 @@ export default {
           url: `reservations/availabledate/${id}/${this.formatted_date}`
         })
         .then((result) => {
-          console.log(result.data);
           this.cantReservations = result.data;
           this.availableTimes = [];
           this.makeAvailableTimes();
@@ -255,7 +262,51 @@ export default {
           console.log("ERROR:" + e)
           this.reservationStatus = e
         })
-    }     
+    },
+    getIsFollowing(memberNo) {
+      const getFollowingRequest = apiInstance();
+      getFollowingRequest({
+          method: 'GET',
+          url: `members/isfollowing/${memberNo}`,
+      })
+      .then((res) => {
+          console.log('팔로잉???')
+          console.log(res.data)
+          this.isFollowing = res.data
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+    },
+    followRequest() {
+      const followRequest = apiInstance();
+      followRequest({
+          method: 'PUT',
+          url: `members/follow/${this.counselor.memberNo}`,
+      })
+      .then((res) => {
+          console.log(res)
+          this.isFollowing = true
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+    },
+    unfollowRequest() {
+      const unfollowRequest = apiInstance();
+      unfollowRequest({
+          method: 'DELETE',
+          url: `members/unfollow/${this.counselor.memberNo}`,
+      })
+      .then((res) => {
+          console.log("unfollowid", this.counselor.memberNo)
+          console.log(res)
+          this.isFollowing = false
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+    },
   },
   created(){
     this.pageType = this.$route.query.pageType;
@@ -432,5 +483,17 @@ img {
     width: 346px;
     height: 40px;
     padding: 20px 23px;
+}
+.profile-img {
+  position: relative; /* Make the container a positioning context */
+}
+.follow-btn img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 40px;
+  height: 40px;
+  margin: 10px;
+  padding: 10px;
 }
 </style>
