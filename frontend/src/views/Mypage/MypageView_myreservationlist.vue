@@ -135,7 +135,7 @@ export default {
             const cancelRezRequest = apiInstance();
             console.log("예약 취소 클릭")
             cancelRezRequest({
-                method: 'PUT',
+                method: 'PATCH',
                 url: `reservations/cancel/${reservationNo}`,
             })
             .then((res) => {
