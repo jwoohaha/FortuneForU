@@ -79,7 +79,7 @@
             counselors: null,
             isCounselors: false,
             selectedImg: null,
-            imgUrl: require ('@/assets/dummy_counselor_img.jpg'),
+            imgUrl: require ('@/assets/profile_default_img.png'),
         };
       },
       methods: {

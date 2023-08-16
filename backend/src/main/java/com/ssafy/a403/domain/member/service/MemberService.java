@@ -54,9 +54,8 @@ public class MemberService {
         Member member = memberRepository.findById(id).orElseThrow(EntityNotFoundException::new);
 
         // 경로 설정
-        String HomeDirectory = System.getProperty("user.home");
         String ImgName = System.currentTimeMillis() + "_" + profileImageFile.getOriginalFilename(); // 이름 중복 방지
-        String Path = HomeDirectory + "/" + ImgName;
+        String Path = "/opt/images/" + ImgName;
 
         // 저장
         File f = new File(Path);
