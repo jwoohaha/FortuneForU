@@ -7,9 +7,9 @@ function apiInstance() {
     const store = useTokenStore();
 
     const instance = axios.create({
-        // baseURL: 'https://i9a403.p.ssafy.io/api',
-        baseURL: 'http://localhost:5000/api',
-        headers: {
+        baseURL: 'https://i9a403.p.ssafy.io/api',
+        // baseURL: 'http://localhost:5000/api',
+        headers:{
             "Content-Type": 'application/json;charset=utf-8'
         },
         timeout: 5000
@@ -30,7 +30,7 @@ function apiInstance() {
 
     instance.interceptors.response.use(
         (response) => {
-            console.log("successed response: " + response);
+            // console.log("successed response: " + response);
             if (!store.isIntervalStarted) {
                 const intervalId = setInterval(silentReissue, 9 * 1000);
                 store.startInterval(intervalId);
@@ -53,8 +53,8 @@ function reissue() {
 
     const instance = axios.create({
         method: 'GET',
-        // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
-        baseURL: 'http://localhost:5000/api/auth/reissue',
+        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        // baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
         withCredentials: true,
         headers: {
@@ -86,8 +86,8 @@ function silentReissue() {
 
     const instance = axios.create({
         method: 'GET',
-        // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
-        baseURL: 'http://localhost:5000/api/auth/reissue',
+        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        // baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
         withCredentials: true,
         headers: {
@@ -110,7 +110,6 @@ function silentReissue() {
         },
         (error) => {
             console.log("로그인이 필요합니다." + error);
-            // store.logout();
             store.stopInterval();
             return "";
         }

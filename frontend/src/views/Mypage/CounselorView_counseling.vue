@@ -19,7 +19,7 @@
                 </div>
                 
                 <div>
-                    <div class="get-count">대기 중인 상담 신청 : 2건</div>
+                    <div class="get-count">예정된 상담 : {{ this.waitingCnt }} 개</div>
                     <div class="counseling-info-part">
                         <div class="upper-part">
                             <div class="upbox" id="calendar">
@@ -85,11 +85,11 @@
                                     <!-- <router-link to="/chatview">상담 시작</router-link> -->
                                     <router-link :to="{ name: 'chatviewforconsultant', params: { reservationNo: clickedReservation.reservationNo } }">상담 시작</router-link>
                                     </SquareButton>
-                                <SquareButton isTarot id="cancel-btn" @click="cancelReservation">취소</SquareButton>
+                                <SquareButton isTarot id="cancel-btn" @click="cancelReservation()">취소</SquareButton>
                                 
                             </div>
                             <div class="res-cell" id="cell-btns" v-if="clickedReservation.reservationStatus === '상담 종료'">
-                                <SquareButton isTarot id="cancel-btn" @click="checkResult">결과보기</SquareButton>
+                                <SquareButton isTarot id="cancel-btn" @click="checkResult(clickedReservation.reservationNo)">결과보기</SquareButton>
                             </div>
 
 
@@ -124,9 +124,24 @@ export default {
             formatted_date: null,
             clickedReservation : null,
             clickedReservationNo: null,
+            waitingCnt: 0
         };
     },
     methods: {
+        getCounselorWaitingInfo(){
+            const getCounselorInfoRequest = apiInstance(); 
+            getCounselorInfoRequest({
+                method: 'GET',
+                url: `/reservations/counselor_waiting`,
+            })
+            .then((res) => {
+                this.waitingCnt = res.data
+                console.log(res.data)                
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
         getCounselorInfo(){
             const getCounselorInfoRequest = apiInstance(); 
             getCounselorInfoRequest({
@@ -224,12 +239,21 @@ export default {
                     
                 })
             }            
-        },     
+        }, 
+        checkResult(reservationNo) {
+            const clickedReservationNo = reservationNo
+            console.log(clickedReservationNo)
+            this.$router.push({
+                name: 'counselorreportupdate',
+                params: {rezNo : clickedReservationNo}
+            })
+        }    
 
     },
    
     created() {
-    this.getCounselorInfo();
+        this.getCounselorWaitingInfo();
+        this.getCounselorInfo();
   
     }
 }
@@ -375,6 +399,9 @@ export default {
     background-color: rgba(242, 148, 173, 0.30);
     display: flex;
     justify-content: space-evenly;
+    font-weight: 600;
+    font-size: 18px;
+    align-items: center;
 }
 .list-contents{
     height: 280px;
@@ -383,9 +410,13 @@ export default {
     align-items: center;
     overflow: auto;
     margin-top: 7px;
+    font-size: 18px;
+}
+.list-contents div div{
+    width: 20%;
 }
 .list-row{
-    width: 90%;
+    width: 98%;
     display: flex;
     justify-content: space-between;
     padding-left: 30px;
