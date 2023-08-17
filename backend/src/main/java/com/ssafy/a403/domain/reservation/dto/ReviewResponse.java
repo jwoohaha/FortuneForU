@@ -26,7 +26,7 @@ public class ReviewResponse {
         reviewResponse.memberName = counselingReservation.getMember().getName();
         reviewResponse.counselorName = counselingReservation.getCounselor().getMember().getName();
         reviewResponse.review = counselingReservation.getReservationReview();
-        reviewResponse.profileImage = counselingReservation.getCounselor().getMember().getProfileImage();
+        reviewResponse.profileImage = counselingReservation.getMember().getProfileImage();
         reviewResponse.ratingAvg = counselingReservation.getCounselor().getRatingAvg();
         reviewResponse.reservationScore = counselingReservation.getReservationScore();
 
