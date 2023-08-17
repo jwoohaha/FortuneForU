@@ -28,7 +28,7 @@ export default {
   },
   computed: {
     imgUrl() {
-        return this.counselor.profileImg || this.defaultImgUrl;
+        return this.follow.profileImage || this.defaultImgUrl;
     }
   }
 };
