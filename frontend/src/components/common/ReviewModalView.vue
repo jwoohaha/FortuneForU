@@ -65,12 +65,7 @@ data(){
 },
 methods:{
     setReview(){
-    console.log("입력"+ this.inputtxt);
-    console.log(this.ratings)
-    console.log("상담사"+this.counselorId)
-    console.log("예약"+this.reservationNo)
-
-   
+  
     if(this.inputtxt == "")
         this.inputtxt = "좋은 상담이었습니다.";
 
@@ -88,7 +83,7 @@ methods:{
     .then((result) => {
         console.log(result);
     
-        if(result.state == 200){
+        if(result.status == 200){
         alert("후기 작성이 완료되었습니다.\n마이페이지로 이동합니다.")
         }else{
         alert("?")
