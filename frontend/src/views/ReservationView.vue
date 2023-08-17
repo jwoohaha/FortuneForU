@@ -29,7 +29,7 @@
            <div class="reservation-section">
              <div class="profile-section">
                 <div class="profile-img">
-                    <img src={{counselor.profileImg}}>
+                    <img :src="imgUrl">
                     <div class="follow-btn">
                       <img v-if="isFollowing" :src="selectedIcon" @click="unfollowRequest">
                       <img v-else :src="unselectedIcon" @click="followRequest"> 
@@ -117,6 +117,7 @@ export default {
       selectedIcon: require ('@/assets/selected_icon.png'),
       unselectedIcon: require ('@/assets/unselected_icon.png'),
       isFollowing: false,
+      defaultImgUrl: require ('@/assets/profile_default_img.png'),
     };
   },
   setup(){
@@ -318,6 +319,11 @@ export default {
     }
     
     this.getCounselorInfo(this.$route.query.id)
+  },
+  computed: {
+    imgUrl() {
+        return this.counselor.profileImg || this.defaultImgUrl;
+    }
   }
  };
 </script>
@@ -407,9 +413,6 @@ img {
     object-fit: fill;
     flex-shrink: 0;
     border-radius: 10px;
-    border: 2px solid #D7D7D7;
-    background:  lightgray 50% / contain no-repeat;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
 }
 .profile-txt {
     border-left: #000000 3px solid;
@@ -494,9 +497,11 @@ img {
   position: absolute;
   bottom: 0;
   right: 0;
-  width: 40px;
-  height: 40px;
+  width: 70px;
+  height: 70px;
   margin: 10px;
   padding: 10px;
+  // background:  rgb(255, 254, 254) 50% / contain no-repeat;
+  // box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
 }
 </style>
