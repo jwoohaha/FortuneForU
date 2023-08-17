@@ -30,7 +30,6 @@ function apiInstance() {
 
     instance.interceptors.response.use(
         (response) => {
-            // console.log("successed response: " + response);
             if (!store.isIntervalStarted) {
                 const intervalId = setInterval(silentReissue,  30 * 60 * 1000);
                 store.startInterval(intervalId);
@@ -38,7 +37,6 @@ function apiInstance() {
             return response;
         },
         (error) => {
-            // console.log("response error: " + error);
             reissue();
             return Promise.reject(error);
         }
@@ -72,12 +70,14 @@ function reissue() {
         },
         (error) => {
             console.log("Access Token 재발급 실패" + error)
-            alert("로그인이 만료되었습니다❌\n다시 로그인하세요.");
+            //alert("로그인이 만료되었습니다❌\n다시 로그인하세요.");
             store.logout();
             store.stopInterval();
             return Promise.reject();
         }
     )
+
+    return instance();
 }
 
 function silentReissue() {
@@ -111,11 +111,10 @@ function silentReissue() {
         (error) => {
             console.log("로그인이 필요합니다." + error);
             store.stopInterval();
-            return error;
         }
     )
 
     return instance();
 }
 
-export { apiInstance, silentReissue }
+export { apiInstance, reissue, silentReissue }
