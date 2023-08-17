@@ -61,6 +61,8 @@ public class Counselor {
         this.phone = phone;
         this.startTime = startTime;
         this.endTime = endTime;
+        this.reviewCnt = 0;
+        this.ratingAvg = 0.0F;
     }
 
 
