@@ -67,7 +67,7 @@ public class CounselorForm extends BaseTime {
                 .career(this.career)
                 .address(this.address)
                 .phone(this.phone)
-                .startTime("9:00")
+                .startTime("09:00")
                 .endTime("18:00")
                 .build();
     }
