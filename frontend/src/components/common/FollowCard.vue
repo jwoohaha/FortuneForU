@@ -23,7 +23,7 @@ export default {
   },
   data() {
     return {
-        defaultImgUrlUrl: require ('@/assets/profile_default_img.png'),
+        defaultImgUrl: require ('@/assets/profile_default_img.png'),
     }
   },
   computed: {
