@@ -112,7 +112,6 @@ export default {
                 .then((res) => {
                     alert("수정되었습니다!")
                     console.log(res.data)
-                    location.reload();
                 }) 
                 .catch((e) => {
                     console.log(e);

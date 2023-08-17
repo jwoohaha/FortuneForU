@@ -176,6 +176,7 @@ textarea{
     outline: none;
     resize: none;
     font-size: 22px;
+    font-family: Noto Sans KR;
 }
 .modal-buttons{
     width: 100%;

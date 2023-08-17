@@ -13,8 +13,8 @@ export default {
   methods: {
     socialLogin(provider) {
       console.log(provider);
-      const url = 'https://i9a403.p.ssafy.io/oauth2/authorize/' + provider;
-      // const url = `http://localhost:5000/oauth2/authorize/${provider}`;
+      // const url = 'https://i9a403.p.ssafy.io/oauth2/authorize/' + provider;
+      const url = `http://localhost:5000/oauth2/authorize/${provider}`;
       //local 에서는 ssafytest.shop 안됨
       location.href = url;
     }
@@ -35,15 +35,16 @@ export default {
 }
 
 .sns-login-logo {
-  position: absolute;
-  left: 85px;
-  width: 50px;
-  height: 50px;
+  margin: auto;
+  padding-left: 30px;
+  width: 15%;
 }
 
 .sns-login-button-text {
-  position: absolute;
-  left: 190px;
+  margin: auto;
+  width: 80%;
+  padding-left: 30px;
+  text-align: start;
   font-family: Noto Sans KR;
   font-size: 20px;
   font-style: normal;
