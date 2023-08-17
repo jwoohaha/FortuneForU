@@ -7,10 +7,12 @@
         <router-link to="/saju">사주상담</router-link>
         <router-link to="/community">커뮤니티</router-link>
       </nav>
-      <div v-if="tokenStore.isLoggedIn">
+      <div class="button-section" v-if="tokenStore.isLoggedIn">
         <button @click="this.logout">로그아웃</button>
-        <router-link to="/mypage"><button>마이페이지</button></router-link>
-        <div v-if="tokenStore.checkRolesIncludes('ROLE_COUNSELOR')">
+        <div v-if="!tokenStore.checkRolesIncludes('ROLE_ADMIN')">
+          <router-link to="/mypage"><button>마이페이지</button></router-link>
+        </div>
+        <div v-if="tokenStore.checkRolesIncludes('ROLE_COUNSELOR')&&!tokenStore.checkRolesIncludes('ROLE_ADMIN')">
           <router-link to="/counselor"><button>상담사전용</button></router-link>
         </div>
         <div v-if="tokenStore.checkRolesIncludes('ROLE_ADMIN')">
@@ -79,7 +81,7 @@ header {
 }
 .nav-contents {
   position: relative;
-  width: 70%;
+  width: 80%;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -88,7 +90,7 @@ nav {
   display: flex;
   align-items: flex-start;
   gap: 63px;
-  color: var(--title-text, #333);
+  color:  #333;
   font-family: Noto Sans KR;
   font-size: 20px;
   font-style: normal;
@@ -98,13 +100,18 @@ nav {
 .router-link-exact-active {
   color: var(--title-text, #333);
 }
-button {
+.button-section{
+  width: 320px;
   display: flex;
-  padding: 0.5% 1.25%;
-  position: relative;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
+
+}
+button {
+  padding: 0.5% 1.25%;
   gap: 10px;
+  height: 40px;
+  padding: 0px 10px;
   border-radius: 8px;
   background: var(--title-text, #333);
   color: #fff;
