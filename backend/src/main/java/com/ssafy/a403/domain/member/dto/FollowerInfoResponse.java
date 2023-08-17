@@ -11,6 +11,7 @@ import java.util.List;
 @Getter
 public class FollowerInfoResponse {
 
+    private final Long memberNo;
     private final String email;
     private final String name;
     private final String profileImage;
@@ -25,9 +26,10 @@ public class FollowerInfoResponse {
     private final int reviewCnt;
     private final float ratingAvg;
 
-    public FollowerInfoResponse(String email, String name, String profileImage, List<Role> role,
+    public FollowerInfoResponse(Long memberNo, String email, String name, String profileImage, List<Role> role,
                                 Long counselorNo, int reviewCnt, float ratingAvg, String major, String intro,
                                 String career, String address, String phone, CounselorType counselorType) {
+        this.memberNo = memberNo;
         this.email = email;
         this.name = name;
         this.profileImage = profileImage;
@@ -45,7 +47,7 @@ public class FollowerInfoResponse {
 
     public static FollowerInfoResponse of(Member member) {
         Counselor counselor = member.getCounselor();
-        return new FollowerInfoResponse(member.getEmail(), member.getName(), member.getProfileImage(), member.getRoles(),
+        return new FollowerInfoResponse(member.getNo(), member.getEmail(), member.getName(), member.getProfileImage(), member.getRoles(),
                 counselor.getNo(), counselor.getReviewCnt(), counselor.getRatingAvg(), counselor.getMajor(),
                 counselor.getIntro(), counselor.getCareer(), counselor.getAddress(), counselor.getPhone(), counselor.getCounselorType());
     }

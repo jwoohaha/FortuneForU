@@ -37,7 +37,7 @@ public class FollowService {
         followRepository.deleteById(new FollowId(follower, followee));
     }
 
-    private Boolean isFollowedCounselor(Member follower, Member followee) {
+    public Boolean isFollowedCounselor(Member follower, Member followee) {
         return followRepository.existsById(new FollowId(follower, followee));
     }
 

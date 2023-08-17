@@ -60,6 +60,11 @@ public class MemberService {
         followService.unfollow(follower, followee);
     }
 
+    public Boolean isFollowing(Member follower, Member followee) {
+
+        return followService.isFollowedCounselor(follower, followee);
+    }
+
     @Transactional
     public void submitCounselorForm(CounselorFormRequest counselorFormRequest, Member member) {
 
