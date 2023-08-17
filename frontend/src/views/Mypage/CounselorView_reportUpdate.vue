@@ -59,11 +59,11 @@ export default {
         };
     },
     created() {
-        const rezNo = this.$route.params.rezNo;
-        console.log(rezNo)
+        this.reservationNo = this.$route.params.rezNo;
+        console.log(this.reservationNo)
 
-        if (rezNo) {
-            this.getReportDetail(rezNo);
+        if (this.reservationNo) {
+            this.getReportDetail(this.reservationNo);
         }
     },
     methods: {
@@ -96,7 +96,7 @@ export default {
             console.log(reportDetail.reservationDateTime)
             return reportDetail;
         },
-        updateReport(reservationNo){
+        updateReport(num){
             
             const confirmUpdate = window.confirm("수정하시겠습니까?")
             
@@ -104,15 +104,15 @@ export default {
                 const api = apiInstance();
                 api({
                 method: 'PUT',
-                url: `/reservations/counseling_results/${reservationNo}`,
+                url: `/reservations/counseling_results/${num}`,
                 data: {
-                    counselingResult: this.reportDetail.reservationReport
+                    counselingResult: this.reportTxt
                     }
                 })
                 .then((res) => {
                     alert("수정되었습니다!")
-                    console.log("수정결과"+res.data)
-                    //location.reload();
+                    console.log(res.data)
+                    location.reload();
                 }) 
                 .catch((e) => {
                     console.log(e);
@@ -144,8 +144,6 @@ export default {
     height: 900px;
     width: 1273px;
     margin-top: 96px;
-    // margin-left: 15%;
-    // margin-right: 15%;
 }
 .mypage-header { 
     height: 57px;
