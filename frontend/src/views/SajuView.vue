@@ -92,10 +92,6 @@ export default {
       })
       .then((res) => {
         console.log(res.data)
-        //보여줄 컨텐츠(상담사 정보)가 없을 경우 예외처리
-        if(Object.keys(res.data.content) == 0){
-          this.emptyPage = true;
-        }
         this.counselors = res.data.content
         this.totalPages = res.data.totalPages
       })
@@ -116,6 +112,7 @@ export default {
       .then((res) => {
         console.log(res.data.content)
         this.counselors = res.data.content
+        this.totalPages = res.data.totalPages
       })
       .catch((e) => {
         console.log(e)

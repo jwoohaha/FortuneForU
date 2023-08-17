@@ -48,7 +48,7 @@
                                 </div>
                                 <div class="divider">|</div>
                                 <div id="coun-room">             
-                                    <div v-if="reservation.reservationReview === null" @click="writeReview" ><span style="text-decoration : underline;">후기 작성하기</span>🧾</div>
+                                    <div v-if="reservation.reservationReview === null" @click="writeReview(reservation.reservationNo, reservation.counselorId)" ><span style="text-decoration : underline;">후기 작성하기</span>🧾</div>
                                     <div v-else>작성 완료</div>
                                 </div>
                             </div>
@@ -56,7 +56,7 @@
                     </div>
                 </div>
             </div>
-            <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationList.counselorId" :reservationNo="this.reservationList.reservationNo"></modal-view><modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationNo" :reservationNo="this.reservationNo"></modal-view>
+            <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.clickedId" :reservationNo="this.clickednum"></modal-view>
         </div>
     </template>
     
@@ -76,6 +76,8 @@ export default {
             reservationNo:null,
             clickedReservation : null,
             isModalVisible: false,
+            clickednum: null,
+            clickedId: null,
         };
     },
     methods: {
@@ -139,8 +141,13 @@ export default {
             const ImgUrl = this.member.profileImage;
             return ImgUrl
         },
-        writeReview(){
+        writeReview(reservationNo, counselorId){
+            console.log("counselingId" + this.counselorId)
+            
             this.isModalVisible = true;
+            this.clickednum = reservationNo;
+            this.clickedId = counselorId;
+            
         }
     },
     created() {

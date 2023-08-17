@@ -68,7 +68,7 @@ public class SecurityConfig {
                                                 "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
                                                 "/api/auth", "/api/auth/**",
                                                 "/api/counselors", "/api/counselors/{counselorNo}/", "/api/counselors/by_ratings", "/api/counselors/by_reviews",
-                                                "/api/reservations/availabledate/**", "/api/reservations/{counselorId}/co_reviews"
+                                                "/api/reservations/availabledate/**", "/api/reservations/{counselorId}/co_reviews", "/api/recording/{sessionId}"
                                         ).permitAll()
                                         .antMatchers(
                                                 "/api/roomsession", "/api/sessions/{sessionId}",
