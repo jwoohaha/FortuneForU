@@ -241,8 +241,6 @@ export default {
           },
         })
         .then((result) => {
-          console.log(result);
-
           if(result.data == "예약이 완료 됐습니다."){
             this.reservationStatus = "200";
             this.isModalVisible = true;
@@ -359,7 +357,7 @@ img {
 }
 .profile-txt {
     border-left: #000000 3px solid;
-    height: 144px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

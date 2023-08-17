@@ -11,14 +11,6 @@
                 <div class="mypage-contents">
                     <div class="profile-nav">
                         <img :src="imgUrl" class="profile-img">
-                        <input
-                            style="display: none"
-                            type="file"
-                            @change="onFileChange"
-                            ref="imgInput"
-                            accept="image/*" />
-                        <button @click="$refs.imgInput.click()">사진 선택</button>
-                        <SquareButton @click="uploadImage">프로필 사진 변경</SquareButton>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                             <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link>
@@ -39,6 +31,14 @@
                                     <div class="each-field">{{ this.email }}</div>
                                 </div>
                             </div>
+                            <input
+                            style="display: none"
+                            type="file"
+                            @change="onFileChange"
+                            ref="imgInput"
+                            accept="image/*" />
+                        <button @click="$refs.imgInput.click()">사진 선택</button>
+                            <SquareButton @click="uploadImage" style="width: 350px;">프로필 사진 변경</SquareButton>
                         </div>
                     </div>
                     <div class="like-part">
@@ -46,7 +46,7 @@
                         <div class="like-box">
                             <div class="like-list">
                                 <div v-if="!isCounselors">
-                                    <router-link to="/tarot">상담사 찜하러 가기</router-link>
+                                    <router-link to="/tarot" style="font-size: 20px; font-weight: 600; text-decoration: underline;">상담사 찜하러 가기💛</router-link>
                                 </div>
                                 <div v-for="counselor in counselors" :key="counselor.id">
                                     <ReviewCard :counselor="counselor" id="reviewcard"></ReviewCard>
@@ -217,7 +217,7 @@
     }
     .info-box {
         width: 446px;
-        height: 424px;
+        height: 340px;
         border-radius: 10px;
         background: #FCFAF1;
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
@@ -228,10 +228,11 @@
         margin-bottom: 52px;
     }
     .up-info {
-        height: 295px;
+        height: 180px;
         width: 378px;
         display: inline-flex;
         justify-content: space-between;
+        margin-bottom: 50px;
     }
     .info-labels {
         display: flex;
