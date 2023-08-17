@@ -92,21 +92,34 @@ export default {
     async getCounselorForms(filter, pageNum, pageSize) {
       await this.api.get(`/admin/counselor-forms?filter=${filter}&page=${pageNum}&size=${pageSize}`)
         .then((response) => {
-            console.log(response.data);
-            this.counselorForms = response.data.content;
+            response.data.content.forEach((value) => {
+              this.counselorForms.push(value);
+            })
             if (response.data.totalElements != 0) {
-              this.totalPages = response.data.totalElements / pageSize;
+              this.totalPages = Math.ceil(response.data.totalElements / pageSize);
             }            
         })
         .catch((error) => {
-          console.log('상담사 목록을 불러오지 못했습니다.\n' + error);
+          console.log('상담사 목록을 불러오지 못했습니다.');
+          console.log(error);
+          if (error.response.status == 401) {
+            alert("관리자만 접근 가능한 페이지입니다.");
+            this.$router.push('/');
+          } else {
+            alert("상담사 목록을 불러오지 못했습니다.")
+            this.$router.push('/');
+          }
         })
     },
     onPageChange(value) {
+      this.counselorForms = [];
       this.pageNum = value;
       this.getCounselorForms(this.filter, this.pageNum, this.pageSize);
     },
     onFilteringButtonClick(filter) {
+      this.counselorForms = [];
+      this.filter = filter;
+      this.pageNum = 0;
       this.buttonTextColor[''] = "#333333";
       this.buttonTextColor['WAITING'] = "#333333";
       this.buttonTextColor['PASS'] = "#333333";

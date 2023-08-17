@@ -10,13 +10,17 @@
       <div v-if="tokenStore.isLoggedIn">
         <button @click="this.logout">로그아웃</button>
         <router-link to="/mypage"><button>마이페이지</button></router-link>
-        <router-link to="/counselor"><button>상담사전용</button></router-link>
-        <router-link to="/admin/counselor-form-list"><button>관리자</button></router-link>
+        <div v-if="tokenStore.checkRolesIncludes('ROLE_COUNSELOR')">
+          <router-link to="/counselor"><button>상담사전용</button></router-link>
+        </div>
+        <div v-if="tokenStore.checkRolesIncludes('ROLE_ADMIN')">
+          <router-link to="/admin/counselor-form-list"><button>관리자</button></router-link>
+        </div>
       </div>
       <div v-else>
-        <button @click="isModalVisible = true">로그인</button>
+        <button @click="tokenStore.makeLoginModalVisible">로그인</button>
       </div>
-    <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false">
+    <modal-view v-if="tokenStore.getLoginModalStatus" @close-modal="tokenStore.makeLoginModalInvisible">
       <login-content />
     </modal-view>
     </div>
@@ -34,11 +38,6 @@ export default {
     Logo,
     ModalView,
   },
-  data() {
-    return {
-      isModalVisible: false,
-    };
-  },
   setup() {
     const tokenStore = useTokenStore();
     const api = apiInstance();
@@ -49,14 +48,16 @@ export default {
   },
   methods: {
     logout() {
-      this.api.get('/auth/logout')
-        .then((response) => {
-          console.log(response);
+      const yes = confirm("로그아웃 하시겠습니까?");
+      if (yes) {
+        this.api.get('/auth/logout')
+        .then(() => {
           this.tokenStore.logout();
         })
-        .catch((error) => {
-          console.log(error);
+        .catch(() => {
+          alert("로그아웃을 요청하는 도중 오류가 발생했습니다.");
         })
+      }
     }
   }
 };

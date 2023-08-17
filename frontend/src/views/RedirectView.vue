@@ -4,7 +4,7 @@
 </template>
 <script>
 import router from '@/router';
-import { apiInstance } from '@/api/index'
+import { apiInstance, silentReissue } from '@/api/index'
 import { useTokenStore } from '@/stores/token'
 
 export default { 
@@ -23,22 +23,27 @@ export default {
     methods: {
         async auth() {
             const authToken = this.$route.query.token;
+            console.log(authToken)
 
             if (authToken) {
                 await this.api.post('/auth', authToken)
-                .then(response => this.onSuccess(response.headers))
+                .then(response => this.onSuccess(response))
                 .catch((error) => this.onError(error))
             } else {
                 window.alert("로그인에 실패하였습니다.");
                 router.push({path: '/'});
             }   
         },
-        onSuccess(headers) {
-            console.log(headers);
-            const accessToken = headers.authorization;
-            console.log("accessToken: " + accessToken);
+        onSuccess(response) {
+            const accessToken = response.headers.authorization;
+            const roles = response.data;
             this.store.saveAccessToken(accessToken);
+            this.store.saveRoles(roles);
             this.store.login();
+            if (!this.store.isIntervalStarted) {
+                const intervalId = setInterval(silentReissue,  30 * 60 * 1000);
+                this.store.startInterval(intervalId);
+            }
             router.push({path: '/'});
         },
         onError(error) {
