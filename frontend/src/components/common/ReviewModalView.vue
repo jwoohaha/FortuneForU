@@ -14,18 +14,18 @@
             <div class="modal-score">
                 평점
                 <div class="star-rating space-x-4 mx-auto">
-                    <input type="radio" id="5-stars" name="rating" value="5" v-model="ratings" />
+                    <input type="radio" id="5-stars" name="rating" value="5" @click="ratings = 5"  />
                     <label for="5-stars" class="star pr-4">★</label>
-                    <input type="radio" id="4-stars" name="rating" value="4" v-model="ratings" />
+                    <input type="radio" id="4-stars" name="rating" value="4" @click="ratings = 4" />
                     <label for="4-stars" class="star">★</label>
-                    <input type="radio" id="3-stars" name="rating" value="3" v-model="ratings" />
+                    <input type="radio" id="3-stars" name="rating" value="3" @click="ratings = 3" />
                     <label for="3-stars" class="star">★</label>
-                    <input type="radio" id="2-stars" name="rating" value="2" v-model="ratings" />
+                    <input type="radio" id="2-stars" name="rating" value="2" @click="ratings = 2" />
                     <label for="2-stars" class="star">★</label>
-                    <input type="radio" id="1-star" name="rating" value="1" v-model="ratings" />
+                    <input type="radio" id="1-star" name="rating" value="1" @click="ratings = 1" />
                     <label for="1-star" class="star">★</label>
                 </div>
-                {{ this.ratings }} 점
+                <span>{{ ratings }} 점</span>
             </div>
             
             <div class="modal-buttons">
@@ -56,6 +56,7 @@ props:{
       required: true,
     },
 },
+
 data(){
     return {
     ratings: 0,
@@ -64,8 +65,12 @@ data(){
 },
 methods:{
     setReview(){
-    // console.log("입력"+ this.inputtxt);
-    
+    console.log("입력"+ this.inputtxt);
+    console.log(this.ratings)
+    console.log("상담사"+this.counselorId)
+    console.log("예약"+this.reservationNo)
+
+   
     if(this.inputtxt == "")
         this.inputtxt = "좋은 상담이었습니다.";
 
@@ -82,7 +87,7 @@ methods:{
     })
     .then((result) => {
         console.log(result);
-
+    
         if(result.state == 200){
         alert("후기 작성이 완료되었습니다.\n마이페이지로 이동합니다.")
         }else{

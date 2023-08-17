@@ -6,6 +6,7 @@ import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.service.CounselingReservationService;
 import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/reservations")
@@ -123,9 +125,11 @@ public class CounselingReservationController {
     @PatchMapping("/{reservationNo}")
     public ResponseEntity<String> deleteReview(@PathVariable Long reservationNo) {
         try {
+            log.trace("{}", reservationNo);
             counselingReservationService.deleteReview(reservationNo);
             return ResponseEntity.ok("리뷰 삭제 성공했습니다.");
         } catch (IllegalArgumentException e) {
+            log.trace("{}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }

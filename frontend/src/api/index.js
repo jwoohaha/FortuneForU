@@ -7,8 +7,8 @@ function apiInstance() {
     const store = useTokenStore();
 
     const instance = axios.create({
-        baseURL: 'https://i9a403.p.ssafy.io/api',
-        // baseURL: 'http://localhost:5000/api',
+        // baseURL: 'https://i9a403.p.ssafy.io/api',
+        baseURL: 'http://localhost:5000/api',
         headers:{
             "Content-Type": 'application/json;charset=utf-8'
         },
@@ -52,8 +52,8 @@ async function reissue() {
 
     const instance = axios.create({
         method: 'GET',
-        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
-        // baseURL: 'http://localhost:5000/api/auth/reissue',
+        // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
         withCredentials: true
     })
@@ -80,8 +80,8 @@ function silentReissue() {
 
     const instance = axios.create({
         method: 'GET',
-        baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
-        // baseURL: 'http://localhost:5000/api/auth/reissue',
+        // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
+        baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
         withCredentials: true
     })
