@@ -2,7 +2,7 @@
     <div class="follow-card">
         <div class="upper-content">
             <div id="img-border">
-                <img class="card-img" :src="follow.profileImg"  style="width: 100%; height: 100%; object-fit:cover;">                
+                <img class="card-img" :src="follow.profileImage"  style="width: 100%; height: 100%; object-fit:cover;">                
             </div>
             <div class="card-info">
                 <p id="card-name">{{ follow.name }} <span id="card-score">⭐ {{ follow.ratingAvg }}</span> </p>
