@@ -215,11 +215,11 @@ export default {
     width: 180.9px;
     height: 180px;
     border-radius: 180.9px;
-    background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
+    //background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
     background-repeat : no-repeat;
     background-size : cover;
     margin-bottom: 14px;
-    // background: lightgray 50% / cover no-repeat, #D7D7D7;
+    background: lightgray 50% / cover no-repeat, #D7D7D7;
 }
 .nav-menu{
     display: flex;
