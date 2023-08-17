@@ -111,7 +111,7 @@ function silentReissue() {
         (error) => {
             console.log("로그인이 필요합니다." + error);
             store.stopInterval();
-            return "";
+            return error;
         }
     )
 

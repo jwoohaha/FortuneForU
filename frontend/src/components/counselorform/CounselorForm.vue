@@ -42,7 +42,7 @@
       </div>
       <div class="button-container" v-else>
         <button class="button-content confirm" type="button" @click="this.submit">제출</button>
-        <button class="button-content reject" type="button">취소</button>
+        <button class="button-content reject" type="button" @click="this.cancel">취소</button>
       </div>
     </form>
   </div>
@@ -222,6 +222,12 @@ export default {
         return '한줄소개';
       }
       return '';
+    },
+    cancel() {
+      const result = confirm('취소하시겠습니까?\n이전 작성한 내용들은 저장되지 않습니다.');
+      if (result) {
+        router.push('/');  
+      }
     }
   } 
 }

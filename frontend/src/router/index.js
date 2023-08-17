@@ -154,7 +154,6 @@ router.beforeEach((to) => {
       silentReissue()
       .catch(() => {
         alert('이미 상담가로 등록되셨습니다.');
-        tokenStore.makeLoginModalVisible();
         return '/'
       }
       )
@@ -163,7 +162,6 @@ router.beforeEach((to) => {
       silentReissue()
       .catch(() => {
         alert('"상담가" 권한의 사용자만 접근가능합니다.');
-        tokenStore.makeLoginModalVisible();
         return '/'
       }
       )
@@ -172,7 +170,6 @@ router.beforeEach((to) => {
       silentReissue()
       .catch(() => {
         alert('"관리자" 권한의 사용자만 접근가능합니다.');
-        tokenStore.makeLoginModalVisible();
         return '/'
       }
       )
