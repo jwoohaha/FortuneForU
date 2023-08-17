@@ -413,14 +413,12 @@ export default {
     font-size: 18px;
 }
 .list-contents div div{
-    width: 20%;
+    width: 17%;
 }
 .list-row{
-    width: 98%;
+    width: 96%;
     display: flex;
     justify-content: space-between;
-    padding-left: 30px;
-    padding-right: 25px;
     margin-top: 5px;
     margin-bottom: 5px;
 }

@@ -18,14 +18,19 @@
                 </div>
                     <div class="coun-result-part">
                         <div class="result-header">
-                            <div>
-                                상담 내용 요약
+                            상담 일시: {{ reportDetail.reservationDateTime }}
+                            <div class="header-subtxt">    
+                                <p v-if="!isEditable">상담 내용 요약을 수정하고 싶으시면 아래의 버튼을 클릭해주세요.</p>
+                                <p v-else>상담 내용 요약을 수정하고 있습니다. 수정이 완료되면 다시 버튼을 클릭해주세요.</p>
                             </div>
                         </div>
-                        <div class="result-content">
-                            <input type="text" v-model="reportDetail.reservationReport" style="width: 100%; height: 350px;">
-                        </div>
-                        <UpdateButton @click="updateReport(this.reservationNo)">수정</UpdateButton>
+                        <div class="result-content" v-if="!isEditable">
+                            {{this.reportTxt}}
+                          </div>
+                        <textarea v-model="reportTxt" v-else ></textarea>
+                        
+                        <SquareButton isTarot v-if="isEditable" @click="updateReport(this.reservationNo)">상담 결과서 수정하기</SquareButton>
+                        <SquareButton isTarot v-else @click="changeEditable">상담 결과서 수정하기</SquareButton>
                     </div>
                 </div>
             </div>
@@ -34,61 +39,74 @@
     
 <script>
 import { apiInstance } from '@/api';
-import { UpdateButton } from '../../components/styled-components/StyledButton'
-// import { SquareButton } from "../../components/styled-components/StyledButton";
-// import { ReviewCard } from "../components/common/ReviewCard";
-// import PageButton from '../../components/common/PageButton.vue';
+import { SquareButton } from "../../components/styled-components/StyledButton";
 
 export default {
     components: {
-        UpdateButton,
+        SquareButton,
 
     },
     data() {
         return {
             reservationNo: null,
             reportDetail: {
-                reservationNo: "test",
-                reservationReport: "test"
+                reservationDateTime: null,
+                reservationNo: null,
+                reservationReport: null
             },
+            reportTxt: null,
+            isEditable: false
         };
     },
     created() {
-    const rezNo = this.$route.params.rezNo;
-    console.log(rezNo)
+        this.reservationNo = this.$route.params.rezNo;
+        console.log(this.reservationNo)
 
-    if (rezNo) {
-      this.getReportDetail(rezNo);
+        if (this.reservationNo) {
+            this.getReportDetail(this.reservationNo);
         }
     },
     methods: {
+        changeEditable(){
+            this.isEditable = true;
+        },
         getReportDetail(reservationNo){
            
             const api = apiInstance();
-            this.reservationNo = reservationNo
             api({
                 method: 'GET',
-                url: `/reservations/reports/${reservationNo}`,
+                url: `/reservations/report/${reservationNo}`,
             })
             .then((res) => {
                 console.log(res.data)
              
-                this.reportDetail = res.data;          
+                this.reportDetail = res.data;
+                this.reportTxt = this.reportDetail.reservationReport;  
+            
+                this.handleRezInfo(res.data)
             })
             .catch((e) => {
                 console.log(e)
             })
         },
-        updateReport(reservationNo){
+        handleRezInfo(reportDetail) {
+           
+            reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
+            reportDetail.reservationDateTime = reportDetail.reservationDateTime.substring(0, 16);
+            console.log(reportDetail.reservationDateTime)
+            return reportDetail;
+        },
+        updateReport(num){
+            
             const confirmUpdate = window.confirm("수정하시겠습니까?")
             
             if (confirmUpdate) {
                 const api = apiInstance();
                 api({
                 method: 'PUT',
-                url: `/reservations/counseling_results/${reservationNo}`,
+                url: `/reservations/counseling_results/${num}`,
                 data: {
-                    counselingResult: this.reportDetail.reservationReport
+                    counselingResult: this.reportTxt
                     }
                 })
                 .then((res) => {
@@ -99,7 +117,9 @@ export default {
                 .catch((e) => {
                     console.log(e);
                 })
-            }          
+            }    
+
+            this.isEditable = false;      
         }
         
         
@@ -109,7 +129,9 @@ export default {
 </script>
 
 <style lang="scss" scoped="scss">
-
+* {
+    font-family: 'Noto Sans KR', sans-serif;
+}
 .mypage {
     display: inline-flex;
     justify-content: center;
@@ -122,8 +144,6 @@ export default {
     height: 900px;
     width: 1273px;
     margin-top: 96px;
-    // margin-left: 15%;
-    // margin-right: 15%;
 }
 .mypage-header { 
     height: 57px;
@@ -192,10 +212,12 @@ export default {
     flex-direction: column;
     justify-content: space-evenly;
     align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
 }
 .result-header{
     width: 974px;
-    height: 83px;
+    height: 75px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -205,14 +227,20 @@ export default {
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    margin: 0px 20px;
 }
-
+.header-subtxt{
+    font-size: 13px;
+    text-align: left;
+    font-weight: 500;
+}
 .result-content {
     width: 974px;
+    height: 70%;
     display: flex;
     padding: 21px 28px;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: start;
     gap: 10px;
     border-radius: 10px;
     background: #FFFEF9;
@@ -223,6 +251,15 @@ export default {
     padding: 10px;
     box-sizing: border-box;
     text-align: left;
+    overflow: auto;
+}
+.coun-result-part textarea{
+    width: 974px;
+    height: 70%;
+    border: solid 0.8px rgba(0, 0, 0, 0.25);
+    resize: none;
+    padding: 20px;
+    box-sizing: border-box;
 }
 
 </style>
