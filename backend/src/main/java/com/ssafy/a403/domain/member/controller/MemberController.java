@@ -65,6 +65,12 @@ public class MemberController {
         return HttpStatus.NO_CONTENT;
     }
 
+    @GetMapping("isfollowing/{followeeId}")
+    public Boolean isFollowing(@PathVariable Long followeeId, @AuthenticationPrincipal LoginUser loginUser) {
+
+        return memberService.isFollowing(loginUser.getMember(), memberService.findById(followeeId));
+    }
+
     @PostMapping("/submit")
     public HttpStatus submitCounselorForm(
             @RequestBody CounselorFormRequest counselorFormRequest,

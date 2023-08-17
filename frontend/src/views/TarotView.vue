@@ -158,7 +158,7 @@ export default {
   },
 
   created() {
-    this.getCounselorsByRatings(0);
+    this.getCounselorsByReviews(0);
   }
  };
 </script>
