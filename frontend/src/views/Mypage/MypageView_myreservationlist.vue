@@ -145,11 +145,9 @@ export default {
             })
             .then((res) => {
                 console.log(res)
-                if(res.status==200){
-                    alert("예약된 상담이 취소되었습니다.")
-                    this.getRezInfo();
-                    this.getMemberInfo();
-                }
+                alert(res.data)
+                this.getRezInfo();
+                this.getMemberInfo();
             })
             .catch((e) => {
                 console.log(e)

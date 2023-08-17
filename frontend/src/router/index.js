@@ -150,7 +150,7 @@ router.beforeEach((to) => {
       }
       )
   }
-  if (to.meta.onlyForUser && tokenStore.checkRolesIncludes("ROLE_COUNSELOR")) {
+  if (to.meta.onlyForUser && !tokenStore.isLoggedIn && tokenStore.checkRolesIncludes("ROLE_COUNSELOR")) {
       silentReissue()
       .catch(() => {
         alert('이미 상담가로 등록되셨습니다.');
