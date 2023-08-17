@@ -1,7 +1,8 @@
 <template>
   <div id="main-container" class="container">
     <div id="session" v-if="session">
-      <div id="session-header">        
+      <div id="session-header"> 
+        Fortune For U 상담방
       </div>
 
       <div id="video-container" class="col-md-6" style="display: flex; flex-direction: row; justify-content: center;">
@@ -9,7 +10,8 @@
         <user-video v-for="sub in subscribers" :key="sub.stream.connection.connectionId" :stream-manager="sub"
           @click="updateMainVideoStreamManager(sub)" style="margin-right: 10px; margin-left:10px;" />
       </div>
-      <RoundButton isTarot @click="closing" value="Leave session">나가기</RoundButton>
+
+      <RoundButton isTarot @click="closing" value="Leave session" id="outBtn">나가기</RoundButton>
 
     </div>
     </div>
@@ -121,9 +123,9 @@
         // First param is the token. Second param can be retrieved by every user on event
         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
         if(this.isRecorder){
-          this.myUserName="상담가";
+          this.myUserName="상담사";
         }else{
-          this.myUserName="사용가";
+          this.myUserName="사용자";
         }
         this.session.connect(token, { clientData: this.myUserName  })
           .then(() => {
@@ -273,5 +275,19 @@ background-position: 5px center; /* 아이콘 위치 */
 /* 다른 스타일 변경 및 추가 */
 }
 
+#session-header{
+  font-family: 'Noto Sans KR', 'Serif';
+  font-size: 50px;
+  font-weight: 700;
+  margin-top: 120px;
+  margin-bottom: 50px;
+}
 
+#outBtn{
+  margin-top: 20px;
+  width: 240px;
+  height: 50px;
+  font-size: 20px;
+  font-weight: 700;
+}
 </style>

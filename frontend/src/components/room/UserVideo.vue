@@ -1,7 +1,7 @@
 <template>
 <div v-if="streamManager">
 	<ov-video :stream-manager="streamManager"/>
-	<div><p>{{ clientData }}</p></div>
+	<div class="username"><p>{{ clientData }}</p></div>
 </div>
 </template>
 
@@ -34,3 +34,20 @@ export default {
 	},
 };
 </script>
+
+<style lang="scss" scoped>
+.username{
+	font-size: 30px;
+	font-family: 'Noto Sans KR', 'Serif';
+	font-weight: 600;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+}
+.username p {
+	margin-top: 20px;
+	margin-bottom: 20px;
+	background: #c2b1e6;
+	width: 30%;
+}
+</style>
