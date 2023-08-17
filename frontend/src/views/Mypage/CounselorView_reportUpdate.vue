@@ -19,7 +19,7 @@
                     <div class="coun-result-part">
                         <div class="result-header">
                             상담 일시: {{ reportDetail.reservationDateTime }}
-                            <div class="header-subtxt">    
+                            <div class="header-subtxt">
                                 <p v-if="!isEditable">상담 내용 요약을 수정하고 싶으시면 아래의 버튼을 클릭해주세요.</p>
                                 <p v-else>상담 내용 요약을 수정하고 있습니다. 수정이 완료되면 다시 버튼을 클릭해주세요.</p>
                             </div>
@@ -28,7 +28,7 @@
                             {{this.reportTxt}}
                           </div>
                         <textarea v-model="reportTxt" v-else ></textarea>
-                        
+
                         <SquareButton isTarot v-if="isEditable" @click="updateReport(this.reservationNo)">상담 결과서 수정하기</SquareButton>
                         <SquareButton isTarot v-else @click="changeEditable">상담 결과서 수정하기</SquareButton>
                     </div>
@@ -81,8 +81,8 @@ export default {
                 console.log(res.data)
              
                 this.reportDetail = res.data;
-                this.reportTxt = this.reportDetail.reservationReport;  
-            
+                this.reportTxt = this.reportDetail.reservationReport;
+
                 this.handleRezInfo(res.data)
             })
             .catch((e) => {
@@ -90,14 +90,14 @@ export default {
             })
         },
         handleRezInfo(reportDetail) {
-           
+
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.substring(0, 16);
             console.log(reportDetail.reservationDateTime)
             return reportDetail;
         },
         updateReport(num){
-            
+
             const confirmUpdate = window.confirm("수정하시겠습니까?")
             
             if (confirmUpdate) {
@@ -117,9 +117,9 @@ export default {
                 .catch((e) => {
                     console.log(e);
                 })
-            }    
+            }
 
-            this.isEditable = false;      
+            this.isEditable = false;
         }
         
         
