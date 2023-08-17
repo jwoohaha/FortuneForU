@@ -1,7 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import MainView from '../views/MainView.vue'
 import { useTokenStore } from '@/stores/token'
-import { silentReissue } from '@/api'
+import { reissue } from '@/api'
 
 const routes = [
   {
@@ -138,41 +138,34 @@ const router = createRouter({
 
 router.beforeEach((to) => {
   const tokenStore = useTokenStore();
-
   // 1. meta 확인 -> 사용자가 로그인한 상태여야 접근이 가능한 페이지라면
   // 2. tokenStore에서 사용자가 로그인했는지 여부 확인
   if (to.meta.requiresAuth && !tokenStore.isLoggedIn) {
-      silentReissue()
-      .catch(() => {
+      reissue().catch(() => {
         alert('로그인이 필요한 페이지입니다.');
         tokenStore.makeLoginModalVisible();
         return '/'
       }
       )
   }
-  if (to.meta.onlyForUser && !tokenStore.isLoggedIn && tokenStore.checkRolesIncludes("ROLE_COUNSELOR")) {
-      silentReissue()
-      .catch(() => {
-        alert('이미 상담가로 등록되셨습니다.');
-        return '/'
-      }
-      )
+  if (to.meta.onlyForUser && tokenStore.checkRolesIncludes("ROLE_COUNSELOR")) {
+    alert('이미 상담가(혹은 관리자)로 등록되셨습니다.');
+    return '/'
   }
   if (to.meta.forCounselor && !tokenStore.checkRolesIncludes("ROLE_COUNSELOR")) {
-      silentReissue()
-      .catch(() => {
-        alert('"상담가" 권한의 사용자만 접근가능합니다.');
-        return '/'
-      }
-      )
+    reissue().catch(() => {
+      alert('"상담가" 권한의 사용자만 접근가능합니다.');
+      return '/'
+    }
+    )
   }
   if (to.meta.forAdmin && !tokenStore.checkRolesIncludes("ROLE_ADMIN")) {
-      silentReissue()
-      .catch(() => {
-        alert('"관리자" 권한의 사용자만 접근가능합니다.');
-        return '/'
-      }
-      )
+    reissue().catch(() => {
+      alert('"관리자" 권한의 사용자만 접근가능합니다.');
+      tokenStore.makeLoginModalVisible();
+      return '/'
+    }
+    )
   }
 })
 
