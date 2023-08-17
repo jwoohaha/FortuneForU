@@ -100,6 +100,7 @@ export default {
             }
         },
         removeReview(reservationNo){
+            console.log(reservationNo)
             this.api.patch(`/reservations/${ reservationNo }`)
             .then((response) =>{
                 console.log(response)
@@ -108,6 +109,8 @@ export default {
                     window.location.reload();
                 }else{
                     console.log('삭제 실패 status : ', response.status);
+                    alert("실패!")
+                    console.log(response)
                 }
             })
             .catch((error) =>{
