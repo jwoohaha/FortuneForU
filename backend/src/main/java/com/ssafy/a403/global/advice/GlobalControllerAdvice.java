@@ -27,6 +27,13 @@ public class GlobalControllerAdvice {
         return ResponseEntity.notFound().build();
     }
 
+    @ExceptionHandler(ExpiredJwtException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ResponseEntity<String> expiredJwtExceptionHandler(Exception e) {
+        log.info("ExpiredJwtException: {}", e.getMessage());
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+    }
+
     @ExceptionHandler(RuntimeException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ResponseEntity<String> runtimeExceptionHandler(Exception e) {

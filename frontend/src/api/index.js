@@ -17,9 +17,7 @@ function apiInstance() {
 
     instance.interceptors.request.use(
         (config) => {
-            // config.headers['Content-Type'] = 'application/json;charset=utf-8';
             config.headers['Authorization'] = store.getAccessToken;
-            config.headers['']
             config.withCredentials = true;
             
             return config;
@@ -33,20 +31,23 @@ function apiInstance() {
     instance.interceptors.response.use(
         (response) => {
             // console.log("successed response: " + response);
-            // setTimeout(silentReissue, 8 * 1000);
+            if (!store.isIntervalStarted) {
+                const intervalId = setInterval(silentReissue,  30 * 60 * 1000);
+                store.startInterval(intervalId);
+            }
             return response;
         },
         (error) => {
             // console.log("response error: " + error);
             reissue();
-            return error;
+            return Promise.reject(error);
         }
     )
 
     return instance;
 }
 
-async function reissue() {
+function reissue() {
 
     const store = useTokenStore();
 
@@ -55,21 +56,26 @@ async function reissue() {
         // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
         baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
-        withCredentials: true
+        withCredentials: true,
+        headers: {
+            "Content-Type": 'application/json;charset=utf-8'
+        },
     })
     instance.interceptors.response.use(
         (response) => {
+            console.log(response);
             const accessToken = response.headers.authorization;
-            // console.log("newAccessToken: " + accessToken);
+            const roles = response.data;
             store.saveAccessToken(accessToken);
+            store.saveRoles(roles);
             store.login();
-            setTimeout(silentReissue, 5 * 1000);
         },
         (error) => {
             console.log("Access Token 재발급 실패" + error)
             alert("로그인이 만료되었습니다❌\n다시 로그인하세요.");
             store.logout();
-            return error;
+            store.stopInterval();
+            return Promise.reject();
         }
     )
 }
@@ -83,23 +89,33 @@ function silentReissue() {
         // baseURL: 'https://i9a403.p.ssafy.io/api/auth/reissue',
         baseURL: 'http://localhost:5000/api/auth/reissue',
         timeout: 5000,
-        withCredentials: true
+        withCredentials: true,
+        headers: {
+            "Content-Type": 'application/json;charset=utf-8'
+        },
     })
+
     instance.interceptors.response.use(
         (response) => {
+            console.log(response);
             const accessToken = response.headers.authorization;
-            // console.log("newAccessToken: " + accessToken);
+            const roles = response.data;
             store.saveAccessToken(accessToken);
+            store.saveRoles(roles);
             store.login();
+            if (!store.isIntervalStarted) {
+                const intervalId = setInterval(silentReissue, 30 * 60 * 1000);
+                store.startInterval(intervalId);
+            }
         },
         (error) => {
-            console.log("로그인이 필요합니다." + error)
-            store.logout();
+            console.log("로그인이 필요합니다." + error);
+            store.stopInterval();
             return "";
         }
     )
 
-    instance();
+    return instance();
 }
 
 export { apiInstance, silentReissue }

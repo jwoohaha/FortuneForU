@@ -1,6 +1,7 @@
 package com.ssafy.a403.domain.counselorform.entity;
 
 import com.ssafy.a403.domain.counselorform.dto.CounselorFormUpdateRequest;
+import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
 import com.ssafy.a403.domain.model.CounselorType;
 import com.ssafy.a403.domain.model.PassState;
@@ -55,6 +56,20 @@ public class CounselorForm extends BaseTime {
         this.phone = phone;
         this.passState = passState;
         this.reason = reason;
+    }
+
+    public Counselor toCounselor() {
+        return Counselor.builder()
+                .member(this.member)
+                .counselorType(this.counselorType)
+                .major(this.major)
+                .intro(this.intro)
+                .career(this.career)
+                .address(this.address)
+                .phone(this.phone)
+                .startTime("09:00")
+                .endTime("18:00")
+                .build();
     }
 
     public void changeFormStatus(CounselorFormUpdateRequest updateRequest) {

@@ -7,6 +7,8 @@ import lombok.Data;
 public class CounselorInfoResponse {
     private String name;
 
+    private Long memberNo;
+
     private String profileImg;
 
     private Long counselorNo;
@@ -35,6 +37,7 @@ public class CounselorInfoResponse {
         CounselorInfoResponse counselorInfoResponse = new CounselorInfoResponse();
 
         counselorInfoResponse.name = counselor.getMember().getName();
+        counselorInfoResponse.memberNo = counselor.getMember().getNo();
         counselorInfoResponse.profileImg = counselor.getMember().getProfileImage();
         counselorInfoResponse.counselorNo = counselor.getNo();
         counselorInfoResponse.CounselorType = counselor.getCounselorType();

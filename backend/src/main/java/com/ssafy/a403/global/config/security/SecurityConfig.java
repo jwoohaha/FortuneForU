@@ -9,6 +9,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -56,30 +57,34 @@ public class SecurityConfig {
                 .and()
                 .authorizeHttpRequests(
                         requests ->
-                                requests.antMatchers(
-                                        "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
-                                        "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-                                        "/api/**"
-                                ).permitAll()
-                                // swagger 사용을 위한 url -> permitAll()로 지정
 //                                requests.antMatchers(
-//                                                "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
-//                                                "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
-//                                                "/api/auth/**",
-//                                                "/api/counselors", "/api/counselors/**", "/api/counselors/by_ratings", "/api/counselors/by_reviews",
-//                                                "/api/reservations/availabledate/**", "/api/reservations/co_reviews", "/api/reservations/**/co_reviews"
-//                                        ).permitAll()
-//                                        .antMatchers(
-//                                                "/api/roomsession", "/api/sessions/{sessionId}",
-//                                                "/api/reservations/counselor_rez_info/**", "/api/reservations/counseling_results/**",
-//                                                "/api/counselors/time/update/{counselorNo}", "/api/counselors/info", "/api/counselors/update"
-//                                        ).hasAnyRole("COUNSELOR")
-//                                        .antMatchers(
-//                                                "/api/admin/counselor-forms","/api/admin/counselor-forms/**"
-//                                        ).hasAnyRole("ADMIN")
-//                                        .anyRequest().authenticated()
+//                                        "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+//                                        "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+//                                        "/api/**"
+//                                ).permitAll()
+//                                 swagger 사용을 위한 url -> permitAll()로 지정
+                                requests.antMatchers(
+                                                "/v2/api-docs", "/swagger-resources", "/swagger-resources/**", "/configuration/ui",
+                                                "/configuration/security", "/swagger-ui.html", "/webjars/**", "/v3/api-docs/**", "/swagger-ui/**",
+                                                "/api/auth", "/api/auth/**",
+                                                "/api/counselors", "/api/counselors/{counselorNo}/", "/api/counselors/by_ratings", "/api/counselors/by_reviews",
+                                                "/api/reservations/availabledate/**", "/api/reservations/{counselorId}/co_reviews"
+                                        ).permitAll()
+                                        .antMatchers(
+                                                "/api/roomsession", "/api/sessions/{sessionId}",
+                                                "/api/reservations/counselor_rez_info/{date}", "/api/reservations/counseling_results/{reservationNo}",
+                                                "/api/reservations/co_reviews", "/api/reservations/counseling_results/{reservationNo}",
+                                                "/api/counselors/time/update/{counselorNo}", "/api/counselors/info", "/api/counselors/update"
+                                        ).hasAnyRole("COUNSELOR")
+                                        .antMatchers(
+                                                "/api/admin/counselor-forms","/api/admin/counselor-forms/**", "/api/admin/counselor-forms/{counselorFormNo}/update"
+                                        ).hasAnyRole("ADMIN")
+                                        .anyRequest().authenticated()
                 )
                 .exceptionHandling()
+                .authenticationEntryPoint((request, response, authException) -> {
+                    response.setStatus(HttpStatus.UNAUTHORIZED.value());
+                })
                 .accessDeniedHandler(accessDeniedHandler)
                 .and()
                 .oauth2Login(setOAuth2Config())
@@ -108,7 +113,7 @@ public class SecurityConfig {
         configuration.setAllowedOrigins(List.of(clientUrl));
         configuration.setAllowedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.CONTENT_TYPE));
         configuration.setExposedHeaders(List.of(HttpHeaders.AUTHORIZATION, HttpHeaders.SET_COOKIE));
-        configuration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.DELETE.name()));
+        configuration.setAllowedMethods(List.of(HttpMethod.GET.name(), HttpMethod.POST.name(), HttpMethod.PUT.name(), HttpMethod.PATCH.name(), HttpMethod.DELETE.name()));
         configuration.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
