@@ -65,26 +65,3 @@ export const TimeButton = styled('div', timebtnProps)`
   box-sizing: border-box;
   white-space: nowrap;
 `;
-
-
-export const UpdateButton = styled('button')`
-  display: inline-flex;
-  height: 40px;
-  padding: 7px 15px;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  border-radius: 5px;
-  box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
-  background: #9C7AE7;
-  color: #FFF;
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 700;
-  line-height: normal;
-  border-color: transparent;
-  box-sizing: border-box;
-  white-space: nowrap;
-`;
-
-
