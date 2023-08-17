@@ -92,8 +92,7 @@ public class CounselingReservationService {
         if (reservations.isEmpty()) {
             return Collections.emptyList();
         }
-        reservations.sort(Comparator.comparing(CounselingReservation::getReservationDateTime).reversed());
-
+        reservations.sort(Comparator.comparing(CounselingReservation::getReservationNo).reversed());
         return reservationList(reservations);
     }
 

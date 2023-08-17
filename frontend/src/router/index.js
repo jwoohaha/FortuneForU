@@ -80,6 +80,11 @@ const routes = [
     component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_counreview.vue')
   },
   {
+    path: '/counselor/review-update/:rezNo',
+    name: 'counselorreportupdate',
+    component: () => import(/* webpackChunkName: "counreview" */ '../views/Mypage/CounselorView_reportUpdate.vue')
+  },
+  {
     path: '/counselor-form',
     name: 'counselor-form',
     component: () => import(/* webpackChunkName: "counreview" */ '@/views/CounselorFormView')
