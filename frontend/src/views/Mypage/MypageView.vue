@@ -50,6 +50,7 @@
                                 </div>
                                 <div v-for="counselor in counselors" :key="counselor.id">
                                     <FollowCard :follow="counselor" id="followcard"></FollowCard>
+                                    <FollowCard :follow="counselor" id="followcard"></FollowCard>
                                 </div>
                             </div>
                         </div>
@@ -307,9 +308,8 @@
     .like-list{
         height: 480px;
         width: 344px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
+        overflow: auto;
+        padding: 10px;
     }
     .each-like{
         height: 84px;
@@ -321,9 +321,8 @@
     }
 
     #followcard{
-        // width: 344px;
         width: 100%;
-        margin-bottom: 5px;
+        margin-bottom: 7px;
     }
 
     </style>

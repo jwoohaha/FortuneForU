@@ -3,8 +3,8 @@
         <div class="upper-content">
             <img class="card-img" src="{{ follow.profileImg }}">
             <div class="card-info">
-                <p id="card-name">{{ follow.name }} <span id="card-score">⭐ {{ follow.email }}</span> </p>
-                <p class="card-txt">소개</p>
+                <p id="card-name">{{ follow.name }} <span id="card-score">⭐ {{ follow.ratingAvg }}</span> </p>
+                <p class="card-txt">{{ follow.intro }}</p>
             </div>
         </div>
     </div>
@@ -31,11 +31,12 @@ export default {
     border: 1px solid #D9D9D9;
     background: #FFF;
     justify-content: space-between;
-    padding: 22px 14px;
+    padding: 15px 10px;
     box-sizing: border-box;
 }
 .upper-content {
     display: flex;
+    height: 100%;
 }
 .card-img {
     width: 70px;
@@ -43,13 +44,16 @@ export default {
     border-radius: 70px;
     border: 1px solid var(--bg-gray, #F7F7F7);
     background: lightgray 50% / cover no-repeat;
-    margin-right: 21px;
+    margin-right: 15px;
+}
+.card-info{
+    width: 72%;
 }
 .card-txt {
     width: 100%;
-    height: 138px;
+    height: 76%;
     overflow: hidden;
-    color: var(--title-text);
+    color: #333;
     text-overflow: ellipsis;
     font-size: 16px;
     font-style: normal;
@@ -58,7 +62,7 @@ export default {
     text-align: start;
 }
 #card-name { 
-    color: var(--title-text);
+    color: #333;
     text-align: center;
     font-size: 20px;
     font-style: normal;
@@ -68,7 +72,7 @@ export default {
     margin-bottom: 7px;
 }
 #card-score {
-    color: var(--title-text);
+    color: #333;
     text-align: center;
     font-size: 12px;
     font-style: normal;
