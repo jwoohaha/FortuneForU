@@ -23,7 +23,6 @@ export default {
     methods: {
         async auth() {
             const authToken = this.$route.query.token;
-            console.log(authToken)
 
             if (authToken) {
                 await this.api.post('/auth', authToken)

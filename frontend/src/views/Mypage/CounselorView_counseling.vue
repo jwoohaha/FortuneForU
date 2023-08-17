@@ -136,7 +136,6 @@ export default {
             })
             .then((res) => {
                 this.waitingCnt = res.data
-                console.log(res.data)                
             })
             .catch((e) => {
                 console.log(e)
@@ -150,7 +149,6 @@ export default {
             })
             .then((res) => {
                 this.counselor = res.data
-                console.log(this.counselor)
                 this.getCoRezInfo(this.clicked_date)
                 
             })
@@ -178,8 +176,6 @@ export default {
                 url: `/reservations/counselor_rez_info/${this.formatted_date}`,
             })
             .then((res) => {
-                console.log(res.data)
-               
                 this.reservations = this.handleRezInfo(res.data)
                 this.noReservation = false;
                 this.toggleReservationDetails();
@@ -230,7 +226,6 @@ export default {
                 })
                 .then((res) => {
                     alert(res.data)
-                    console.log(res.data);
                     location.reload();
 
                 })
@@ -242,7 +237,6 @@ export default {
         }, 
         checkResult(reservationNo) {
             const clickedReservationNo = reservationNo
-            console.log(clickedReservationNo)
             this.$router.push({
                 name: 'counselorreportupdate',
                 params: {rezNo : clickedReservationNo}

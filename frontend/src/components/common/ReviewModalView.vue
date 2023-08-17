@@ -80,9 +80,7 @@ methods:{
         "reservationScore": this.ratings
         },
     })
-    .then((result) => {
-        console.log(result);
-    
+    .then((result) => {    
         if(result.status == 200){
         alert("후기 작성이 완료되었습니다.\n마이페이지로 이동합니다.")
         }else{

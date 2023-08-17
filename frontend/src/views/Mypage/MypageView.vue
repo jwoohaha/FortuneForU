@@ -101,7 +101,6 @@
                 url: 'members/details',
             })
             .then((res) => {
-                console.log(res.data)
                 this.email = res.data.email
                 this.name = res.data.name
                 this.counselors = res.data.followInfoList
@@ -134,7 +133,6 @@
                 },
             })
             .then((res) => {
-                console.log(res)
                 window.location.reload();
             })
             .catch((e) => {

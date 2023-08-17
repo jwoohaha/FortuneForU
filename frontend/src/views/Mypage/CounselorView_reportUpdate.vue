@@ -60,7 +60,6 @@ export default {
     },
     created() {
         this.reservationNo = this.$route.params.rezNo;
-        console.log(this.reservationNo)
 
         if (this.reservationNo) {
             this.getReportDetail(this.reservationNo);
@@ -78,7 +77,6 @@ export default {
                 url: `/reservations/report/${reservationNo}`,
             })
             .then((res) => {
-                console.log(res.data)
              
                 this.reportDetail = res.data;
                 this.reportTxt = this.reportDetail.reservationReport;
@@ -93,7 +91,6 @@ export default {
 
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.substring(0, 16);
-            console.log(reportDetail.reservationDateTime)
             return reportDetail;
         },
         updateReport(num){
@@ -111,7 +108,6 @@ export default {
                 })
                 .then((res) => {
                     alert("수정되었습니다!")
-                    console.log(res.data)
                 }) 
                 .catch((e) => {
                     console.log(e);

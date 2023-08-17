@@ -90,9 +90,7 @@ export default {
                 url: '/members/info',
             })
             .then((res) => {
-                console.log(res.data)
                 this.member = res.data
-                console.log(this.member)
                 if (res.data.profileImage != null){
                     this.imgUrl = res.data.profileImage
                 }
@@ -108,7 +106,6 @@ export default {
                 url: '/reservations/member/reports',
             })
             .then((res) => {
-                console.log(res.data)
                 if(res.data.length !== 0) {
                     this.reservationList = this.handleRezInfo(res.data)
                     this.noReservation = false;
@@ -143,7 +140,6 @@ export default {
           
         },
         writeReview(reservationNo, counselorId){
-            console.log("counselingId" + this.counselorId)
             
             this.isModalVisible = true;
             this.clickednum = reservationNo;

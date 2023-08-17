@@ -65,7 +65,6 @@ export default {
     },
     created() {
         const rezNo = this.$route.params.rezNo;
-        console.log(rezNo)
 
         if (rezNo) {
         this.getReportDetail(rezNo);
@@ -82,7 +81,6 @@ export default {
             })
             .then((res) => {
                 this.member = res.data
-                console.log(this.member)
                 if (res.data.profileImage != null){
                     this.imgUrl = res.data.profileImage
                 }
@@ -99,7 +97,6 @@ export default {
                 url: `/reservations/report/${reservationNo}`,
             })
             .then((res) => {
-                console.log(res.data)
              
                 this.reportDetail = res.data;
             
@@ -113,7 +110,6 @@ export default {
            
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.substring(0, 16);
-            console.log(reportDetail.reservationDateTime)
             return reportDetail;
         }
         

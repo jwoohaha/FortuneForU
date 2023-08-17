@@ -105,7 +105,6 @@ export default {
     getTaroCounselorsByRatings(){
       this.api.get('/counselors/by_ratings?counselorType=TARO')
       .then((response) => {
-        console.log(response.data)
         this.taroCounselors = response.data.content
         this.selectRandomTaroCounselors();
       })
@@ -117,7 +116,6 @@ export default {
     getSajuCounselorsByRatings(){
       this.api.get('/counselors/by_reviews?counselorType=SAJU')
       .then((response) => {
-        console.log(response)
         this.sajuCounselors = response.data.content
         this.selectRandomSajuCounselors();
       })

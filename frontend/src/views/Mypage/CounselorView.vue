@@ -197,7 +197,6 @@ export default {
                     endTime: this.endTime
             })
         .then((re) => {
-            console.log(+re.data);
         }).catch((e) => {
             console.log(e)
         })

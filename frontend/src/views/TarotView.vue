@@ -79,7 +79,6 @@ export default {
         }
       })
       .then((res) => {
-        console.log(res.data)
         this.counselors = res.data.content;
         this.totalPages = res.data.totalPages;
       })
@@ -98,7 +97,6 @@ export default {
         }
       })
       .then((res) => {
-        console.log(res.data.content)
         this.counselors = res.data.content
         this.totalPages = res.data.totalPages;
       })

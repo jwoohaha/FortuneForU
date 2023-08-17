@@ -135,7 +135,6 @@ export default {
         url: `/counselors/${id}/`,
       })
       .then((result) => {
-        console.log(result.data);
         this.counselor = result.data;        
         this.getReviewInfo(this.counselor.counselorNo)
         this.setDate(this.counselor.counselorNo, this.clicked_date)
@@ -154,7 +153,6 @@ export default {
         url: 'reservations/'+ id + '/co_reviews',
       })
       .then((result) => {
-        console.log(result);
         //예외처리
         if(result.data.length == 0){
           this.emptyReview = true;
@@ -274,8 +272,6 @@ export default {
           url: `members/isfollowing/${memberNo}`,
       })
       .then((res) => {
-          console.log('팔로잉???')
-          console.log(res.data)
           this.isFollowing = res.data
       })
       .catch((e) => {
@@ -289,7 +285,6 @@ export default {
           url: `members/follow/${this.counselor.memberNo}`,
       })
       .then((res) => {
-          console.log(res)
           this.isFollowing = true
       })
       .catch((e) => {
@@ -303,8 +298,6 @@ export default {
           url: `members/unfollow/${this.counselor.memberNo}`,
       })
       .then((res) => {
-          console.log("unfollowid", this.counselor.memberNo)
-          console.log(res)
           this.isFollowing = false
       })
       .catch((e) => {

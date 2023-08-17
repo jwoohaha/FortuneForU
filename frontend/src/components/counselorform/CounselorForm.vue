@@ -125,8 +125,6 @@ export default {
       this.counselorForm.counselorType = value;
     },
     majorChange(value, index) {
-      console.log(this.counselorForm.major)
-      console.log(value)
       if (value != 'none' && this.counselorForm.major.includes(value)) {
         alert('동일한 전문영역을 여러개 선택할 수 없습니다.');
         let list = [...this.counselorForm.major];
@@ -164,8 +162,6 @@ export default {
       this.counselorForm.major = (this.counselorForm.major[0] + ' ' + 
                                   (this.counselorForm.major[1] == 'none' ? '' : this.counselorForm.major[1]) + ' ' + 
                                   (this.counselorForm.major[2] == 'none' ? '' : this.counselorForm.major[2])).trim();
-      console.log(this.counselorForm.counselorType);
-      console.log(this.counselorForm.major);
       await this.api.post("/members/submit", this.counselorForm)
               .then(() => {
                 alert("정상적으로 등록되었습니다.");
@@ -179,7 +175,6 @@ export default {
     async getCounselorFormDetails() {
       await this.api.get(`/admin/counselor-forms/${this.$route.params.formNo}`)
               .then((response) => {
-                console.log(response);
                 const form = response.data;
                 this.counselorForm = form;
                 this.counselorForm.counselorType = this.enumToCounselorType[form.counselorType];

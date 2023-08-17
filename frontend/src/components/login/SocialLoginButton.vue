@@ -12,7 +12,6 @@ export default {
   },
   methods: {
     socialLogin(provider) {
-      console.log(provider);
       const url = 'https://i9a403.p.ssafy.io/oauth2/authorize/' + provider;
       // const url = `http://localhost:5000/oauth2/authorize/${provider}`;
       //local 에서는 ssafytest.shop 안됨
