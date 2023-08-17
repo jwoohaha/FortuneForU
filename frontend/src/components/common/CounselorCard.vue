@@ -1,7 +1,8 @@
 <template>
     <div class="counselor-card">
         <div class="upper-content">
-            <img class="card-img" src={{counselor.profileImg}}>
+            <img class="card-img" :src=counselor.profileImg>
+            
             <div class="card-info">
                 <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.ratingAvg }}</span> </p>
                 <p id="review-cnt"><span>{{ counselor.reviewCnt }}</span>개의 후기</p>
