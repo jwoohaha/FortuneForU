@@ -32,7 +32,7 @@ function apiInstance() {
         (response) => {
             // console.log("successed response: " + response);
             if (!store.isIntervalStarted) {
-                const intervalId = setInterval(silentReissue, 9 * 1000);
+                const intervalId = setInterval(silentReissue,  30 * 60 * 1000);
                 store.startInterval(intervalId);
             }
             return response;
@@ -104,7 +104,7 @@ function silentReissue() {
             store.saveRoles(roles);
             store.login();
             if (!store.isIntervalStarted) {
-                const intervalId = setInterval(silentReissue, 9 * 1000);
+                const intervalId = setInterval(silentReissue, 30 * 60 * 1000);
                 store.startInterval(intervalId);
             }
         },
@@ -115,7 +115,7 @@ function silentReissue() {
         }
     )
 
-    instance();
+    return instance();
 }
 
 export { apiInstance, silentReissue }

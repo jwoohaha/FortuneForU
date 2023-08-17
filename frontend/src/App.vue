@@ -1,6 +1,8 @@
 <template>
-  <Header></Header>
-  <router-view/>
+  <div v-if="this.isSilentReissueDone">
+    <Header></Header>
+    <router-view/>
+  </div>
 </template>
 
 <script>
@@ -11,9 +13,17 @@ export default {
   components: {
     Header,
   },
-  mounted() {
-    silentReissue();
+  data() {
+    return {
+      isSilentReissueDone: false
+    }
   },
+  created() {
+    silentReissue()
+      .then(() => {
+        this.isSilentReissueDone = true;
+      })
+  }
  };
 </script>
 

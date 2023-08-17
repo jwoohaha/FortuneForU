@@ -41,7 +41,7 @@ export default {
             this.store.saveRoles(roles);
             this.store.login();
             if (!this.store.isIntervalStarted) {
-                const intervalId = setInterval(silentReissue, 9 * 1000);
+                const intervalId = setInterval(silentReissue,  30 * 60 * 1000);
                 this.store.startInterval(intervalId);
             }
             router.push({path: '/'});
