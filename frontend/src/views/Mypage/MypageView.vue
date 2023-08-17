@@ -135,6 +135,7 @@
             })
             .then((res) => {
                 console.log(res)
+                window.location.reload();
             })
             .catch((e) => {
                 console.log(e)
@@ -198,8 +199,7 @@
     }
     .profile-img{
         width: 180.9px;
-        height: 180px;
-        border-radius: 180.9px;
+        height: 190px;
         background-repeat : no-repeat;
         background-size : cover;
         margin-bottom: 14px;
