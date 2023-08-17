@@ -118,6 +118,8 @@ export default {
     },
     onFilteringButtonClick(filter) {
       this.counselorForms = [];
+      this.filter = filter;
+      this.pageNum = 0;
       this.buttonTextColor[''] = "#333333";
       this.buttonTextColor['WAITING'] = "#333333";
       this.buttonTextColor['PASS'] = "#333333";
