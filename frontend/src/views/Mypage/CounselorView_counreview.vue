@@ -85,7 +85,6 @@ export default {
             .then((response) => {
 
                 response.data.forEach(element => {
-                    console.log(element);
                     this.reviews.push(element);
                 });
 

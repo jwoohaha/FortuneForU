@@ -119,7 +119,6 @@
       // Get a token from the OpenVidu deployment
       this.getToken().then((token) => {
         console.log("getToken 자동 실행?");
-        console.log("토큰 정보"+token);
         // First param is the token. Second param can be retrieved by every user on event
         // 'streamCreated' (property Stream.connection.data), and will be appended to DOM as the user's nickname
         if(this.isRecorder){
@@ -175,7 +174,6 @@
       if(this.isRecorder){
         //상담가일 경우 back으로 간 다음 세션을 종료하고 나간다.
         const response = await this.api.put('/sessions/'+this.sessionId)
-        console.log(response);
         if(response.data=="success"){
           this.$router.push('/');
         }
@@ -216,7 +214,6 @@ async startRecording() {
   withCredentials: true
 });
 const responseData = response.data; // 받아온 데이터
-console.log(responseData);
 this.res=responseData;
 return responseData; // The sessionId
 },  
@@ -243,7 +240,6 @@ return responseData; // The sessionId
       const response = await this.api.post('/roomsession', this.roomRequest)
       console.log("2. createsession 함수 정상실행");
       console.log("받아온 sessionId"+response.data.sessionId);
-      console.log(this.roomRequest.reservationNo);
       this.sessionId= response.data.sessionId;
       return response.data.sessionId; // The sessionId
     },
@@ -252,7 +248,6 @@ return responseData; // The sessionId
       console.log("createToken 넘어옴");
       const response = await this.api.post('/sessions/' + sessionId + '/connections')
       console.log("createToken 함수 정상실행");
-      console.log(response.data);
       return response.data.token; // The token
     },
   },

@@ -93,9 +93,7 @@ export default {
                 url: 'members/info',
             })
             .then((res) => {
-                console.log(res.data)
                 this.member = res.data
-                console.log(this.member)
                 if (res.data.profileImage != null){
                     this.imgUrl = res.data.profileImage
                 }
@@ -111,7 +109,6 @@ export default {
                 url: `reservations/member_rez_info`,
             })
             .then((res) => {
-                console.log(res.data)
                 if(res.data.length !== 0) {
                     this.reservationList = this.handleRezInfo(res.data)
                     this.noReservation = false;
@@ -138,13 +135,11 @@ export default {
         },
         cancelReservation(reservationNo) {
             const cancelRezRequest = apiInstance();
-            // console.log("예약 취소 클릭" + reservationNo)
             cancelRezRequest({
                 method: 'PATCH',
                 url: `reservations/cancel/${reservationNo}`,
             })
             .then((res) => {
-                console.log(res)
                 alert(res.data)
                 this.getRezInfo();
                 this.getMemberInfo();

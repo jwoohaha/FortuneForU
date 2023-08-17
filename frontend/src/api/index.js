@@ -61,7 +61,6 @@ function reissue() {
     })
     instance.interceptors.response.use(
         (response) => {
-            console.log(response);
             const accessToken = response.headers.authorization;
             const roles = response.data;
             store.saveAccessToken(accessToken);
@@ -97,7 +96,6 @@ function silentReissue() {
 
     instance.interceptors.response.use(
         (response) => {
-            console.log(response);
             const accessToken = response.headers.authorization;
             const roles = response.data;
             store.saveAccessToken(accessToken);

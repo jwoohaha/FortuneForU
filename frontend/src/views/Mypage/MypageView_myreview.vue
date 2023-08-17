@@ -82,7 +82,6 @@ export default {
                 url: 'members/info',
             })
             .then((res) => {
-                console.log(res.data.profileImage)
                 if (res.data.profileImage != null){
                     this.imgUrl = res.data.profileImage
                 }
@@ -94,9 +93,7 @@ export default {
         getMyReviews(){
             this.api.get('/reservations/reviews')
             .then((response) => {
-                console.log(response.data);
                 response.data.forEach(element => {
-                    console.log(element);
                     this.reviews.push(element);
                 });
 
@@ -116,17 +113,14 @@ export default {
             }
         },
         removeReview(reservationNo){
-            console.log(reservationNo)
             this.api.patch(`/reservations/${ reservationNo }`)
             .then((response) =>{
-                console.log(response)
                 if(response.status == 200){
                     alert('해당 후기를 삭제하였습니다')
                     window.location.reload();
                 }else{
                     console.log('삭제 실패 status : ', response.status);
                     alert("실패!")
-                    console.log(response)
                 }
             })
             .catch((error) =>{

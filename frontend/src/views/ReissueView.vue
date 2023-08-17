@@ -34,9 +34,7 @@ export default {
             }   
         },
         onSuccess(headers) {
-            console.log(headers);
             const accessToken = headers.authorization;
-            console.log("accessToken: " + accessToken);
             this.store.saveAccessToken(accessToken);
             this.store.login();
             router.push({path: '/'});
