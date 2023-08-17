@@ -44,7 +44,7 @@ export default {
                 const intervalId = setInterval(silentReissue,  30 * 60 * 1000);
                 this.store.startInterval(intervalId);
             }
-            router.push({path: '/'});
+            router.replace({path: '/'});
         },
         onError(error) {
             console.log(error);

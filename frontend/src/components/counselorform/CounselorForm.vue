@@ -1,5 +1,5 @@
 <template>
-    <div style="display: flex; width: 55%; margin: auto; padding-bottom: 20px;">
+    <div v-if="isReadonly" style="display: flex; width: 55%; margin: auto; padding-bottom: 20px;">
       <div style="width: 80%; margin: auto; text-align: left; font-size: 18px;">{{ counselorForm.name }}</div>
       <div style="width: 20%; align-items: flex-end;">
         <status-box :statusCode="statusCode[counselorForm.status]"></status-box>

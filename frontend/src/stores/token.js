@@ -58,7 +58,7 @@ export const useTokenStore = defineStore("token", {
         logout() {
             this.accessToken = null;
             this.loggedIn = false;
-            router.push('/');
+            router.replace('/');
         }
     }
 });
