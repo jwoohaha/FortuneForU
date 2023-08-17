@@ -5,7 +5,7 @@
       <nav>
         <router-link to="/tarot">타로상담</router-link>
         <router-link to="/saju">사주상담</router-link>
-        <router-link to="/community">커뮤니티</router-link>
+        <!-- <router-link to="/community">커뮤니티</router-link> -->
       </nav>
       <div class="button-section" v-if="tokenStore.isLoggedIn">
         <button @click="this.logout">로그아웃</button>
