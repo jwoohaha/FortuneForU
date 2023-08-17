@@ -15,16 +15,6 @@
                 </div>
               </div>
             
-              <div class="search">
-                <div class="input-box">
-                  <input type="text">
-                </div>
-                <div>
-                  <i class="bi bi-search"></i>
-                </div>
-                <RoundButton>검색</RoundButton>
-              </div>
-            
             </div>
           
             <div class="hr-wrapper"></div>
@@ -62,14 +52,12 @@
 <script>
 import CounselorCard from '../components/common/CounselorCard.vue';
 import PageButton from '../components/common/PageButton.vue';
-import { RoundButton } from "../components/styled-components/StyledButton";
 import { apiInstance } from '@/api/index';
 
 export default {
   components: {
     CounselorCard,
     PageButton,
-    RoundButton
   },
   data() {
     return {

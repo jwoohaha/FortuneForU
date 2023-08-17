@@ -77,8 +77,9 @@ export default {
 .card-img {
     width: 70px;
     height: 70px;
-    border-radius: 70px;
+    object-fit: fill;
     border: 1px solid #F7F7F7;
+    border-radius: 40px;
     background: lightgray 50% / cover no-repeat;
     margin-right: 21px;
 }
