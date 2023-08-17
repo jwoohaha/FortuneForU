@@ -29,7 +29,11 @@
            <div class="reservation-section">
              <div class="profile-section">
                 <div class="profile-img">
-                    <img src={{counselor.profileImg}}>
+                    <img :src="imgUrl">
+                    <div class="follow-btn">
+                      <img v-if="isFollowing" :src="selectedIcon" @click="unfollowRequest">
+                      <img v-else :src="unselectedIcon" @click="followRequest"> 
+                    </div>
                 </div>
                 <div class="profile-txt">
                     <div>성명 : {{ counselor.name }}</div>
@@ -42,11 +46,13 @@
             
             <div class="review-section">
                 <div class="review-title">생생한 상담 후기</div>
-                <div v-for="review in reviews" :key="review.id">
-                    <ReviewCard :review="review"></ReviewCard>
-                </div>
-                <!-- 예외처리 -->
+                <div class="reviewcard-list">
+                  <div v-for="review in reviews" :key="review.id">
+                      <ReviewCard :review="review" id="review-card"></ReviewCard>
+                  </div>
+                  <!-- 예외처리 -->
                 <div v-if="emptyReview" style="font-size: 20px; background-color: bisque;">후기가 없습니다.</div>
+                </div>
             </div>
 
             <div class="calendar-section">
@@ -87,6 +93,7 @@ import ReviewCard from '../components/common/ReviewCard.vue';
 import { SquareButton } from '../components/styled-components/StyledButton'
 import ModalView from "@/components/common/AlertModalView.vue";
 import { apiInstance } from '@/api/index';
+import { useTokenStore } from '@/stores/token';
 
 export default {
   components: {
@@ -109,10 +116,14 @@ export default {
       clickedBtnIdx: null,
       reservationStatus: "",
       isModalVisible: false,
+      selectedIcon: require ('@/assets/selected_icon.png'),
+      unselectedIcon: require ('@/assets/unselected_icon.png'),
+      isFollowing: false,
+      defaultImgUrl: require ('@/assets/profile_default_img_square.png'),
     };
   },
   setup(){
-    
+
   },
   methods: {
     getCounselorInfo(id){
@@ -128,6 +139,7 @@ export default {
         this.counselor = result.data;        
         this.getReviewInfo(this.counselor.counselorNo)
         this.setDate(this.counselor.counselorNo, this.clicked_date)
+        this.getIsFollowing(result.data.memberNo)
       })
       .catch((e) => {
         console.log(e)
@@ -172,7 +184,6 @@ export default {
           url: `reservations/availabledate/${id}/${this.formatted_date}`
         })
         .then((result) => {
-          console.log(result.data);
           this.cantReservations = result.data;
           this.availableTimes = [];
           this.makeAvailableTimes();
@@ -231,18 +242,12 @@ export default {
       const reservationDatetime =  this.formatted_date + "T" + this.resTime + ":00" 
       const api = apiInstance();
       
-        api({
-          method: 'POST',
-          url: `reservations/reserve`,
-          data: {
+        api.post('reservations/reserve', {
             "counselorId": this.counselor.counselorNo,
             "reservationDate": reservationDatetime,
             "reservationType": this.pageType
-          },
-        })
+          })
         .then((result) => {
-          console.log(result);
-
           if(result.data == "예약이 완료 됐습니다."){
             this.reservationStatus = "200";
             this.isModalVisible = true;
@@ -251,11 +256,61 @@ export default {
             this.isModalVisible = true;
           }
           
-        }).catch((e) => {
-          console.log("ERROR:" + e)
-          this.reservationStatus = e
         })
-    }     
+        .catch((error) => {
+          console.log(error)
+          this.reservationStatus = error
+          if (error.response.status == 401){
+            const tokenStore = useTokenStore();
+            alert("로그인이 필요한 페이지입니다.");
+            tokenStore.makeLoginModalVisible();
+          }
+        })
+    },
+    getIsFollowing(memberNo) {
+      const getFollowingRequest = apiInstance();
+      getFollowingRequest({
+          method: 'GET',
+          url: `members/isfollowing/${memberNo}`,
+      })
+      .then((res) => {
+          console.log('팔로잉???')
+          console.log(res.data)
+          this.isFollowing = res.data
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+    },
+    followRequest() {
+      const followRequest = apiInstance();
+      followRequest({
+          method: 'PUT',
+          url: `members/follow/${this.counselor.memberNo}`,
+      })
+      .then((res) => {
+          console.log(res)
+          this.isFollowing = true
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+    },
+    unfollowRequest() {
+      const unfollowRequest = apiInstance();
+      unfollowRequest({
+          method: 'DELETE',
+          url: `members/unfollow/${this.counselor.memberNo}`,
+      })
+      .then((res) => {
+          console.log("unfollowid", this.counselor.memberNo)
+          console.log(res)
+          this.isFollowing = false
+      })
+      .catch((e) => {
+          console.log(e)
+      })
+    },
   },
   created(){
     this.pageType = this.$route.query.pageType;
@@ -264,6 +319,11 @@ export default {
     }
     
     this.getCounselorInfo(this.$route.query.id)
+  },
+  computed: {
+    imgUrl() {
+        return this.counselor.profileImg || this.defaultImgUrl;
+    }
   }
  };
 </script>
@@ -341,6 +401,14 @@ export default {
     margin-top: 64px;
     flex-wrap: wrap;
 }
+.reviewcard-list{
+  height: 600px;
+  overflow: auto;
+  padding: 10px;
+}
+.review-card{
+  margin-bottom: 10px;
+}
 .profile-section {
     display: inline-flex;
     flex-direction: column;
@@ -353,13 +421,10 @@ img {
     object-fit: fill;
     flex-shrink: 0;
     border-radius: 10px;
-    border: 2px solid #D7D7D7;
-    background:  lightgray 50% / contain no-repeat;
-    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
 }
 .profile-txt {
     border-left: #000000 3px solid;
-    height: 144px;
+    width: 300px;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -432,5 +497,19 @@ img {
     width: 346px;
     height: 40px;
     padding: 20px 23px;
+}
+.profile-img {
+  position: relative; /* Make the container a positioning context */
+}
+.follow-btn img {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  width: 70px;
+  height: 70px;
+  margin: 10px;
+  padding: 10px;
+  background: transparent;
+  border: none;
 }
 </style>

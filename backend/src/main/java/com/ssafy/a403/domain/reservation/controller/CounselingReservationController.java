@@ -6,6 +6,7 @@ import com.ssafy.a403.domain.reservation.dto.*;
 import com.ssafy.a403.domain.reservation.service.CounselingReservationService;
 import com.ssafy.a403.global.config.security.LoginUser;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("api/reservations")

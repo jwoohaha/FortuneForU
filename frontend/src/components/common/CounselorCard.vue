@@ -1,7 +1,8 @@
 <template>
     <div class="counselor-card">
         <div class="upper-content">
-            <img class="card-img" src={{counselor.profileImg}}>
+            <img class="card-img" :src="currentImgUrl">
+            
             <div class="card-info">
                 <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.ratingAvg }}</span> </p>
                 <p id="review-cnt"><span>{{ counselor.reviewCnt }}</span>개의 후기</p>
@@ -34,6 +35,22 @@ export default {
         required: true
     } 
   },
+  data() {
+    return {
+        defaultImgUrl: require ('@/assets/profile_default_img.png'),
+        imgLoadError: false,
+    }
+  },
+  methods: {
+    handleImgError() {
+      this.imgLoadError = true;
+    }
+  },
+  computed: {
+    currentImgUrl() {
+        return this.imgLoadError ? this.defaultImgUrl : (this.counselor.profileImg || this.defaultImgUrl);
+    }
+  }
 };
 </script>
 
@@ -60,8 +77,9 @@ export default {
 .card-img {
     width: 70px;
     height: 70px;
-    border-radius: 70px;
+    object-fit: fill;
     border: 1px solid #F7F7F7;
+    border-radius: 40px;
     background: lightgray 50% / cover no-repeat;
     margin-right: 21px;
 }

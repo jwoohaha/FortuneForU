@@ -11,14 +11,6 @@
                 <div class="mypage-contents">
                     <div class="profile-nav">
                         <img :src="imgUrl" class="profile-img">
-                        <input
-                            style="display: none"
-                            type="file"
-                            @change="onFileChange"
-                            ref="imgInput"
-                            accept="image/*" />
-                        <button @click="$refs.imgInput.click()">사진 선택</button>
-                        <SquareButton @click="uploadImage">프로필 사진 변경</SquareButton>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                             <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link>
@@ -39,6 +31,21 @@
                                     <div class="each-field">{{ this.email }}</div>
                                 </div>
                             </div>
+                            <div v-if="imgbtnFlag===0">
+                                <SquareButton @click="changeFlag(0)" style="width: 350px;">프로필 사진 변경</SquareButton>
+                            </div>
+                            <div v-else-if="imgbtnFlag===1&&selectedImage==null">
+                                <input
+                                style="display: none"
+                                type="file"
+                                @change="onFileChange"
+                                ref="imgInput"
+                                accept="image/*" />
+                                <SquareButton @click="$refs.imgInput.click()">사진 선택</SquareButton>
+                            </div>
+                            <div v-else>
+                                <SquareButton @click="uploadImage" style="width: 350px;">사진 적용하기</SquareButton>
+                            </div>
                         </div>
                     </div>
                     <div class="like-part">
@@ -46,10 +53,10 @@
                         <div class="like-box">
                             <div class="like-list">
                                 <div v-if="!isCounselors">
-                                    <router-link to="/tarot">상담사 찜하러 가기</router-link>
+                                    <router-link to="/tarot" style="font-size: 20px; font-weight: 600; text-decoration: underline;">상담사 찜하러 가기💛</router-link>
                                 </div>
                                 <div v-for="counselor in counselors" :key="counselor.id">
-                                    <ReviewCard :counselor="counselor" id="reviewcard"></ReviewCard>
+                                    <FollowCard :follow="counselor" id="followcard"></FollowCard>
                                 </div>
                             </div>
                         </div>
@@ -62,13 +69,13 @@
 
     <script>
     import { SquareButton } from "../../components/styled-components/StyledButton";
-    import ReviewCard from '../../components/common/ReviewCard.vue';
+    import FollowCard from '../../components/common/FollowCard.vue';
     import { apiInstance } from '@/api/index';
 
     export default {
         components: {
             SquareButton,
-            ReviewCard,
+            FollowCard,
       },
       data() {
         return {
@@ -76,11 +83,17 @@
             name: null,
             counselors: null,
             isCounselors: false,
-            selectedImg: null,
+            selectedImage: null,
             imgUrl: require ('@/assets/profile_default_img.png'),
+            imgbtnFlag: 0
         };
       },
       methods: {
+        changeFlag(flag){
+            if(flag === 0){
+                this.imgbtnFlag = 1;
+            }
+        },  
         getMemberDetail() {
             const getRezInfoRequest = apiInstance();
             getRezInfoRequest({
@@ -122,11 +135,13 @@
             })
             .then((res) => {
                 console.log(res)
+                window.location.reload();
             })
             .catch((e) => {
                 console.log(e)
             })
           }
+          this.imgbtnFlag = 0;
         }
       },
       created() {
@@ -154,7 +169,7 @@
     }
     .mypage-header {
         height: 57px;
-        width: 344px;
+        width: 80%;
         text-align: left;
         color: #333;
         font-size: 34px;
@@ -163,10 +178,12 @@
         line-height: normal;
     }
     .header-line {
-        height: 1px;
-        width: 100%;
-        background-color: #333;
-        margin-top: 10px;
+        height: 1.5px;
+        background: #000;
+        width: 45%;
+        padding: 0;
+        margin-top: 20px;
+        margin-bottom: 67px;
     }
     .mypage-contents{
         height: 588px;
@@ -182,8 +199,7 @@
     }
     .profile-img{
         width: 180.9px;
-        height: 180px;
-        border-radius: 180.9px;
+        height: 190px;
         background-repeat : no-repeat;
         background-size : cover;
         margin-bottom: 14px;
@@ -217,7 +233,7 @@
     }
     .info-box {
         width: 446px;
-        height: 424px;
+        height: 340px;
         border-radius: 10px;
         background: #FCFAF1;
         box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
@@ -228,10 +244,11 @@
         margin-bottom: 52px;
     }
     .up-info {
-        height: 295px;
+        height: 180px;
         width: 378px;
         display: inline-flex;
         justify-content: space-between;
+        margin-bottom: 50px;
     }
     .info-labels {
         display: flex;
@@ -306,9 +323,8 @@
     .like-list{
         height: 480px;
         width: 344px;
-        display: flex;
-        flex-direction: column;
-        justify-content: space-around;
+        overflow: auto;
+        padding: 10px;
     }
     .each-like{
         height: 84px;
@@ -319,10 +335,9 @@
         height: 25px;
     }
 
-    #reviewcard{
-        // width: 344px;
+    #followcard{
         width: 100%;
-        margin-bottom: 5px;
+        margin-bottom: 7px;
     }
 
     </style>

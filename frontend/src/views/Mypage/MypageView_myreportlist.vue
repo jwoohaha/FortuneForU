@@ -10,8 +10,9 @@
         
                 <div class="mypage-contents" id="my-report-list">
                     <div class="profile-nav">
-                        <div class="profile-img"><img :src="getProfileImg"></div>
-                        <!-- <div class="profile-img" :style="{ backgroundImage : `url(${this.member.profileImage})`}" ></div> -->
+                        <div class="profile-img">
+                            <img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;">
+                        </div>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -48,7 +49,7 @@
                                 </div>
                                 <div class="divider">|</div>
                                 <div id="coun-room">             
-                                    <div v-if="reservation.reservationReview === null" @click="writeReview" ><span style="text-decoration : underline;">후기 작성하기</span>🧾</div>
+                                    <div v-if="reservation.reservationReview === null" @click="writeReview(reservation.reservationNo, reservation.counselorId)" ><span style="text-decoration : underline;">후기 작성하기</span>🧾</div>
                                     <div v-else>작성 완료</div>
                                 </div>
                             </div>
@@ -56,7 +57,7 @@
                     </div>
                 </div>
             </div>
-            <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationList.counselorId" :reservationNo="this.reservationList.reservationNo"></modal-view><modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.reservationNo" :reservationNo="this.reservationNo"></modal-view>
+            <modal-view v-if="isModalVisible" @close-modal="isModalVisible = false" :counselorId="this.clickedId" :reservationNo="this.clickednum"></modal-view>
         </div>
     </template>
     
@@ -76,6 +77,9 @@ export default {
             reservationNo:null,
             clickedReservation : null,
             isModalVisible: false,
+            clickednum: null,
+            clickedId: null,
+            imgUrl: require ('@/assets/profile_default_img.png'),
         };
     },
     methods: {
@@ -89,6 +93,9 @@ export default {
                 console.log(res.data)
                 this.member = res.data
                 console.log(this.member)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
             })
             .catch((e) => {
                 console.log(e)
@@ -135,16 +142,17 @@ export default {
             })
           
         },
-        getProfileImg() {
-            const ImgUrl = this.member.profileImage;
-            return ImgUrl
-        },
-        writeReview(){
+        writeReview(reservationNo, counselorId){
+            console.log("counselingId" + this.counselorId)
+            
             this.isModalVisible = true;
+            this.clickednum = reservationNo;
+            this.clickedId = counselorId;
+            
         }
     },
     created() {
-        //this.getMemberInfo();
+        this.getMemberInfo();
         this.getEndRezInfo();
     },
 }
@@ -201,11 +209,11 @@ export default {
     width: 180.9px;
     height: 180px;
     border-radius: 180.9px;
-    background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
+    // background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
     background-repeat : no-repeat;
     background-size : cover;
     margin-bottom: 14px;
-    // background: lightgray 50% / cover no-repeat, #D7D7D7;
+    background: lightgray 50% / cover no-repeat, #D7D7D7;
 }
 .nav-menu{
     display: flex;

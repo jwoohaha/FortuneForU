@@ -1,4 +1,10 @@
 <template>
+    <div style="display: flex; width: 55%; margin: auto; padding-bottom: 20px;">
+      <div style="width: 80%; margin: auto; text-align: left; font-size: 18px;">{{ counselorForm.name }}</div>
+      <div style="width: 20%; align-items: flex-end;">
+        <status-box :statusCode="statusCode[counselorForm.status]"></status-box>
+      </div>
+    </div>
     <div id="counselor-form-container">
     <form id="counselor-form-content">
       <table id="counselor-form-table">
@@ -27,7 +33,7 @@
           <input-field :placeholder="'본인을 나타낼 수 있는 문구를 기재해주세요'" :value="counselorForm.intro" @input-event="introduceInput" :isReadonly="isReadonly"></input-field>
         </table-row>
         <table-row :headerText="'승인/반려사유'" v-if="isReadonly">
-          <text-field :placeholder="'승인/반려사유를 작성해주세요'" :value="reason" @input-event="reasonInput" :isReadonly="!isReadonly"></text-field>
+          <text-field :placeholder="'승인/반려사유를 작성해주세요'" :value="counselorForm.reason" @input-event="reasonInput" :isReadonly="!isReadonly"></text-field>
         </table-row>
       </table>
       <div class="button-container" v-if="isReadonly">
@@ -49,10 +55,11 @@ import TextField from '@/components/common/TextField.vue';
 import DropDown from '@/components/common/DropDown.vue';
 import { apiInstance } from '@/api';
 import router from '@/router';
+import StatusBox from '../admin/StatusBox.vue';
 
 
 export default {
-  components: { TableRow, InputField, TextField, DropDown },
+  components: { TableRow, InputField, TextField, DropDown, StatusBox },
   props: {
     isReadonly: Boolean
   },
@@ -65,19 +72,30 @@ export default {
   data() {
     return {
       counselorForm: {
+        name: '',
         counselorType: 'none',
         major: ['none', 'none', 'none'],
         career: '',
         address: '',
         phone: '',
         intro : '',
-        
+        status: 'WAITING',
+        reason: ''
       },
       counselorTypeOptions: [
           'none', '사주', '타로', '사주/타로'
       ],
       majorOptions: [
-          'none', '가족/건강', '직장/진로', '시험/진학', '연애/결혼', '사업/재물', '사주/신수', '작명/개명', '미래/해몽', '이사/풍수'
+          'none', 
+          '가족/건강', 
+          '직장/진로', 
+          '시험/진학', 
+          '연애/결혼', 
+          '사업/재물', 
+          '사주/신수', 
+          '작명/개명', 
+          '미래/해몽', 
+          '이사/풍수'
       ],
       counselorTypeToEnum: {
           'none': 'NONE',
@@ -90,7 +108,11 @@ export default {
         'TARO': '타로',
         'BOTH': '사주/타로'
       },
-      reason : ""
+      statusCode: {
+        WAITING: { label: '대기중', color: '#FFC700'},
+        PASS: { label: '승인', color: '#00CA45'},
+        REJECT: { label: '반려', color: '#FF008A'},
+      },
     }
   },
   created() {
@@ -103,7 +125,19 @@ export default {
       this.counselorForm.counselorType = value;
     },
     majorChange(value, index) {
-      this.counselorForm.major[index] = value;
+      console.log(this.counselorForm.major)
+      console.log(value)
+      if (value != 'none' && this.counselorForm.major.includes(value)) {
+        alert('동일한 전문영역을 여러개 선택할 수 없습니다.');
+        let list = [...this.counselorForm.major];
+        list[0] = 'none';
+        list[1] = 'none';
+        list[2] = 'none';
+        list[index] = value;
+        this.counselorForm.major = list;
+      } else {
+        this.counselorForm.major[index] = value;
+      }
     },
     careerInput(value) {
       this.counselorForm.career = value;
@@ -121,6 +155,11 @@ export default {
       this.reason = value;
     },
     async submit() {
+      const message = this.validateInputs();
+      if (message) {
+        alert(`'${message}'는 필수기재항목입니다.`)
+        return;
+      }
       this.counselorForm.counselorType = this.counselorTypeToEnum[this.counselorForm.counselorType];
       this.counselorForm.major = (this.counselorForm.major[0] + ' ' + 
                                   (this.counselorForm.major[1] == 'none' ? '' : this.counselorForm.major[1]) + ' ' + 
@@ -140,10 +179,13 @@ export default {
     async getCounselorFormDetails() {
       await this.api.get(`/admin/counselor-forms/${this.$route.params.formNo}`)
               .then((response) => {
+                console.log(response);
                 const form = response.data;
                 this.counselorForm = form;
                 this.counselorForm.counselorType = this.enumToCounselorType[form.counselorType];
                 this.counselorForm.major = form.major.split(' ');
+                this.counselorForm.status = form.passState;
+                this.counselorForm.reason = form.reason;
               })
               .catch((error) => {
                 console.log(error);
@@ -159,6 +201,27 @@ export default {
                     .catch(() => {
                       alert("요청이 실패하였습니다.")
                     })
+    },
+    validateInputs() {
+      if (this.counselorForm.counselorType == 'none') {
+        return '상담분야';
+      }
+      if (this.counselorForm.major[0] == 'none') {
+        return '전문영역1';
+      }
+      if (!this.counselorForm.career) {
+        return '경력';
+      }
+      if (!this.counselorForm.address) {
+        return '주소지';
+      }
+      if (!this.counselorForm.phone) {
+        return '경력';
+      }
+      if (!this.counselorForm.intro) {
+        return '한줄소개';
+      }
+      return '';
     }
   } 
 }

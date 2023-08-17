@@ -10,8 +10,7 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"><img :src="getProfileImg"></div>
-                        <!-- <div class="profile-img" :style="{ backgroundImage : `url(${this.member.profileImage})`}" ></div> -->
+                        <div class="profile-img"><img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;"></div>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -82,7 +81,8 @@ export default {
         return {
             member: null,
             reservationList: null,
-            noReservation: true
+            noReservation: true,
+            imgUrl: require ('@/assets/profile_default_img.png'),
         };
     },
     methods: {
@@ -96,6 +96,9 @@ export default {
                 console.log(res.data)
                 this.member = res.data
                 console.log(this.member)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
             })
             .catch((e) => {
                 console.log(e)
@@ -153,10 +156,6 @@ export default {
                 alert("취소가 불가능한 예약입니다")
             })
         },
-        getProfileImg() {
-            const ImgUrl = this.member.profileImage;
-            return ImgUrl
-        }
     },
     created() {
         this.getRezInfo();

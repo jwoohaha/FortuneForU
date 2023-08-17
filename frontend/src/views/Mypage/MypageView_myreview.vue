@@ -10,7 +10,9 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"></div>
+                        <div class="profile-img" >
+                            <img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;">
+                        </div>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -23,9 +25,8 @@
                         <img src="@/assets/left_btn.png"  @click="prePage"/>
                         
                         <div class="review-cards-section">
-                            <!-- 카드하나 -->
                             <div class="review-card" v-for="(reviewIndex, idx) in displayedIndexes" :key="idx">
-                                <img class="card-img" src="{{ reviewIndex.profileImage }}">
+                                <img class="card-img" :src="imgUrl">
                                 <div class="coun-info">
                                     <div id="review-title">{{ reviewIndex.counselorName }} <span> ⭐ {{ reviewIndex.reservationScore }}</span></div>
                                     <div class="review-txt">{{ reviewIndex.review }}</div>
@@ -53,6 +54,7 @@ export default {
             currentPage : 1,
             itemsPerPage : 6,
             reviews: [],
+            imgUrl: require ('@/assets/profile_default_img.png'),
         }
     },
     computed: {
@@ -73,12 +75,26 @@ export default {
         }
     },
     methods:{
+        getMemberInfo() {
+            const getRezInfoRequest = apiInstance();
+            getRezInfoRequest({
+                method: 'GET',
+                url: 'members/info',
+            })
+            .then((res) => {
+                console.log(res.data.profileImage)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
         getMyReviews(){
             this.api.get('/reservations/reviews')
             .then((response) => {
-                console.log(response);
                 console.log(response.data);
-
                 response.data.forEach(element => {
                     console.log(element);
                     this.reviews.push(element);
@@ -100,6 +116,7 @@ export default {
             }
         },
         removeReview(reservationNo){
+            console.log(reservationNo)
             this.api.patch(`/reservations/${ reservationNo }`)
             .then((response) =>{
                 console.log(response)
@@ -108,6 +125,8 @@ export default {
                     window.location.reload();
                 }else{
                     console.log('삭제 실패 status : ', response.status);
+                    alert("실패!")
+                    console.log(response)
                 }
             })
             .catch((error) =>{
@@ -116,6 +135,7 @@ export default {
         }
     },
     created(){
+        this.getMemberInfo();
         this.getMyReviews();
     }
 
@@ -170,7 +190,6 @@ export default {
     width: 180.9px;
     height: 180px;
     border-radius: 180.9px;
-    background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
     background-repeat : no-repeat;
     background-size : cover;
     margin-bottom: 14px;

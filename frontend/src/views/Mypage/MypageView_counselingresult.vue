@@ -10,7 +10,7 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"></div>
+                        <div class="profile-img"><img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;"></div>
                         
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
@@ -27,10 +27,11 @@
                                 상담 일시: {{ reportDetail.reservationDateTime }}
                             </div>
                             <div>
-                                상담가: {{ reportDetail.counselorName }}
+                                상담사: {{ reportDetail.counselorName }}
                             </div>
                         </div>
                         <div class="result-content">
+                            {{ reportDetail.reservationReport }}
                             {{ reportDetail.reservationReport }}
                         </div>
                 
@@ -59,17 +60,37 @@ export default {
                 counselorName: "결과 받아오는 중",
                 reservationReview: "결과 받아오는 중",
             },
+            imgUrl: require ('@/assets/profile_default_img.png'),
         };
     },
     created() {
-    const rezNo = this.$route.params.rezNo;
-    console.log(rezNo)
+        const rezNo = this.$route.params.rezNo;
+        console.log(rezNo)
 
-    if (rezNo) {
-      this.getReportDetail(rezNo);
-        }
+        if (rezNo) {
+        this.getReportDetail(rezNo);
+            }
+        
+        this.getMemberInfo();
     },
     methods: {
+        getMemberInfo() {
+            const getRezInfoRequest = apiInstance();
+            getRezInfoRequest({
+                method: 'GET',
+                url: 'members/info',
+            })
+            .then((res) => {
+                this.member = res.data
+                console.log(this.member)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
         getReportDetail(reservationNo){
            
             const api = apiInstance();
@@ -91,6 +112,7 @@ export default {
         handleRezInfo(reportDetail) {
            
             reportDetail.reservationDateTime = reportDetail.reservationDateTime.replace("T", " ");
+            reportDetail.reservationDateTime = reportDetail.reservationDateTime.substring(0, 16);
             console.log(reportDetail.reservationDateTime)
             return reportDetail;
         }
@@ -178,8 +200,10 @@ export default {
     box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.25);
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    justify-content: center;
     align-items: center;
+    padding: 10px;
+    box-sizing: border-box;
 }
 .result-header{
     width: 974px;
@@ -193,14 +217,17 @@ export default {
     font-style: normal;
     font-weight: 700;
     line-height: normal;
+    margin-bottom: 10px;
+    margin-left: 20px;
 }
 
 .result-content {
     width: 974px;
+    height: 75%;
     display: flex;
     padding: 21px 28px;
-    justify-content: center;
-    align-items: center;
+    justify-content: left;
+    align-items: start;
     gap: 10px;
     border-radius: 10px;
     background: #FFFEF9;
@@ -208,9 +235,10 @@ export default {
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    padding: 10px;
+    padding: 20px;
     box-sizing: border-box;
     text-align: left;
+    overflow: auto;
 }
 
 </style>

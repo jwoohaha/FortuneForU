@@ -1,6 +1,7 @@
 package com.ssafy.a403.global.config.security.jwt;
 
 import com.ssafy.a403.domain.member.dto.AuthResponse;
+import com.ssafy.a403.domain.model.Role;
 import com.ssafy.a403.global.config.security.LoginUser;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpHeaders;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+import java.util.List;
+
 
 @Slf4j
 @Service
@@ -17,6 +20,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JwtSetupService {
 
 	private final JwtProvider jwtProvider;
+    private final JwtValidator jwtValidator;
 
     @Value("${client.host}")
     private String clientHost;
@@ -31,6 +35,11 @@ public class JwtSetupService {
         headers.add(HttpHeaders.SET_COOKIE, authResponse.getRefreshToken());
         log.trace(authResponse.getRefreshToken());
         return headers;
+    }
+
+    public List<Role> getRolesFromJwtToken(String token) {
+
+        return jwtValidator.getLoginUser(token).getMember().getRoles();
     }
 
     public HttpHeaders removeAuthorizationHeader(String refreshToken) {
@@ -61,7 +70,7 @@ public class JwtSetupService {
                 .maxAge(maxAge / 1000)
                 .path("/")
                 .httpOnly(true)
-                .secure(true)
+//                .secure(true)
                 .domain(clientHost)
                 .build();
     }
