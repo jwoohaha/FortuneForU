@@ -10,7 +10,7 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"></div>
+                        <img :src="imgUrl" class="profile-img">
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -23,9 +23,8 @@
                         <img src="@/assets/left_btn.png"  @click="prePage"/>
                         
                         <div class="review-cards-section">
-                            <!-- 카드하나 -->
                             <div class="review-card" v-for="(reviewIndex, idx) in displayedIndexes" :key="idx">
-                                <img class="card-img" src="{{ reviewIndex.profileImage }}">
+                                <img class="card-img" :src="imgUrl">
                                 <div class="coun-info">
                                     <div id="review-title">{{ reviewIndex.counselorName }} <span> ⭐ {{ reviewIndex.reservationScore }}</span></div>
                                     <div class="review-txt">{{ reviewIndex.review }}</div>
@@ -53,6 +52,7 @@ export default {
             currentPage : 1,
             itemsPerPage : 6,
             reviews: [],
+            imgUrl: require ('@/assets/profile_default_img.png'),
         }
     },
     computed: {
@@ -73,12 +73,26 @@ export default {
         }
     },
     methods:{
+        getMemberInfo() {
+            const getRezInfoRequest = apiInstance();
+            getRezInfoRequest({
+                method: 'GET',
+                url: 'members/info',
+            })
+            .then((res) => {
+                console.log(res.data.profileImage)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
         getMyReviews(){
             this.api.get('/reservations/reviews')
             .then((response) => {
-                console.log(response);
                 console.log(response.data);
-
                 response.data.forEach(element => {
                     console.log(element);
                     this.reviews.push(element);
@@ -119,6 +133,7 @@ export default {
         }
     },
     created(){
+        this.getMemberInfo();
         this.getMyReviews();
     }
 

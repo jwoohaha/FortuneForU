@@ -10,7 +10,7 @@
         
                 <div class="mypage-contents" id="my-report-list">
                     <div class="profile-nav">
-                        <div class="profile-img"><img :src="getProfileImg"></div>
+                        <div class="profile-img"><img :src="imgUrl"></div>
                         <!-- <div class="profile-img" :style="{ backgroundImage : `url(${this.member.profileImage})`}" ></div> -->
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
@@ -78,6 +78,7 @@ export default {
             isModalVisible: false,
             clickednum: null,
             clickedId: null,
+            imgUrl: require ('@/assets/profile_default_img.png'),
         };
     },
     methods: {
@@ -91,6 +92,9 @@ export default {
                 console.log(res.data)
                 this.member = res.data
                 console.log(this.member)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
             })
             .catch((e) => {
                 console.log(e)
@@ -137,10 +141,6 @@ export default {
             })
           
         },
-        getProfileImg() {
-            const ImgUrl = this.member.profileImage;
-            return ImgUrl
-        },
         writeReview(reservationNo, counselorId){
             console.log("counselingId" + this.counselorId)
             
@@ -151,7 +151,7 @@ export default {
         }
     },
     created() {
-        //this.getMemberInfo();
+        this.getMemberInfo();
         this.getEndRezInfo();
     },
 }

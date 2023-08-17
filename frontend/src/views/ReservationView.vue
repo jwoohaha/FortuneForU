@@ -119,7 +119,7 @@ export default {
       selectedIcon: require ('@/assets/selected_icon.png'),
       unselectedIcon: require ('@/assets/unselected_icon.png'),
       isFollowing: false,
-      defaultImgUrl: require ('@/assets/profile_default_img.png'),
+      defaultImgUrl: require ('@/assets/profile_default_img_square.png'),
     };
   },
   setup(){
