@@ -168,7 +168,6 @@ export default {
     width: 180.9px;
     height: 180px;
     border-radius: 180.9px;
-    background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
     background-repeat : no-repeat;
     background-size : cover;
     margin-bottom: 14px;
