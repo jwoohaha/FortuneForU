@@ -1,7 +1,9 @@
 <template>
     <div class="review-card">
         <div class="upper-content">
-            <img class="card-img" src="https://a-static.besthdwallpaper.com/huh-yunjin-le-sserafim-kpop-girls-group-wallpaper-2048x1536-99987_26.jpg">
+            <div class="img-border">
+                <img class="card-img" src="review.profileImage" style="width: 100%; height: 100%; object-fit:cover;">
+            </div>
             <div class="card-info">
                 <p id="card-name">{{ review.memberName }} <span id="card-score">⭐ {{ review.reservationScore }}</span> </p>
                 <p class="card-txt">{{ review.review }}</p>
@@ -37,13 +39,18 @@ export default {
 .upper-content {
     display: flex;
 }
+.img-border{
+    width: 70px;
+    height: 70px;
+    border-radius: 70px;
+    margin-right: 21px;
+}
 .card-img {
     width: 70px;
     height: 70px;
     border-radius: 70px;
     border: 1px solid var(--bg-gray, #F7F7F7);
     background: lightgray 50% / cover no-repeat;
-    margin-right: 21px;
 }
 .card-txt {
     width: 100%;

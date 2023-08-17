@@ -10,7 +10,7 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"><img :src="imgUrl"></div>
+                        <div class="profile-img"><img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;"></div>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 

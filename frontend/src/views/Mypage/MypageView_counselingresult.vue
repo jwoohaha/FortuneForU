@@ -10,7 +10,7 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <div class="profile-img"></div>
+                        <div class="profile-img"><img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;"></div>
                         
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
@@ -60,17 +60,37 @@ export default {
                 counselorName: "결과 받아오는 중",
                 reservationReview: "결과 받아오는 중",
             },
+            imgUrl: require ('@/assets/profile_default_img.png'),
         };
     },
     created() {
-    const rezNo = this.$route.params.rezNo;
-    console.log(rezNo)
+        const rezNo = this.$route.params.rezNo;
+        console.log(rezNo)
 
-    if (rezNo) {
-      this.getReportDetail(rezNo);
-        }
+        if (rezNo) {
+        this.getReportDetail(rezNo);
+            }
+        
+        this.getMemberInfo();
     },
     methods: {
+        getMemberInfo() {
+            const getRezInfoRequest = apiInstance();
+            getRezInfoRequest({
+                method: 'GET',
+                url: 'members/info',
+            })
+            .then((res) => {
+                this.member = res.data
+                console.log(this.member)
+                if (res.data.profileImage != null){
+                    this.imgUrl = res.data.profileImage
+                }
+            })
+            .catch((e) => {
+                console.log(e)
+            })
+        },
         getReportDetail(reservationNo){
            
             const api = apiInstance();

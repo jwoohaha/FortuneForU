@@ -10,7 +10,9 @@
         
                 <div class="mypage-contents" id="my-res-list">
                     <div class="profile-nav">
-                        <img :src="imgUrl" class="profile-img">
+                        <div class="profile-img" >
+                            <img :src="imgUrl" style="width: 100%; height: 100%; object-fit:cover;">
+                        </div>
                         <ul class="nav-menu">
                             <router-link to="/mypage"><li> | 개인 정보 수정</li></router-link>
                         <router-link to="/mypage/reservationlist"><li> | 나의 예약 목록</li></router-link> 
@@ -188,7 +190,6 @@ export default {
     width: 180.9px;
     height: 180px;
     border-radius: 180.9px;
-    background-image: url('https://t1.daumcdn.net/cfile/tistory/99A2E4475F05CDA90F');
     background-repeat : no-repeat;
     background-size : cover;
     margin-bottom: 14px;
