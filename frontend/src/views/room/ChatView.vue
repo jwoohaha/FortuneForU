@@ -10,7 +10,7 @@
           @click="updateMainVideoStreamManager(sub)" style="margin-right: 10px; margin-left:10px;" />
       </div>
       <RoundButton isTarot @click="closing" value="Leave session">나가기</RoundButton>
-      <RoundButton isTarot @click="convert">convert</RoundButton>
+
     </div>
     </div>
   </template>
@@ -169,19 +169,6 @@
 
       window.addEventListener("beforeunload", this.closing);
     },
-
-    async convert() {
-      try{
-        const response = await this.api.get('/convert');
-        this.mp4Url = response.data;
-        console.log('MP4 URL:', this.mp4Url);
-      }catch(error){
-        console.log("오류발생:" ,error);
-      }
-      
-    },
-
-
     async closing() {
       if(this.isRecorder){
         //상담가일 경우 back으로 간 다음 세션을 종료하고 나간다.
@@ -200,6 +187,8 @@
         this.publisher = undefined;
         this.subscribers = [];
         this.OV = undefined;
+
+        this.$router.push('/');
       }
       
       // this.sessionId= response.data.sessionId;
