@@ -125,11 +125,9 @@ public class CounselingReservationController {
     @PatchMapping("/{reservationNo}")
     public ResponseEntity<String> deleteReview(@PathVariable Long reservationNo) {
         try {
-            log.trace("{}", reservationNo);
             counselingReservationService.deleteReview(reservationNo);
             return ResponseEntity.ok("리뷰 삭제 성공했습니다.");
         } catch (IllegalArgumentException e) {
-            log.trace("{}", e.getMessage());
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
