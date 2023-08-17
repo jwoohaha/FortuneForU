@@ -1,7 +1,7 @@
 <template>
     <div class="counselor-card">
         <div class="upper-content">
-            <img class="card-img" :src=counselor.profileImg>
+            <img class="card-img" :src="currentImgUrl">
             
             <div class="card-info">
                 <p id="card-name">{{ counselor.name }} <span id="card-score">⭐ {{ counselor.ratingAvg }}</span> </p>
@@ -35,6 +35,22 @@ export default {
         required: true
     } 
   },
+  data() {
+    return {
+        defaultImgUrl: require ('@/assets/profile_default_img.png'),
+        imgLoadError: false,
+    }
+  },
+  methods: {
+    handleImgError() {
+      this.imgLoadError = true;
+    }
+  },
+  computed: {
+    currentImgUrl() {
+        return this.imgLoadError ? this.defaultImgUrl : (this.counselor.profileImg || this.defaultImgUrl);
+    }
+  }
 };
 </script>
 
