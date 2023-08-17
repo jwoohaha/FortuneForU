@@ -46,11 +46,13 @@
             
             <div class="review-section">
                 <div class="review-title">생생한 상담 후기</div>
-                <div v-for="review in reviews" :key="review.id">
-                    <ReviewCard :review="review"></ReviewCard>
-                </div>
-                <!-- 예외처리 -->
+                <div class="reviewcard-list">
+                  <div v-for="review in reviews" :key="review.id">
+                      <ReviewCard :review="review" id="review-card"></ReviewCard>
+                  </div>
+                  <!-- 예외처리 -->
                 <div v-if="emptyReview" style="font-size: 20px; background-color: bisque;">후기가 없습니다.</div>
+                </div>
             </div>
 
             <div class="calendar-section">
@@ -399,6 +401,14 @@ export default {
     margin-top: 64px;
     flex-wrap: wrap;
 }
+.reviewcard-list{
+  height: 600px;
+  overflow: auto;
+  padding: 10px;
+}
+.review-card{
+  margin-bottom: 10px;
+}
 .profile-section {
     display: inline-flex;
     flex-direction: column;
@@ -499,7 +509,7 @@ img {
   height: 70px;
   margin: 10px;
   padding: 10px;
-  // background:  rgb(255, 254, 254) 50% / contain no-repeat;
-  // box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.10);
+  background: transparent;
+  border: none;
 }
 </style>

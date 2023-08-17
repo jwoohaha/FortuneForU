@@ -156,10 +156,11 @@ export default {
     line-height: normal;
 }
 .header-line {
-    height: 1px;
-    width: 100%;
-    background-color: #333;
-    margin-top: 10px;
+    height: 1.5px;
+        background: #000;
+        width: 100%;
+        padding: 0;
+        margin-top: 10px;
 }
 .mypage-contents{
     height: 588px;
