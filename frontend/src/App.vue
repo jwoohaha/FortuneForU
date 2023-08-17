@@ -1,26 +1,51 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js App"/>
+  <div v-if="this.isSilentReissueDone">
+    <Header></Header>
+    <router-view/>
+  </div>
 </template>
 
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import Header from './components/common/Header.vue';
+import { silentReissue } from '@/api/index.js';
 
 export default {
-  name: 'App',
   components: {
-    HelloWorld
+    Header,
+  },
+  data() {
+    return {
+      isSilentReissueDone: false
+    }
+  },
+  created() {
+    silentReissue()
+      .then(() => {
+        this.isSilentReissueDone = true;
+      })
   }
-}
+ };
 </script>
 
-<style>
+<style lang="scss">
 #app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
+  font-family: Noto Sans KR, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-align: center;
   color: #2c3e50;
-  margin-top: 60px;
+}
+
+nav {
+  padding: 30px;
+}
+
+nav a {
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+nav a.router-link-exact-active {
+  color: #42b983;
 }
 </style>
