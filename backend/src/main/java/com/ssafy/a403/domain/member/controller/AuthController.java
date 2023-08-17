@@ -1,21 +1,18 @@
 package com.ssafy.a403.domain.member.controller;
 
 import com.ssafy.a403.domain.member.dto.AuthRequest;
-import com.ssafy.a403.domain.member.dto.AuthResponse;
+import com.ssafy.a403.domain.model.Role;
 import com.ssafy.a403.global.config.security.jwt.JwtSetupService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import java.util.Arrays;
-import java.util.Optional;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -26,11 +23,13 @@ public class AuthController {
     private final JwtSetupService jwtSetupService;
 
     @PostMapping
-    public ResponseEntity<AuthResponse> authToken(@RequestBody @Validated AuthRequest authRequest) {
+    public ResponseEntity<List<Role>> authToken(@RequestBody @Validated AuthRequest authRequest) {
         log.trace("Auth Token: {}", authRequest.getAuthToken());
 
         HttpHeaders headers = jwtSetupService.makeAuthorizationHeader(authRequest.getAuthToken());
-        return ResponseEntity.ok().headers(headers).build();
+        List<Role> roles = jwtSetupService.getRolesFromJwtToken(authRequest.getAuthToken());
+
+        return ResponseEntity.ok().headers(headers).body(roles);
     }
 
     @GetMapping("/reissue")
@@ -42,7 +41,9 @@ public class AuthController {
         }
         String refreshToken = refreshCookie.getValue();
         HttpHeaders headers = jwtSetupService.makeAuthorizationHeader(refreshToken);
-        return ResponseEntity.ok().headers(headers).build();
+        List<Role> roles = jwtSetupService.getRolesFromJwtToken(refreshToken);
+
+        return ResponseEntity.ok().headers(headers).body(roles);
     }
 
     @GetMapping("/logout")

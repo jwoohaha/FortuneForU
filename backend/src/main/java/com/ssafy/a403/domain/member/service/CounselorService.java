@@ -1,5 +1,6 @@
 package com.ssafy.a403.domain.member.service;
 
+import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
 import com.ssafy.a403.domain.member.dto.UpdateCounselorRequest;
 import com.ssafy.a403.domain.member.entity.Counselor;
 import com.ssafy.a403.domain.member.entity.Member;
@@ -59,5 +60,12 @@ public class CounselorService {
                 orElseThrow(EntityNotFoundException::new);
         counselor.updateCounselorInfo(request);
         counselorRepository.save(counselor);
+    }
+
+    // 상맏사 등록
+    @Transactional
+    public void registerCounselor(CounselorForm counselorForm) {
+
+        counselorRepository.save(counselorForm.toCounselor());
     }
 }

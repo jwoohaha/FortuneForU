@@ -2,6 +2,7 @@ package com.ssafy.a403.domain.counselorform.dto;
 
 import com.ssafy.a403.domain.counselorform.entity.CounselorForm;
 import com.ssafy.a403.domain.model.CounselorType;
+import com.ssafy.a403.domain.model.PassState;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -26,6 +27,8 @@ public class CounselorFormDetailsResponse {
     private final String phone;
 
     private final LocalDateTime created;
+    private final PassState passState;
+    private final String reason;
 
     public static CounselorFormDetailsResponse of(CounselorForm counselorForm) {
 
@@ -37,6 +40,8 @@ public class CounselorFormDetailsResponse {
                 counselorForm.getIntro(),
                 counselorForm.getAddress(),
                 counselorForm.getPhone(),
-                counselorForm.getCreated());
+                counselorForm.getCreated(),
+                counselorForm.getPassState(),
+                counselorForm.getReason());
     }
 }
