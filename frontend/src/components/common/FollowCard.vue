@@ -1,7 +1,9 @@
 <template>
     <div class="follow-card">
         <div class="upper-content">
-            <img class="card-img" src="{{ follow.profileImg }}">
+            <div id="img-border">
+                <img class="card-img" src="{{ follow.profileImg }}"  style="width: 100%; height: 100%; object-fit:cover;">                
+            </div>
             <div class="card-info">
                 <p id="card-name">{{ follow.name }} <span id="card-score">⭐ {{ follow.ratingAvg }}</span> </p>
                 <p class="card-txt">{{ follow.intro }}</p>
@@ -38,13 +40,18 @@ export default {
     display: flex;
     height: 100%;
 }
+#img-border{
+    width: 70px;
+    height: 70px;
+    border-radius: 70px;
+    margin-right: 15px;
+}
 .card-img {
     width: 70px;
     height: 70px;
     border-radius: 70px;
-    border: 1px solid var(--bg-gray, #F7F7F7);
+    // border: 0px solid var(--bg-gray, #F7F7F7);
     background: lightgray 50% / cover no-repeat;
-    margin-right: 15px;
 }
 .card-info{
     width: 72%;
