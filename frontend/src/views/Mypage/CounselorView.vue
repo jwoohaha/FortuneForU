@@ -196,8 +196,7 @@ export default {
                     startTime: this.startTime,
                     endTime: this.endTime
             })
-        .then((re) => {
-        }).catch((e) => {
+        .catch((e) => {
             console.log(e)
         })
     },
