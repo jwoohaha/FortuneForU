@@ -284,7 +284,7 @@ export default {
           method: 'PUT',
           url: `members/follow/${this.counselor.memberNo}`,
       })
-      .then((res) => {
+      .then(() => {
           this.isFollowing = true
       })
       .catch((e) => {
@@ -297,7 +297,7 @@ export default {
           method: 'DELETE',
           url: `members/unfollow/${this.counselor.memberNo}`,
       })
-      .then((res) => {
+      .then(() => {
           this.isFollowing = false
       })
       .catch((e) => {

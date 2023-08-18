@@ -132,7 +132,7 @@
                 'Content-Type': 'multipart/form-data',
                 },
             })
-            .then((res) => {
+            .then(() => {
                 window.location.reload();
             })
             .catch((e) => {

@@ -106,7 +106,7 @@ export default {
                     counselingResult: this.reportTxt
                     }
                 })
-                .then((res) => {
+                .then(() => {
                     alert("수정되었습니다!")
                 }) 
                 .catch((e) => {
