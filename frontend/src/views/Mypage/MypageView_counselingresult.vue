@@ -32,7 +32,6 @@
                         </div>
                         <div class="result-content">
                             {{ reportDetail.reservationReport }}
-                            {{ reportDetail.reservationReport }}
                         </div>
                 
                         
