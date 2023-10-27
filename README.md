@@ -9,6 +9,9 @@
 
 ## 기획 배경
 
+<details>
+<summary>내용 보기</summary>
+<div markdown="1">
 ### 시장 조사
 - 국내 점술 시장의 규모는 약 1조 4천억으로 추정
   - 기존의 주 수요층이었던 중장년층 뿐만 아니라 MZ세대 또한 점술시장의 주 수요층으로 변화
@@ -22,16 +25,23 @@
   - 메신저를 통한 상담의 경우, **해석을 기다리는 시간이 길게 느껴질 수 있음**
   - 전화를 통한 상담의 경우, **사용자가 해석을 모두 받아적어야 하기 때문에 불편함**
   - **과거의 상담 이력을 조회하기가 힘든 구조임**
+</div>
+</details>
+
 
 <br/>
 
-## 개발 목표
+## 기능 소개
 ### WebRTC 기반의 화상 상담
   - 상담가와 직접 대면함으로써 직접 방문한 것과 같은 현장감을 느낄 수 있는 서비스
+  ![대체 텍스트](./exec/image/consulting_reservation.PNG)
+  ![대체 텍스트](./exec/image/consulting_start.PNG)
+  ![대체 텍스트](./exec/image/consulting_room.PNG)
 ### 상담 결과 문서화 및 요약
   - STT(Speech To Text) API를 사용하여 상담 내용을 문서화
   - Chat GPT API를 사용하여 문서화한 상담 내용을 요약
   - 사용자나 상담가가 상담 결과를 기록해야 하는 번거로움을 덜어주는 서비스
+  ![대체 텍스트](./exec/image/mq.PNG)
 
 <br/>
 
@@ -87,16 +97,21 @@
 
 ## 기술 스택🛠️
 ### Front-end
+<p>
 <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"/>
 <img src="https://img.shields.io/badge/Vue.js-4FC08D?style=for-the-badge&logo=vue.js&logoColor=white"/>
 <img src="https://img.shields.io/badge/webrtc-333333?style=for-the-badge&logo=webrtc&logoColor=white"/>
+</p>
 
 ### Back-end
+<p>
 <img src="https://img.shields.io/badge/openjdk-FFFFFF?style=for-the-badge&logo=openjdk&logoColor=black"/>
 <img src="https://img.shields.io/badge/springboot-6DB33F?style=for-the-badge&logo=springboot&logoColor=white"/>
 <img src="https://img.shields.io/badge/springsecurity-6DB33F?style=for-the-badge&logo=springsecurity&logoColor=white"/>
+</p>
 
 ### Infra
+<p>
 <img src="https://img.shields.io/badge/amazonec2-FF9900?style=for-the-badge&logo=amazonec2&logoColor=white"/>
 <img src="https://img.shields.io/badge/ubuntu-E95420?style=for-the-badge&logo=ubuntu&logoColor=white"/>
 <img src="https://img.shields.io/badge/docker-2496ED?style=for-the-badge&logo=docker&logoColor=white"/>
@@ -105,15 +120,17 @@
 <img src="https://img.shields.io/badge/redis-DC382D?style=for-the-badge&logo=redis&logoColor=white"/>
 <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-badge&logo=mariadb&logoColor=white"/>
 <img src="https://img.shields.io/badge/Jenkins-D24939?style=for-the-badge&logo=jenkins&logoColor=white"/>
+</p>
 
 
 
 ### Project Management
-
+<p>
 <img src="https://img.shields.io/badge/notion-000000?style=for-the-badge&logo=notion&logoColor=white"/>
 <img src="https://img.shields.io/badge/gitlab-FC6D26?style=for-the-badge&logo=gitlab&logoColor=white"/>
 <img src="https://img.shields.io/badge/jira-0052CC?style=for-the-badge&logo=jira&logoColor=white"/>
 <img src="https://img.shields.io/badge/mattermost-0058CC?style=for-the-badge&logo=mattermost&logoColor=white"/>
+</p>
 
 <br/>
 
